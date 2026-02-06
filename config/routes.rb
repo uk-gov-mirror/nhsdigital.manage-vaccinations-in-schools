@@ -91,6 +91,8 @@ Rails.application.routes.draw do
              path: "find-team-contact/:id",
              controller: "school_team_contacts"
 
+    get "find-team-contact", to: redirect("/find-team-contact/school")
+
     resources :consent_forms, path: "/consents", only: %i[create] do
       collection do
         get ":session_slug_or_team_location_id/:programme_types/start",

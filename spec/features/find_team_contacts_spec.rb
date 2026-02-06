@@ -3,6 +3,14 @@
 describe "Find team contacts" do
   let(:team) { create(:team) }
 
+  scenario "Landing and school step" do
+    when_i_visit_find_team_contact
+    then_i_am_on_the_school_step
+    and_i_see_the_school_search_heading
+    and_i_see_the_search_form
+    and_i_do_not_see_school_search_results
+  end
+
   scenario "Search with no match" do
     given_a_school_with_a_team_exists("Test School")
     when_i_visit_the_school_step
