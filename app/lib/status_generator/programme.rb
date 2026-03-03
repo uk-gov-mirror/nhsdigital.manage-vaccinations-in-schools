@@ -17,7 +17,8 @@ class StatusGenerator::Programme
     triages:,
     attendance_record:,
     vaccination_records:,
-    parents:
+    parents:,
+    consent_notifications:
   )
     @programme_type = programme_type
     @academic_year = academic_year
@@ -28,6 +29,7 @@ class StatusGenerator::Programme
     @attendance_record = attendance_record
     @vaccination_records = vaccination_records
     @parents = parents
+    @consent_notifications = consent_notifications
 
     @vaccination_criteria =
       VaccinationCriteria.new(
@@ -166,7 +168,8 @@ class StatusGenerator::Programme
               :triages,
               :attendance_record,
               :vaccination_criteria,
-              :parents
+              :parents,
+              :consent_notifications
 
   delegate :vaccinated?,
            :vaccinated_vaccination_record,
@@ -201,7 +204,8 @@ class StatusGenerator::Programme
   end
 
   def should_be_needs_consent_no_response?
-    is_eligible? && consent_status == :no_response
+    is_eligible? && consent_notifications_requested? &&
+      consent_status == :no_response
   end
 
   def should_be_cannot_vaccinate_delay_vaccination?
@@ -231,11 +235,13 @@ class StatusGenerator::Programme
   end
 
   def should_be_needs_consent_request_scheduled?
-    false # TODO: Implement this status.
+    is_eligible? && parents_contactable? && !consent_notifications_requested? &&
+      sessions.any? { it.send_consent_requests_at&.present? }
   end
 
   def should_be_needs_consent_request_not_scheduled?
-    false # TODO: Implement this status.
+    is_eligible? && parents_contactable? && !consent_notifications_requested? &&
+      (sessions.empty? || sessions.any? { it.send_consent_requests_at.nil? })
   end
 
   def should_be_needs_consent_no_contact_details?
@@ -243,6 +249,14 @@ class StatusGenerator::Programme
   end
 
   def parents_contactable? = parents.any?
+
+  def consent_notifications_requested?
+    @consent_notifications_requested ||=
+      consent_notifications.any? do |notification|
+        notification.programme_types.include?(programme.type) &&
+          notification.session&.team_location&.academic_year == academic_year
+      end
+  end
 
   def year_group = patient.year_group(academic_year:)
 
@@ -305,5 +319,17 @@ class StatusGenerator::Programme
         triages:,
         vaccination_records:
       )
+  end
+
+  def sessions
+    @sessions ||=
+      patient_locations.flat_map do |patient_location|
+        patient_location
+          .location
+          .team_locations
+          .select { it.academic_year == academic_year }
+          .flat_map(&:sessions)
+          .select { it.programme_types.include?(programme_type) }
+      end
   end
 end
