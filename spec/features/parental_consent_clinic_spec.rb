@@ -136,7 +136,7 @@ describe "Parental consent" do
         location:
       )
 
-    @child = create(:patient, session: @session)
+    @child = create(:patient, school: @team.unknown_school, session: @session)
 
     @school = create(:school, team: @team)
   end
