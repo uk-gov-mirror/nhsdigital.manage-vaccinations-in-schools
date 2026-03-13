@@ -395,8 +395,8 @@ describe "Triage" do
           to: parent.email,
           template: :triage_vaccination_will_happen
         ).with_content_including(
-          "confirmed it\u2019s safe",
-          "We\u2019ll let you know once"
+          "confirmed it’s safe",
+          "We’ll let you know once"
         )
       )
     end
