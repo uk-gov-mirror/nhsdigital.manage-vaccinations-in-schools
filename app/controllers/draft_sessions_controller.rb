@@ -279,7 +279,6 @@ class DraftSessionsController < ApplicationController
       dates: dates_params,
       dates_check: [],
       delegation: %i[psd_enabled national_protocol_enabled],
-      location_type: %i[location_type],
       programmes: {
         programme_types: []
       },
