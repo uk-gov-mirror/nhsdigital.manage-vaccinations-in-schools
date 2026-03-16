@@ -554,7 +554,12 @@ describe "School sessions" do
 
   def then_the_parent_receives_an_rt5_clinic_invitation
     perform_enqueued_jobs
-    expect_email_to @parent.email, :clinic_initial_invitation_rt5
+    expect(email_deliveries).to include(
+      matching_notify_email(
+        to: @parent.email,
+        template: :clinic_initial_invitation_rt5
+      ).with_content_including("community clinic", "2 to 3 working days")
+    )
     expect_sms_to @parent.phone, :clinic_initial_invitation_rt5, :any
   end
 
