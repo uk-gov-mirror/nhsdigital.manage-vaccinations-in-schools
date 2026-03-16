@@ -130,9 +130,14 @@ describe "HPV vaccination" do
   end
 
   def and_a_text_is_sent_saying_the_vaccination_didnt_happen
-    expect_sms_to(
-      @patient.consents.last.parent.phone,
-      :vaccination_not_administered
+    expect(sms_deliveries).to include(
+      matching_notify_sms(
+        phone_number: @patient.consents.last.parent.phone,
+        template: :vaccination_not_administered
+      ).with_content_including(
+        "did not have their",
+        "contact the local health team"
+      )
     )
   end
 end
