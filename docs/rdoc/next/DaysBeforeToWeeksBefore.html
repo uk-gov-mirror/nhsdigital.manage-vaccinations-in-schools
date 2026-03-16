@@ -573,10 +573,6 @@
 
         <li ><a href="#method-i-weeks_before_consent_requests-3D">weeks_before_consent_requests=</a></li>
 
-        <li ><a href="#method-i-weeks_before_invitations">weeks_before_invitations</a></li>
-
-        <li ><a href="#method-i-weeks_before_invitations-3D">weeks_before_invitations=</a></li>
-
       </ul>
     </details>
   </div>
@@ -790,91 +786,6 @@
             <pre class="ruby"><span class="ruby-comment"># File app/models/concerns/days_before_to_weeks_before.rb, line 20</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">weeks_before_consent_requests=</span>(<span class="ruby-identifier">value</span>)
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">days_before_consent_requests</span> = (<span class="ruby-identifier">value</span>.<span class="ruby-identifier">blank?</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">*</span> <span class="ruby-value">7</span>)
-<span class="ruby-keyword">end</span></pre>
-          </div>
-
-
-
-        <div class="method-description">
-
-
-          
-
-
-        </div>
-
-
-
-
-
-      </div>
-
-
-      <div id="method-i-weeks_before_invitations" class="method-detail anchor-link ">
-        <div class="method-header">
-
-            <div class="method-heading">
-              <a href="#method-i-weeks_before_invitations" title="Link to this method">
-                <span class="method-name">weeks_before_invitations</span>
-                <span class="method-args">()</span>
-              </a>
-            </div>
-
-        </div>
-
-
-          <div class="method-controls">
-            <details class="method-source-toggle">
-              <summary>Source</summary>
-            </details>
-          </div>
-          <div class="method-source-code" id="weeks_before_invitations-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/concerns/days_before_to_weeks_before.rb, line 24</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">weeks_before_invitations</span>
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">days_before_invitations</span>.<span class="ruby-identifier">nil?</span>
-  (<span class="ruby-identifier">days_before_invitations</span> <span class="ruby-operator">/</span> <span class="ruby-value">7</span>).<span class="ruby-identifier">to_i</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-
-
-
-        <div class="method-description">
-
-
-          
-
-
-        </div>
-
-
-
-
-
-      </div>
-
-
-      <div id="method-i-weeks_before_invitations-3D" class="method-detail anchor-link ">
-        <div class="method-header">
-
-            <div class="method-heading">
-              <a href="#method-i-weeks_before_invitations-3D" title="Link to this method">
-                <span class="method-name">weeks_before_invitations=</span>
-                <span class="method-args">(value)</span>
-              </a>
-            </div>
-
-        </div>
-
-
-          <div class="method-controls">
-            <details class="method-source-toggle">
-              <summary>Source</summary>
-            </details>
-          </div>
-          <div class="method-source-code" id="weeks_before_invitations-3D-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/concerns/days_before_to_weeks_before.rb, line 29</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">weeks_before_invitations=</span>(<span class="ruby-identifier">value</span>)
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">days_before_invitations</span> = (<span class="ruby-identifier">value</span>.<span class="ruby-identifier">blank?</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">*</span> <span class="ruby-value">7</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
 

@@ -639,7 +639,6 @@ careplus_staff_type             :string
 careplus_venue_code             :string
 days_before_consent_reminders   :integer          default(7), not null
 days_before_consent_requests    :integer          default(21), not null
-days_before_invitations         :integer          default(21), not null
 email                           :string
 name                            :text             not null
 national_reporting_cut_off_date :date
@@ -731,7 +730,7 @@ index_teams_on_workgroup        (workgroup) UNIQUE</pre>
             </details>
           </div>
           <div class="method-source-code" id="careplus_enabled-3F-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/team.rb, line 122</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/team.rb, line 123</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">careplus_enabled?</span> =
   <span class="ruby-identifier">careplus_staff_code</span>.<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">careplus_staff_type</span>.<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span>
     <span class="ruby-identifier">careplus_venue_code</span>.<span class="ruby-identifier">present?</span>
@@ -776,7 +775,7 @@ index_teams_on_workgroup        (workgroup) UNIQUE</pre>
             </details>
           </div>
           <div class="method-source-code" id="is_sais_team-3F-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/team.rb, line 126</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/team.rb, line 127</span>
   <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">is_sais_team?</span> =
     <span class="ruby-identifier">has_point_of_care_access?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">has_national_reporting_access?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -818,7 +817,7 @@ index_teams_on_workgroup        (workgroup) UNIQUE</pre>
             </details>
           </div>
           <div class="method-source-code" id="to_param-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/team.rb, line 110</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/team.rb, line 111</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_param</span> = <span class="ruby-identifier">workgroup</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">year_groups</span>(<span class="ruby-value">academic_year:</span> <span class="ruby-keyword">nil</span>)
@@ -875,7 +874,7 @@ index_teams_on_workgroup        (workgroup) UNIQUE</pre>
             </details>
           </div>
           <div class="method-source-code" id="year_groups-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/team.rb, line 112</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/team.rb, line 113</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">year_groups</span>(<span class="ruby-value">academic_year:</span> <span class="ruby-keyword">nil</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-constant">NATIONAL_REPORTING_YEAR_GROUPS</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">has_national_reporting_access?</span>
 
