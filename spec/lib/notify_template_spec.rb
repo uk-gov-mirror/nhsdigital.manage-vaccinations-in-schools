@@ -146,8 +146,10 @@ describe NotifyTemplate do
         .each do |id|
           template = described_class.find_by_id(id, channel: :sms)
           %w[“ ’ ’ ”].each do |quote|
-            expect(template.body).not_to include(quote)
-            expect(template.subject).not_to include(quote)
+            expect(template.body).not_to include(quote),
+            "template #{template.id} (#{template.name}) body should not include #{quote.inspect}"
+            expect(template.subject).not_to include(quote),
+            "template #{template.id} (#{template.name}) subject should not include #{quote.inspect}"
           end
         end
     end
