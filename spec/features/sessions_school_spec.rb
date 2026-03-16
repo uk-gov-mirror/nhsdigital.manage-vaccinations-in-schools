@@ -565,7 +565,12 @@ describe "School sessions" do
         template: :clinic_initial_invitation_rt5
       ).with_content_including("community clinic", "2 to 3 working days")
     )
-    expect_sms_to @parent.phone, :clinic_initial_invitation_rt5, :any
+    expect(sms_deliveries).to include(
+      matching_notify_sms(
+        phone_number: @parent.phone,
+        template: :clinic_initial_invitation_rt5
+      ).with_content_including("community clinic", "2 to 3 working days")
+    )
   end
 
   def then_the_parent_receives_a_ryg_clinic_invitation
