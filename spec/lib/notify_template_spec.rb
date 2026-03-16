@@ -24,24 +24,6 @@ describe NotifyTemplate do
       it { should be_local }
     end
 
-    context "with a Notify-hosted email template" do
-      subject(:template) do
-        described_class.find(:clinic_initial_invitation, channel: :email)
-      end
-
-      it { should_not be_nil }
-      it { should_not be_local }
-    end
-
-    context "with a Notify-hosted SMS template" do
-      subject(:template) do
-        described_class.find(:clinic_initial_invitation, channel: :sms)
-      end
-
-      it { should_not be_nil }
-      it { should_not be_local }
-    end
-
     context "with an unknown template name" do
       subject(:template) do
         described_class.find(:nonexistent_template, channel: :email)
@@ -67,19 +49,6 @@ describe NotifyTemplate do
       it "resolves the template name" do
         expect(template.name).to eq(:consent_confirmation_given)
       end
-    end
-
-    context "with a Notify-hosted template's ID" do
-      subject(:template) do
-        described_class.find_by_id(template_id, channel: :email)
-      end
-
-      let(:template_id) do
-        described_class.find(:clinic_initial_invitation, channel: :email).id
-      end
-
-      it { should_not be_nil }
-      it { should_not be_local }
     end
 
     context "with a retired template's ID" do
@@ -126,49 +95,9 @@ describe NotifyTemplate do
         ).to be true
       end
 
-      it "returns false for source: :govuk_notify" do
-        expect(
-          described_class.exists?(
-            :consent_confirmation_given,
-            channel: :email,
-            source: :govuk_notify
-          )
-        ).to be false
-      end
-
       it "returns true for source: :any (default)" do
         expect(
           described_class.exists?(:consent_confirmation_given, channel: :email)
-        ).to be true
-      end
-    end
-
-    context "with a Notify-hosted template" do
-      let(:template_name) { :clinic_initial_invitation }
-
-      it "returns false for source: :local" do
-        expect(
-          described_class.exists?(
-            template_name,
-            channel: :email,
-            source: :local
-          )
-        ).to be false
-      end
-
-      it "returns true for source: :govuk_notify" do
-        expect(
-          described_class.exists?(
-            template_name,
-            channel: :email,
-            source: :govuk_notify
-          )
-        ).to be true
-      end
-
-      it "returns true for source: :any (default)" do
-        expect(
-          described_class.exists?(template_name, channel: :email)
         ).to be true
       end
     end

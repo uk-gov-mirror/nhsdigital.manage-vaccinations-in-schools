@@ -1,13 +1,5 @@
 # frozen_string_literal: true
 
-GOVUK_NOTIFY_EMAIL_TEMPLATES = {
-
-}.freeze
-
-GOVUK_NOTIFY_SMS_TEMPLATES = {
-
-}.freeze
-
 # Here we track email and SMS templates that we used to send but no longer
 # do. We need these to be able to display the names of the templates.
 GOVUK_NOTIFY_UNUSED_TEMPLATES = {
