@@ -565,7 +565,12 @@ describe "School sessions" do
 
   def then_the_parent_receives_a_ryg_clinic_invitation
     perform_enqueued_jobs
-    expect_email_to @parent.email, :clinic_initial_invitation_ryg
+    expect(email_deliveries).to include(
+      matching_notify_email(
+        to: @parent.email,
+        template: :clinic_initial_invitation_ryg
+      ).with_content_including("swiftqueue.co.uk", "Jepson House")
+    )
     expect_sms_to @parent.phone, :clinic_initial_invitation_ryg, :any
   end
 end
