@@ -56,15 +56,9 @@ describe NotifyTemplate do
         described_class.find_by_id(template_id, channel: :email)
       end
 
-      let(:template_id) { NotifyTemplate::RETIRED_TEMPLATE_IDS.keys.first }
+      let(:template_id) { NotifyLogEntry::RETIRED_TEMPLATE_IDS.keys.first }
 
-      it { should_not be_nil }
-
-      it "resolves the template name" do
-        expect(template.name).to eq(
-          NotifyTemplate::RETIRED_TEMPLATE_IDS[template_id]
-        )
-      end
+      it { should be_nil }
     end
 
     context "with an unknown ID" do
