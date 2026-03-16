@@ -340,9 +340,11 @@ describe "Flu vaccination" do
   end
 
   def and_a_text_is_sent_to_the_parent_confirming_the_vaccination
-    expect_sms_to(
-      @patient.consents.last.parent.phone,
-      :vaccination_administered
+    expect(sms_deliveries).to include(
+      matching_notify_sms(
+        phone_number: @patient.consents.last.parent.phone,
+        template: :vaccination_administered
+      ).with_content_including("had their", "side effects")
     )
   end
 
