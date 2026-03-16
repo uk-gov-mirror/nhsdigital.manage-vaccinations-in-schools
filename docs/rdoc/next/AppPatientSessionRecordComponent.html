@@ -721,11 +721,7 @@
     <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">consent_given_and_safe_to_vaccinate?</span>(
       <span class="ruby-value">programme:</span>,
       <span class="ruby-value">academic_year:</span>
-    ) <span class="ruby-operator">&amp;&amp;</span>
-    (
-      <span class="ruby-identifier">registration_status</span>&amp;.<span class="ruby-identifier">attending?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">registration_status</span>&amp;.<span class="ruby-identifier">completed?</span> <span class="ruby-operator">||</span>
-        <span class="ruby-operator">!</span><span class="ruby-identifier">session</span>.<span class="ruby-identifier">requires_registration?</span>
-    )
+    ) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">can_record_today?</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
 
