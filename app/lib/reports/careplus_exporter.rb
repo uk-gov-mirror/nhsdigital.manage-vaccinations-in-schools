@@ -33,6 +33,7 @@ class Reports::CareplusExporter
     start_date:,
     end_date:,
     include_gender:,
+    include_missing_nhs_number:,
     vaccine_columns:
   )
     @team = team
@@ -41,6 +42,7 @@ class Reports::CareplusExporter
     @start_date = start_date
     @end_date = end_date
     @include_gender = include_gender
+    @include_missing_nhs_number = include_missing_nhs_number
     @vaccine_columns = vaccine_columns
   end
 
@@ -74,6 +76,7 @@ class Reports::CareplusExporter
               :start_date,
               :end_date,
               :include_gender,
+              :include_missing_nhs_number,
               :vaccine_columns
 
   def headers
@@ -154,6 +157,11 @@ class Reports::CareplusExporter
           )
         )
     end
+
+    scope =
+      scope.joins(:patient).merge(
+        Patient.with_nhs_number
+      ) unless include_missing_nhs_number
 
     scope
   end

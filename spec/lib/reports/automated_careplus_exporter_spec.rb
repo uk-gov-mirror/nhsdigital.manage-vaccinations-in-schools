@@ -14,6 +14,7 @@ describe Reports::AutomatedCareplusExporter do
       start_date:,
       end_date:,
       include_gender: false,
+      include_missing_nhs_number: false,
       vaccine_columns: %i[
         vaccine
         dose

@@ -9,6 +9,7 @@ describe Reports::CareplusExporter do
       start_date: 1.month.ago.to_date,
       end_date: Date.current,
       include_gender:,
+      include_missing_nhs_number:,
       vaccine_columns:
     )
   end
@@ -17,6 +18,7 @@ describe Reports::CareplusExporter do
 
   let(:academic_year) { AcademicYear.current }
   let(:include_gender) { true }
+  let(:include_missing_nhs_number) { true }
   let(:vaccine_columns) do
     %i[
       vaccine
@@ -381,6 +383,82 @@ describe Reports::CareplusExporter do
             expect(data_rows.first[gender_index]).to eq(expected_code)
           end
         end
+      end
+    end
+  end
+
+  context "include_missing_nhs_number parameter" do
+    let(:programme) { Programme.hpv }
+    let(:team) { create(:team, programmes: [programme]) }
+    let(:location) { create(:school) }
+    let(:session) do
+      create(:session, team:, programmes: [programme], location:)
+    end
+
+    context "when true" do
+      let(:include_missing_nhs_number) { true }
+
+      it "includes patients without an NHS number" do
+        patient =
+          create(
+            :patient,
+            :consent_given_triage_not_needed,
+            programmes: [programme],
+            session:,
+            nhs_number: nil
+          )
+        create(
+          :vaccination_record,
+          programme:,
+          patient:,
+          session:,
+          performed_at: 2.weeks.ago
+        )
+
+        expect(data_rows.first).not_to be_nil
+      end
+    end
+
+    context "when false" do
+      let(:include_missing_nhs_number) { false }
+
+      it "excludes patients without an NHS number" do
+        patient =
+          create(
+            :patient,
+            :consent_given_triage_not_needed,
+            programmes: [programme],
+            session:,
+            nhs_number: nil
+          )
+        create(
+          :vaccination_record,
+          programme:,
+          patient:,
+          session:,
+          performed_at: 2.weeks.ago
+        )
+
+        expect(data_rows.first).to be_nil
+      end
+
+      it "includes patients with an NHS number" do
+        patient =
+          create(
+            :patient,
+            :consent_given_triage_not_needed,
+            programmes: [programme],
+            session:
+          )
+        create(
+          :vaccination_record,
+          programme:,
+          patient:,
+          session:,
+          performed_at: 2.weeks.ago
+        )
+
+        expect(data_rows.first).not_to be_nil
       end
     end
   end

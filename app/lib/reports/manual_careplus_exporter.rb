@@ -9,6 +9,7 @@ class Reports::ManualCareplusExporter
       start_date:,
       end_date:,
       include_gender: true,
+      include_missing_nhs_number: true,
       vaccine_columns: %i[
         vaccine
         vaccine_code
