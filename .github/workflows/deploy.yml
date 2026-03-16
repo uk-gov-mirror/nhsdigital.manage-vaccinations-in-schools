@@ -47,7 +47,7 @@ on:
           - ops
         default: all
       run_pre_deploy_migrations:
-        description: Run data migrations before service deployment.
+        description: Run `pre-deploy` job (schema-migrations) before service deployment.
         required: false
         type: boolean
         default: true
