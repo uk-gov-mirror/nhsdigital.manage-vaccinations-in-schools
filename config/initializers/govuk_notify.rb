@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 GOVUK_NOTIFY_EMAIL_TEMPLATES = {
-  clinic_subsequent_invitation: "a86a3b3f-a848-41d8-9a6f-d38174981388",
   clinic_subsequent_invitation_ryg: "eee59c1b-3af4-4ccd-8653-940887066390",
 }.freeze
 
