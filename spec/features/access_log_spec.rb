@@ -13,21 +13,11 @@ describe "Access log" do
   end
 
   scenario "View patient's programme" do
-    given_the_child_record_redesign_feature_is_enabled
-
     when_i_go_to_the_children
     and_i_filter_for_year_8
     and_i_go_to_a_patient
     and_i_click_on_a_programme
     then_i_am_recorded_in_the_access_log(controller: "patients_programmes")
-  end
-
-  scenario "View patient's activity log" do
-    when_i_go_to_the_children
-    and_i_filter_for_year_8
-    and_i_go_to_a_patient
-    and_i_click_on_activity_log
-    then_i_am_recorded_in_the_access_log_twice(controller: "patients")
   end
 
   scenario "View patient in a session" do
@@ -41,10 +31,6 @@ describe "Access log" do
     and_i_go_to_a_patient
     and_i_click_on_session_activity_and_notes
     then_i_am_recorded_in_the_access_log_twice(controller: "patient_sessions")
-  end
-
-  def given_the_child_record_redesign_feature_is_enabled
-    Flipper.enable(:child_record_redesign)
   end
 
   def given_i_am_signed_in
@@ -88,10 +74,6 @@ describe "Access log" do
 
   def and_i_click_on_a_programme
     within(".app-secondary-navigation") { click_on "HPV" }
-  end
-
-  def and_i_click_on_activity_log
-    click_on "Activity log"
   end
 
   def and_i_click_on_session_activity_and_notes

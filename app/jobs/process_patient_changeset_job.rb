@@ -14,33 +14,21 @@ class ProcessPatientChangesetJob < ApplicationJob
     end
 
     patient_changeset.assign_patient_id
-    if Flipper.enabled?(:import_review_screen)
-      patient_changeset.calculating_review!
-    else
-      patient_changeset.committing!
-    end
+    patient_changeset.calculating_review!
 
     if patient_changeset.import.changesets.pending.none?
       import = patient_changeset.import
 
-      if Flipper.enabled?(:import_search_pds) &&
-           Flipper.enabled?(:import_low_pds_match_rate)
+      if Flipper.enabled?(:import_search_pds)
         import.validate_pds_match_rate!
         return if import.low_pds_match_rate?
       end
 
       import.validate_changeset_uniqueness!
       return if import.changesets_are_invalid?
-
-      unless Flipper.enabled?(:import_review_screen)
-        CommitImportJob.perform_async(import.to_global_id.to_s)
-        return
-      end
     end
 
-    if Flipper.enabled?(:import_review_screen)
-      ReviewPatientChangesetJob.perform_later(patient_changeset.id)
-    end
+    ReviewPatientChangesetJob.perform_later(patient_changeset.id)
   end
 
   private

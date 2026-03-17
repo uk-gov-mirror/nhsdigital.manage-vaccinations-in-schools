@@ -10,7 +10,6 @@
 #  careplus_venue_code             :string
 #  days_before_consent_reminders   :integer          default(7), not null
 #  days_before_consent_requests    :integer          default(21), not null
-#  days_before_invitations         :integer          default(21), not null
 #  email                           :string
 #  name                            :text             not null
 #  national_reporting_cut_off_date :date
@@ -38,6 +37,8 @@
 #  fk_rails_...  (organisation_id => organisations.id)
 #
 class Team < ApplicationRecord
+  self.ignored_columns = %w[days_before_invitations]
+
   include DaysBeforeToWeeksBefore
   include FlipperActor
   include HasManyProgrammes
@@ -79,23 +80,30 @@ class Team < ApplicationRecord
   normalizes :phone, with: PhoneNumberNormaliser.new
 
   enum :type,
-       { point_of_care: 0, national_reporting: 1 },
+       { point_of_care: 0, national_reporting: 1, support: 2 },
        validate: true,
        prefix: "has",
        suffix: "access"
 
   validates :name, presence: true, uniqueness: true
+  with_options if: :has_point_of_care_access? do
+    validates :email, notify_safe_email: true
+    validates :phone, presence: true, phone: true
+    validates :privacy_notice_url, presence: true
+    validates :privacy_policy_url, presence: true
+    validates :national_reporting_cut_off_date, absence: true
+  end
   with_options if: :has_national_reporting_access? do
     validates :email, absence: true
     validates :phone, absence: true
     validates :privacy_notice_url, absence: true
     validates :privacy_policy_url, absence: true
   end
-  with_options unless: :has_national_reporting_access? do
-    validates :email, notify_safe_email: true
-    validates :phone, presence: true, phone: true
-    validates :privacy_notice_url, presence: true
-    validates :privacy_policy_url, presence: true
+  with_options if: :has_support_access? do
+    validates :email, absence: true
+    validates :phone, absence: true
+    validates :privacy_notice_url, absence: true
+    validates :privacy_policy_url, absence: true
     validates :national_reporting_cut_off_date, absence: true
   end
   validates :workgroup, presence: true, uniqueness: true
@@ -115,4 +123,7 @@ class Team < ApplicationRecord
   def careplus_enabled? =
     careplus_staff_code.present? && careplus_staff_type.present? &&
       careplus_venue_code.present?
+
+  def is_sais_team? =
+    has_point_of_care_access? || has_national_reporting_access?
 end

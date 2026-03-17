@@ -33,7 +33,6 @@
 #  performed_ods_code                      :string
 #  programme_type                          :enum             not null
 #  protocol                                :integer
-#  reported_at                             :datetime
 #  source                                  :integer          not null
 #  uuid                                    :uuid             not null
 #  created_at                              :datetime         not null
@@ -88,6 +87,8 @@ class VaccinationRecord < ApplicationRecord
   include PerformableAtDateAndTime
   include PerformableBy
   include SyncableToNHSImmunisationsAPI
+
+  self.ignored_columns = %w[reported_at]
 
   audited associated_with: :patient
 

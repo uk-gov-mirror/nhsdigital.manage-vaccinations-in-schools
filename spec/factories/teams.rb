@@ -10,7 +10,6 @@
 #  careplus_venue_code             :string
 #  days_before_consent_reminders   :integer          default(7), not null
 #  days_before_consent_requests    :integer          default(21), not null
-#  days_before_invitations         :integer          default(21), not null
 #  email                           :string
 #  name                            :text             not null
 #  national_reporting_cut_off_date :date
@@ -67,6 +66,15 @@ FactoryBot.define do
       privacy_policy_url { nil }
 
       programmes { [Programme.flu, Programme.hpv] }
+    end
+
+    trait :support do
+      type { :support }
+
+      email { nil }
+      phone { nil }
+      privacy_notice_url { nil }
+      privacy_policy_url { nil }
     end
 
     trait :with_one_nurse do

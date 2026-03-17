@@ -38,10 +38,10 @@ describe ProcessPatientChangesetJob do
         )
       end
 
-      it "does not enqueue CommitImportJob" do
+      it "does not enqueue ReviewPatientChangesetJob" do
         expect {
           described_class.perform_now(patient_changeset.id)
-        }.not_to enqueue_sidekiq_job(CommitImportJob)
+        }.not_to have_enqueued_job(ReviewPatientChangesetJob)
       end
     end
 
@@ -77,10 +77,10 @@ describe ProcessPatientChangesetJob do
         expect(patient_changeset.reload.pds_nhs_number).to eq("9449306168")
       end
 
-      it "marks changeset as processed" do
+      it "marks changeset as calculating_review" do
         described_class.perform_now(patient_changeset.id)
 
-        expect(patient_changeset.reload).to be_committing
+        expect(patient_changeset.reload).to be_calculating_review
       end
     end
 
@@ -111,10 +111,10 @@ describe ProcessPatientChangesetJob do
         expect(patient_changeset.reload.pds_nhs_number).to be_nil
       end
 
-      it "marks changeset as processed" do
+      it "marks changeset as calculating_review" do
         described_class.perform_now(patient_changeset.id)
 
-        expect(patient_changeset.reload).to be_committing
+        expect(patient_changeset.reload).to be_calculating_review
       end
     end
 
@@ -145,10 +145,10 @@ describe ProcessPatientChangesetJob do
         expect(patient_changeset.reload.pds_nhs_number).to be_nil
       end
 
-      it "marks changeset as processed" do
+      it "marks changeset as calculating_review" do
         described_class.perform_now(patient_changeset.id)
 
-        expect(patient_changeset.reload).to be_committing
+        expect(patient_changeset.reload).to be_calculating_review
       end
     end
 
@@ -177,77 +177,31 @@ describe ProcessPatientChangesetJob do
         end
 
         context "when import_search_pds flag is disabled" do
-          context "when low_pds_match_rate flag is disabled" do
-            it "doesn't change import status" do
-              described_class.perform_now(patient_changeset.id)
-              expect(import.reload.status).to eq("pending_import")
-            end
-
-            it "enqueues CommitImportJob" do
-              expect {
-                described_class.perform_now(patient_changeset.id)
-              }.to enqueue_sidekiq_job(CommitImportJob).with(
-                import.to_global_id.to_s
-              )
-            end
-          end
-
-          context "when low_pds_match_rate flag is enabled" do
-            before { Flipper.enable(:import_low_pds_match_rate) }
-
-            it "doesn't change import status" do
-              described_class.perform_now(patient_changeset.id)
-              expect(import.reload.status).to eq("pending_import")
-            end
-
-            it "enqueues CommitImportJob" do
-              expect {
-                described_class.perform_now(patient_changeset.id)
-              }.to enqueue_sidekiq_job(CommitImportJob).with(
-                import.to_global_id.to_s
-              )
-            end
+          it "doesn't change import status" do
+            described_class.perform_now(patient_changeset.id)
+            expect(import.reload.status).to eq("pending_import")
           end
         end
 
         context "when import_search_pds flag is enabled" do
           before { Flipper.enable(:import_search_pds) }
 
-          context "when low_pds_match_rate flag is enabled" do
-            before { Flipper.enable(:import_low_pds_match_rate) }
-
-            it "marks import as low_pds_match_rate and stops" do
-              described_class.perform_now(patient_changeset.id)
-              expect(import.reload.status).to eq("low_pds_match_rate")
-            end
-
-            it "updates changesets to import_invalid and stops" do
-              described_class.perform_now(patient_changeset.id)
-              expect(import.changesets.pluck(:status).uniq).to eq(
-                ["import_invalid"]
-              )
-            end
-
-            it "doesn't enqueue CommitImportJob" do
-              expect {
-                described_class.perform_now(patient_changeset.id)
-              }.not_to enqueue_sidekiq_job(CommitImportJob)
-            end
+          it "marks import as low_pds_match_rate and stops" do
+            described_class.perform_now(patient_changeset.id)
+            expect(import.reload.status).to eq("low_pds_match_rate")
           end
 
-          context "when low_pds_match_rate flag is disabled" do
-            it "doesn't change import status" do
-              described_class.perform_now(patient_changeset.id)
-              expect(import.reload.status).to eq("pending_import")
-            end
+          it "updates changesets to import_invalid and stops" do
+            described_class.perform_now(patient_changeset.id)
+            expect(import.changesets.pluck(:status).uniq).to eq(
+              ["import_invalid"]
+            )
+          end
 
-            it "enqueues CommitImportJob" do
-              expect {
-                described_class.perform_now(patient_changeset.id)
-              }.to enqueue_sidekiq_job(CommitImportJob).with(
-                import.to_global_id.to_s
-              )
-            end
+          it "doesn't enqueue ReviewPatientChangesetJob" do
+            expect {
+              described_class.perform_now(patient_changeset.id)
+            }.not_to have_enqueued_job(ReviewPatientChangesetJob)
           end
         end
       end
@@ -284,11 +238,11 @@ describe ProcessPatientChangesetJob do
         end
 
         context "when changesets have unique NHS numbers and unique patients" do
-          it "enqueues CommitImportJob" do
+          it "enqueues ReviewPatientChangesetJob" do
             expect {
               described_class.perform_now(patient_changeset.id)
-            }.to enqueue_sidekiq_job(CommitImportJob).with(
-              import.to_global_id.to_s
+            }.to have_enqueued_job(ReviewPatientChangesetJob).with(
+              patient_changeset.id
             )
           end
         end
@@ -447,10 +401,18 @@ describe ProcessPatientChangesetJob do
         create(:patient_changeset, import:, status: :pending)
       end
 
-      it "does not enqueue CommitImportJob" do
+      it "enqueues ReviewPatientChangesetJob" do
         expect {
           described_class.perform_now(patient_changeset.id)
-        }.not_to have_enqueued_job(CommitImportJob)
+        }.to have_enqueued_job(ReviewPatientChangesetJob).with(
+          patient_changeset.id
+        )
+      end
+
+      it "does not validate PDS match rate or uniqueness" do
+        expect(import).not_to receive(:validate_pds_match_rate!)
+        expect(import).not_to receive(:validate_changeset_uniqueness!)
+        described_class.perform_now(patient_changeset.id)
       end
     end
 
@@ -469,7 +431,7 @@ describe ProcessPatientChangesetJob do
       it "processes the changeset correctly" do
         described_class.perform_now(patient_changeset.id)
 
-        expect(patient_changeset.reload).to be_committing
+        expect(patient_changeset.reload).to be_calculating_review
         expect(patient_changeset.child_attributes["nhs_number"]).to eq(
           "9449306168"
         )
