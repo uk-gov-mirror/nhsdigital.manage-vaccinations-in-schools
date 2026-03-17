@@ -62,7 +62,7 @@ class Notifier::ConsentForm
 
     if consent_form.health_answers_require_triage?
       EmailDeliveryJob.perform_later(:consent_confirmation_triage, **params)
-    elsif consent_form.session.clinic? || consent_form.session.completed?
+    elsif consent_form.session&.clinic? || consent_form.session&.completed?
       EmailDeliveryJob.perform_later(:consent_confirmation_clinic, **params)
     else
       EmailDeliveryJob.perform_later(:consent_confirmation_given, **params)
