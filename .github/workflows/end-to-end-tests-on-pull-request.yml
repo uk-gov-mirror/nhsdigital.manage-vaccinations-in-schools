@@ -343,18 +343,23 @@ jobs:
     outputs:
       test_branch: ${{ steps.check-branch.outputs.test_branch }}
     steps:
-      - name: Check if branch exists
+      - name: Check if head branch or base branch exists
         id: check-branch
         run: |
           if git ls-remote --exit-code \
               --heads https://github.com/NHSDigital/manage-vaccinations-in-schools-testing.git \
-              "$BRANCH_TO_CHECK" > /dev/null 2>&1; then
-            echo "test_branch=$BRANCH_TO_CHECK" >> "$GITHUB_OUTPUT"
+              "$HEAD_REF" > /dev/null 2>&1; then
+            echo "test_branch=$HEAD_REF" >> "$GITHUB_OUTPUT"
+          elif git ls-remote --exit-code \
+              --heads https://github.com/NHSDigital/manage-vaccinations-in-schools-testing.git \
+              "$BASE_REF" > /dev/null 2>&1; then
+            echo "test_branch=$BASE_REF" >> "$GITHUB_OUTPUT"
           else
             echo "test_branch=main" >> "$GITHUB_OUTPUT"
           fi
         env:
-          BRANCH_TO_CHECK: ${{ github.head_ref }}
+          HEAD_REF: ${{ github.head_ref }}
+          BASE_REF: ${{ github.base_ref }}
   call-end-to-end-tests:
     needs: [launch-dockerized-devimage, wait-for-task-stability, find-correct-test-branch]
     if:
