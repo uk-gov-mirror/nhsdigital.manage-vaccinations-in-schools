@@ -36,23 +36,31 @@ describe AppImportReviewComponent do
 
   let(:new_records) { [] }
   let(:new_records_pagy) do
-    instance_double(Pagy, count: 0, limit: 50).as_null_object
+    instance_double(Pagy, count: new_records.count, limit: 50).as_null_object
   end
   let(:auto_matched_records) { [] }
   let(:auto_matched_records_pagy) do
-    instance_double(Pagy, count: 0, limit: 50).as_null_object
+    instance_double(
+      Pagy,
+      count: auto_matched_records.count,
+      limit: 50
+    ).as_null_object
   end
   let(:import_issues) { [] }
   let(:import_issues_pagy) do
-    instance_double(Pagy, count: 0, limit: 50).as_null_object
+    instance_double(Pagy, count: import_issues.count, limit: 50).as_null_object
   end
   let(:inter_team) { [] }
   let(:school_moves) { [] }
   let(:school_moves_pagy) do
-    instance_double(Pagy, count: 0, limit: 50).as_null_object
+    instance_double(Pagy, count: school_moves.count, limit: 50).as_null_object
   end
   let(:skipped_school_moves) { [] }
   let(:open_sections) { [] }
+
+  before do
+    allow(AppPaginationComponent).to receive(:new) { double.as_null_object }
+  end
 
   shared_examples "section with details" do |title:, summary:, count:|
     it "renders section '#{title}'" do
@@ -75,18 +83,11 @@ describe AppImportReviewComponent do
   end
 
   describe "with new records" do
-    let(:new_records_pagy) do
-      instance_double(Pagy, count: 2, limit: 50).as_null_object
-    end
     let(:new_records) do
       [
         create(:patient_changeset, :new_patient, import:, patient: new_patient),
         create(:patient_changeset, :new_patient, import:)
       ]
-    end
-
-    before do
-      allow(AppPaginationComponent).to receive(:new) { double.as_null_object }
     end
 
     include_examples "section with details",
@@ -105,9 +106,6 @@ describe AppImportReviewComponent do
   end
 
   describe "with auto-matched records" do
-    let(:auto_matched_records_pagy) do
-      instance_double(Pagy, count: 3, limit: 50).as_null_object
-    end
     let(:auto_matched_records) do
       [
         create(
@@ -119,10 +117,6 @@ describe AppImportReviewComponent do
         create(:patient_changeset, :auto_match, import:),
         create(:patient_changeset, :auto_match, import:)
       ]
-    end
-
-    before do
-      allow(AppPaginationComponent).to receive(:new) { double.as_null_object }
     end
 
     include_examples "section with details",
@@ -332,9 +326,6 @@ describe AppImportReviewComponent do
 
   describe "buttons" do
     context "with records to import" do
-      let(:new_records_pagy) do
-        instance_double(Pagy, count: 1, limit: 50).as_null_object
-      end
       let(:new_records) do
         [
           create(
@@ -344,10 +335,6 @@ describe AppImportReviewComponent do
             patient: new_patient
           )
         ]
-      end
-
-      before do
-        allow(AppPaginationComponent).to receive(:new) { double.as_null_object }
       end
 
       it "shows approve button" do
@@ -379,14 +366,8 @@ describe AppImportReviewComponent do
     end
 
     context "with re-review import" do
-      before do
-        import.update!(status: :in_re_review)
-        allow(AppPaginationComponent).to receive(:new) { double.as_null_object }
-      end
+      before { import.update!(status: :in_re_review) }
 
-      let(:new_records_pagy) do
-        instance_double(Pagy, count: 1, limit: 50).as_null_object
-      end
       let(:new_records) do
         [
           create(
@@ -414,10 +395,6 @@ describe AppImportReviewComponent do
   end
 
   describe "empty sections" do
-    let(:new_records_pagy) do
-      instance_double(Pagy, count: 0, limit: 50).as_null_object
-    end
-
     it "does not render sections with no records" do
       expect(rendered).not_to have_css("h2", text: "New records")
       expect(rendered).not_to have_css("h2", text: "Records already in Mavis")
@@ -425,15 +402,8 @@ describe AppImportReviewComponent do
   end
 
   describe "sticky summary" do
-    let(:new_records_pagy) do
-      instance_double(Pagy, count: 1, limit: 50).as_null_object
-    end
     let(:new_records) do
       [create(:patient_changeset, :new_patient, import:, patient: new_patient)]
-    end
-
-    before do
-      allow(AppPaginationComponent).to receive(:new) { double.as_null_object }
     end
 
     it "adds sticky module to summary" do
@@ -442,15 +412,8 @@ describe AppImportReviewComponent do
   end
 
   describe "open_sections" do
-    let(:new_records_pagy) do
-      instance_double(Pagy, count: 1, limit: 50).as_null_object
-    end
     let(:new_records) do
       [create(:patient_changeset, :new_patient, import:, patient: new_patient)]
-    end
-
-    before do
-      allow(AppPaginationComponent).to receive(:new) { double.as_null_object }
     end
 
     context "without any open sections specified" do

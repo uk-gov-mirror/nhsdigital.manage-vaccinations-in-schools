@@ -206,7 +206,8 @@ class CohortImportsController < ApplicationController
           .ready_for_review
           .import_issue
           .where.not(id: @inter_team_ids)
-          .order(:row_number)
+          .order(:row_number),
+        page_param: :import_issues_page
       )
     @school_moves =
       pagy(
@@ -216,7 +217,8 @@ class CohortImportsController < ApplicationController
           .ready_for_review
           .with_school_moves
           .where.not(id: @inter_team_ids)
-          .order(:row_number)
+          .order(:row_number),
+        page_param: :school_moves_page
       )
     @skipped_school_moves =
       @cohort_import

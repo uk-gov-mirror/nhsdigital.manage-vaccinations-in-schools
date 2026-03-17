@@ -57,9 +57,12 @@
     <p class="nhsuk-u-reading-width">
         <%= import_issues_message %>
     </p>
-    <%= render AppDetailsComponent.new(expander: true, sticky: true, id: :import_issues) do |c| %>
+    <%= render AppDetailsComponent.new(expander: true, sticky: true, id: :import_issues, open: @open_sections&.include?(:import_issues)) do |c| %>
         <% c.with_summary do %>
-            <%= pluralize(@import_issues.count, "close match") %> to existing records
+          <%= pluralize(@import_issues_pagy.count, "close match") %> to existing records
+          <% if @import_issues_pagy.count > @import_issues_pagy.limit %>
+            (showing <b><%= @import_issues_pagy.from %></b> to <b><%= @import_issues_pagy.to %></b>)
+          <% end %>
         <% end %>
         <%= render AppImportReviewIssuesSummaryComponent.new(import: @import, records: @import_issues, pagy: @import_issues_pagy, anchor: :import_issues) %>
     <% end %>
@@ -70,9 +73,12 @@
     <p class="nhsuk-u-reading-width">
         <%= school_moves_message %>
     </p>
-    <%= render AppDetailsComponent.new(expander: true, sticky: true, id: :school_moves) do |c| %>
+    <%= render AppDetailsComponent.new(expander: true, sticky: true, id: :school_moves, open: @open_sections&.include?(:school_moves)) do |c| %>
         <% c.with_summary do %>
-            <%= pluralize(@school_moves.count, "school move") %>
+          <%= pluralize(@school_moves_pagy.count, "school move") %>
+          <% if @school_moves_pagy.count > @school_moves_pagy.limit %>
+            (showing <b><%= @school_moves_pagy.from %></b> to <b><%= @school_moves_pagy.to %></b>)
+          <% end %>
         <% end %>
         <%= render AppImportReviewSchoolMovesSummaryComponent.new(changesets: @school_moves, pagy: @school_moves_pagy, anchor: :school_moves) %>
     <% end %>
