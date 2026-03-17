@@ -76,3 +76,7 @@
       cron: "0 13,16,19 * * *"
       class: SendVaccinationConfirmationsJob
       description: Send vaccination confirmation emails to parents
+    automated_careplus_export:
+      cron: "0 7 * * *"
+      class: EnqueueAutomatedCareplusExportJob
+      description: Enqueue automated CarePlus export jobs for all CarePlus-enabled teams
