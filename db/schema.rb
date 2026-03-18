@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_16_165220) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_18_112719) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -758,6 +758,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_16_165220) do
     t.bigint "school_id"
     t.datetime "updated_at", null: false
     t.datetime "updated_from_pds_at"
+    t.index "address_postcode, date_of_birth, lower((given_name)::text)", name: "index_patients_on_lower_given_name_dob_address"
+    t.index "date_of_birth, address_postcode, lower((family_name)::text)", name: "index_patients_on_lower_family_name_dob_address"
+    t.index "lower((family_name)::text), lower((given_name)::text), address_postcode", name: "index_patients_on_lower_names_family_first_address"
+    t.index "lower((given_name)::text), lower((family_name)::text), date_of_birth, address_postcode", name: "index_patients_on_lower_names_given_first_dob_address"
     t.index ["family_name", "given_name"], name: "index_patients_on_names_family_first"
     t.index ["family_name"], name: "index_patients_on_family_name_trigram", opclass: :gin_trgm_ops, using: :gin
     t.index ["given_name", "family_name"], name: "index_patients_on_names_given_first"
