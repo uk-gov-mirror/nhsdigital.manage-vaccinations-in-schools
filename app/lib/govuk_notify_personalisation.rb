@@ -181,8 +181,7 @@ class GovukNotifyPersonalisation
 
   def has_multiple_dates
     return nil if session.nil?
-
-    session.future_dates.length > 1 ? "yes" : "no"
+    has_multiple_dates? ? "yes" : "no"
   end
 
   def host
@@ -613,14 +612,20 @@ class GovukNotifyPersonalisation
     descriptions.map { "- #{it}" }.join("\n")
   end
 
-  private
-
   def is_catch_up?
     return false if patient.nil? || programmes.empty?
 
     @is_catch_up ||=
       programmes.any? { it.is_catch_up?(year_group: patient_year_group) }
   end
+
+  def has_multiple_dates?
+    return false if session.nil?
+
+    session.future_dates.length > 1
+  end
+
+  private
 
   def session_dates_are_accurate?
     consent_form ? consent_form.session_dates_are_accurate? : true
