@@ -1,10 +1,11 @@
-<% content_for :before_main do %>
+<% content_for :navigation do %>
   <%= govuk_back_link(href: schools_team_path) %>
 <% end %>
 
 <%= h1 "Find a school to add to your team" %>
 
 <%= form_with(model: @draft_school, url: wizard_path, method: :put) do |f| %>
+  <%= f.mavis_error_summary %>
   <%= f.govuk_text_field :urn,
                          label: {
                            text: "School URN",

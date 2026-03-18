@@ -1,4 +1,4 @@
-<% content_for :before_main do %>
+<% content_for :navigation do %>
   <%= govuk_back_link(href: consent_form_path) %>
 <% end %>
 
@@ -35,7 +35,7 @@
             end
           end %>
 
-      <p class="nhsuk-body">
+      <p>
         <%= link_to "View full consent response", consent_form_path(@consent_form) %>
       </p>
 
@@ -62,6 +62,7 @@
                 show_parents: true,
                 show_postcode: true,
                 show_school: true,
+                heading_level: 3,
               ) %>
         <% end %>
       <% end %>

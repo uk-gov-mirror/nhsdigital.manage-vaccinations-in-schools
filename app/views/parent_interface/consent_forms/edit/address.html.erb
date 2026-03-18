@@ -1,9 +1,9 @@
-<% content_for :before_main do %>
+<% content_for :navigation do %>
   <%= govuk_back_link(href: backlink_path) %>
 <% end %>
 
 <%= form_with model: @consent_form, url: wizard_path, method: :put do |f| %>
-  <%= f.govuk_error_summary %>
+  <%= f.mavis_error_summary %>
 
   <%= h1 "Home address" %>
 

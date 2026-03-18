@@ -1,14 +1,16 @@
 <% if @sub_service_name.present? %>
-  <%= h1 "#{@service_name} — #{@sub_service_name}", size: "xl" do %>
+  <%= h1 "#{@service_name} — #{@sub_service_name}",
+         size: "xl",
+         page_title: "Dashboard" do %>
     <span class="nhsuk-caption-l"><%= @service_name_with_abbreviation %></span>
     <%= @sub_service_name %>
   <% end %>
 <% else %>
-  <%= h1 @service_name_with_abbreviation, size: "xl" %>
+  <%= h1 @service_name_with_abbreviation, size: "xl", page_title: "Dashboard" %>
 <% end %>
 
 <% if (count = @notices_count) %>
-  <%= render AppWarningCalloutComponent.new(heading: "Important notices") do %>
+  <%= render AppWarningCalloutComponent.new(heading: "Important notices", level: 2) do %>
     <p><%= link_to t(".notices.description", count:), imports_notices_path %></p>
   <% end %>
 <% end %>

@@ -1,11 +1,11 @@
-<% content_for :before_main do %>
+<% content_for :navigation do %>
   <%= govuk_back_link(href: @back_link_path) %>
 <% end %>
 
 <% content_for :page_title, "Vaccinator" %>
 
 <%= form_with model: @draft_vaccination_record, url: wizard_path, method: :put do |f| %>
-  <%= f.govuk_error_summary %>
+  <%= f.mavis_error_summary %>
 
   <span class="nhsuk-caption-l"><%= @patient.full_name %></span>
   <%= h1 "Vaccinator" %>

@@ -1,9 +1,9 @@
-<% content_for :before_main do %>
+<% content_for :navigation do %>
   <%= govuk_back_link(href: session_patient_programme_consent_path) %>
 <% end %>
 
 <%= form_with model: @consent, url: invalidate_session_patient_programme_consent_path, method: :post do |f| %>
-  <%= f.govuk_error_summary %>
+  <%= f.mavis_error_summary %>
 
   <% page_title = "Mark response as invalid" %>
   <%= h1 page_title: do %>
@@ -13,7 +13,7 @@
     <%= page_title %>
   <% end %>
 
-  <p class="nhsuk-body">This operation cannot be undone.</p>
+  <p>This operation cannot be undone.</p>
 
   <%= f.govuk_text_area :notes, label: { text: "Notes", size: "m" } %>
 
