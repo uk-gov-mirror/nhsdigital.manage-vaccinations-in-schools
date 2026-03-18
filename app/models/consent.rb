@@ -7,7 +7,9 @@
 #  id                                              :bigint           not null, primary key
 #  academic_year                                   :integer          not null
 #  disease_types                                   :enum             not null, is an Array
+#  follow_up_outcome                               :integer
 #  follow_up_requested                             :boolean
+#  follow_up_resolved_at                           :datetime
 #  health_answers                                  :jsonb            not null
 #  invalidated_at                                  :datetime
 #  notes                                           :text             default(""), not null
@@ -95,6 +97,12 @@ class Consent < ApplicationRecord
        { website: 0, phone: 1, paper: 2, in_person: 3, self_consent: 4 },
        prefix: "via",
        validate: true
+  enum :follow_up_outcome,
+       { confirmed: 0, withdrawn: 1 },
+       prefix: :follow_up,
+       validate: {
+         allow_nil: true
+       }
 
   validates :parent, presence: true, unless: :via_self_consent?
   validates :recorded_by,
