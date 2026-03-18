@@ -270,7 +270,11 @@ describe "Archive vaccination record" do
       matching_notify_email(
         to: @patient.parents.first.email,
         template: :vaccination_deleted
-      ).with_content_including("sent in error", "Please ignore it")
+      ).with_content_including(
+        "got a vaccination",
+        "sent in error",
+        "Please ignore it"
+      )
     )
   end
 

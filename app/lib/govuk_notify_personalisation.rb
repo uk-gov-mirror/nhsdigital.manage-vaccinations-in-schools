@@ -381,13 +381,13 @@ class GovukNotifyPersonalisation
   end
 
   def outcome_administered
-    return if vaccination_record.nil?
-    vaccination_record.administered? ? "yes" : "no"
+    return nil if vaccination_record.nil?
+    outcome_administered? ? "yes" : "no"
   end
 
   def outcome_not_administered
-    return if vaccination_record.nil?
-    vaccination_record.not_administered? ? "yes" : "no"
+    return nil if vaccination_record.nil?
+    !outcome_administered? ? "yes" : "no"
   end
 
   def patient_date_of_birth
@@ -620,6 +620,10 @@ class GovukNotifyPersonalisation
     return false if session.nil?
 
     session.future_dates.length > 1
+  end
+
+  def outcome_administered?
+    vaccination_record.nil? || vaccination_record.administered?
   end
 
   private
