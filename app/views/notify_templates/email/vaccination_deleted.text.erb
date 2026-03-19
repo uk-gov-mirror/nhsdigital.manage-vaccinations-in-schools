@@ -3,8 +3,7 @@ template_id: "1caf1459-abc9-4944-b8c0-deba906ea005"
 template_name: vaccination_deleted
 subject: "Our last email to you was inaccurate"
 ---
-<% if outcome_administered.present? %>You recently received an email saying that your child got a vaccination.<% end %>
-<% if outcome_not_administered.present? %>You recently received an email saying that your child did not get a vaccination.<% end %>
+You recently received an email saying that your child <%= outcome_administered? ? "got" : "did not get" %> a vaccination.
 
 This was sent in error. Please ignore it.
 

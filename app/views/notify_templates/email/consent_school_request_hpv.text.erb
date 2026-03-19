@@ -3,15 +3,15 @@ template_id: "7b9bb010-0742-460a-ae25-1922355b6776"
 template_name: consent_school_request_hpv
 subject: "HPV vaccination for <%= short_patient_name %>"
 ---
-We’re coming to <%= location_name %> on <%= next_session_dates %> to give the human papillomavirus (HPV) vaccine <% if not_catch_up.present? %> to pupils in Year 8<% end %>.
+We’re coming to <%= location_name %> on <%= next_session_dates %> to give the human papillomavirus (HPV) vaccine <% unless is_catch_up? %> to pupils in Year 8<% end %>.
 
-<% if catch_up.present? %>Our records show your child has not had their HPV vaccination. Pupils usually have this when they’re in Year 8.<% end %>
+<% if is_catch_up? %>Our records show your child has not had their HPV vaccination. Pupils usually have this when they’re in Year 8.<% end %>
 
 We would like your consent to vaccinate <%= short_patient_name %>. You can give this by filling in our online form.
 
 ^ Do not reply to this email to tell us your decision. The link to the online consent form is below.
 
-<% if has_multiple_dates.present? %>We cannot say on which of the above dates your child will have the vaccination because of the number of pupils involved.<% end %>
+<% if has_multiple_dates? %>We cannot say on which of the above dates your child will have the vaccination because of the number of pupils involved.<% end %>
 
 ## What the vaccine is for
 

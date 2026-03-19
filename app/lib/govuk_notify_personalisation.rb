@@ -181,8 +181,7 @@ class GovukNotifyPersonalisation
 
   def has_multiple_dates
     return nil if session.nil?
-
-    session.future_dates.length > 1 ? "yes" : "no"
+    has_multiple_dates? ? "yes" : "no"
   end
 
   def host
@@ -382,13 +381,13 @@ class GovukNotifyPersonalisation
   end
 
   def outcome_administered
-    return if vaccination_record.nil?
-    vaccination_record.administered? ? "yes" : "no"
+    return nil if vaccination_record.nil?
+    outcome_administered? ? "yes" : "no"
   end
 
   def outcome_not_administered
-    return if vaccination_record.nil?
-    vaccination_record.not_administered? ? "yes" : "no"
+    return nil if vaccination_record.nil?
+    !outcome_administered? ? "yes" : "no"
   end
 
   def patient_date_of_birth
@@ -553,30 +552,27 @@ class GovukNotifyPersonalisation
     vaccination_record&.vaccine&.brand
   end
 
-  def vaccine_is_injection = vaccine_is?("injection")
+  def vaccine_is_injection = vaccine_is?("injection") ? "yes" : "no"
 
-  def vaccine_is_nasal = vaccine_is?("nasal")
+  def vaccine_is_nasal = vaccine_is?("nasal") ? "yes" : "no"
 
   def vaccine_is?(method)
     if vaccination_record
-      vaccination_record.vaccine&.method == method ? "yes" : "no"
+      vaccination_record.vaccine&.method == method
     elsif programmes.present?
-      any_vaccines_with_method =
-        if patient
-          programmes.any? do |programme|
-            # We pick the first method as it's the one most likely to be used
-            # to vaccinate the patient. For example, in the case of Flu, the
-            # parents will approve nasal (and then optionally injection).
-            patient
-              .vaccine_criteria(programme:, academic_year:)
-              .vaccine_methods
-              .first == method
-          end
-        else
-          Vaccine.for_programmes(programmes).exists?(method:)
+      if patient
+        programmes.any? do |programme|
+          # We pick the first method as it's the one most likely to be used
+          # to vaccinate the patient. For example, in the case of Flu, the
+          # parents will approve nasal (and then optionally injection).
+          patient
+            .vaccine_criteria(programme:, academic_year:)
+            .vaccine_methods
+            .first == method
         end
-
-      any_vaccines_with_method ? "yes" : "no"
+      else
+        Vaccine.for_programmes(programmes).exists?(method:)
+      end
     end
   end
 
@@ -613,14 +609,24 @@ class GovukNotifyPersonalisation
     descriptions.map { "- #{it}" }.join("\n")
   end
 
-  private
-
   def is_catch_up?
     return false if patient.nil? || programmes.empty?
 
     @is_catch_up ||=
       programmes.any? { it.is_catch_up?(year_group: patient_year_group) }
   end
+
+  def has_multiple_dates?
+    return false if session.nil?
+
+    session.future_dates.length > 1
+  end
+
+  def outcome_administered?
+    vaccination_record.nil? || vaccination_record.administered?
+  end
+
+  private
 
   def session_dates_are_accurate?
     consent_form ? consent_form.session_dates_are_accurate? : true
