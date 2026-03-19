@@ -745,7 +745,8 @@
 
   <span class="ruby-identifier">old_team_location</span>.<span class="ruby-identifier">destroy!</span>
 
-  <span class="ruby-constant">PatientTeamUpdater</span>.<span class="ruby-identifier">call</span>(<span class="ruby-value">team_scope:</span> <span class="ruby-constant">Team</span>.<span class="ruby-identifier">where</span>(<span class="ruby-value">id:</span> <span class="ruby-identifier">team_id</span>))
+  <span class="ruby-identifier">patient_scope</span> = <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">where</span>(<span class="ruby-value">school_id:</span> <span class="ruby-identifier">new_loc</span>.<span class="ruby-identifier">id</span>)
+  <span class="ruby-constant">PatientTeamUpdater</span>.<span class="ruby-identifier">call</span>(<span class="ruby-value">patient_scope:</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
 

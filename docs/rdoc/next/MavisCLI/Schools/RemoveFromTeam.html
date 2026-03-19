@@ -684,15 +684,17 @@
 
   <span class="ruby-identifier">academic_year</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">AcademicYear</span>.<span class="ruby-identifier">pending</span>
 
-  <span class="ruby-constant">ActiveRecord</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>.<span class="ruby-identifier">transaction</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">urns</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">urn</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">locations</span> =
+    <span class="ruby-identifier">urns</span>.<span class="ruby-identifier">filter_map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">urn</span><span class="ruby-operator">|</span>
       <span class="ruby-identifier">location</span> = <span class="ruby-constant">Location</span>.<span class="ruby-identifier">school</span>.<span class="ruby-identifier">find_by_urn_and_site</span>(<span class="ruby-identifier">urn</span>)
 
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">location</span>.<span class="ruby-identifier">nil?</span>
-        <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;Could not find school with URN #{urn}&quot;</span>
-        <span class="ruby-keyword">next</span>
-      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;Could not find school with URN #{urn}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">location</span>.<span class="ruby-identifier">nil?</span>
+      <span class="ruby-identifier">location</span>
+    <span class="ruby-keyword">end</span>
 
+  <span class="ruby-constant">ActiveRecord</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>.<span class="ruby-identifier">transaction</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">locations</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">location</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">urn</span> = <span class="ruby-identifier">location</span>.<span class="ruby-identifier">urn_and_site</span>
       <span class="ruby-identifier">team_locations</span> =
         <span class="ruby-constant">TeamLocation</span>.<span class="ruby-identifier">includes</span>(<span class="ruby-value">:team</span>).<span class="ruby-identifier">where</span>(
           <span class="ruby-value">team:</span>,
@@ -718,6 +720,13 @@
       <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Location #{location.id} (URN: #{urn}) has been removed from subteam #{subteam_name} &quot;</span> \
              <span class="ruby-node">&quot;for academic year #{academic_year}.&quot;</span>
     <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">patients_to_update</span> =
+      <span class="ruby-constant">Patient</span>
+        .<span class="ruby-identifier">joins</span>(<span class="ruby-value">:patient_locations</span>)
+        .<span class="ruby-identifier">where</span>(<span class="ruby-value">patient_locations:</span> { <span class="ruby-value">location:</span> <span class="ruby-identifier">locations</span> })
+        .<span class="ruby-identifier">distinct</span>
+    <span class="ruby-constant">PatientTeamUpdater</span>.<span class="ruby-identifier">call</span>(<span class="ruby-value">patient_scope:</span> <span class="ruby-identifier">patients_to_update</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>

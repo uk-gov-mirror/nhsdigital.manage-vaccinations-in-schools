@@ -705,9 +705,14 @@
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-identifier">location</span>.<span class="ruby-identifier">attach_to_team!</span>(<span class="ruby-identifier">team</span>, <span class="ruby-value">academic_year:</span>, <span class="ruby-value">subteam:</span>)
-    <span class="ruby-keyword">end</span>
 
-    <span class="ruby-constant">PatientTeamUpdater</span>.<span class="ruby-identifier">call</span>(<span class="ruby-value">team:</span>)
+      <span class="ruby-identifier">patients_to_update</span> =
+        <span class="ruby-constant">Patient</span>
+          .<span class="ruby-identifier">joins</span>(<span class="ruby-value">:patient_locations</span>)
+          .<span class="ruby-identifier">where</span>(<span class="ruby-value">patient_locations:</span> { <span class="ruby-value">location:</span> })
+          .<span class="ruby-identifier">distinct</span>
+      <span class="ruby-constant">PatientTeamUpdater</span>.<span class="ruby-identifier">call</span>(<span class="ruby-value">patient_scope:</span> <span class="ruby-identifier">patients_to_update</span>)
+    <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
