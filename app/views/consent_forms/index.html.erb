@@ -8,7 +8,7 @@
   <% end %>
 <% end %>
 
-<%= h1 t(".title"), size: "xl" %>
+<%= h1 t(".title") %>
 
 <% if @consent_forms.any? %>
   <%= render AppCardComponent.new(feature: true) do |card| %>

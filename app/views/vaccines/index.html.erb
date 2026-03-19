@@ -1,4 +1,4 @@
-<%= h1 t(".title"), size: "xl" %>
+<%= h1 t(".title") %>
 
 <% @vaccines.each do |vaccine| %>
   <%= render AppCardComponent.new(section: true) do |card| %>
