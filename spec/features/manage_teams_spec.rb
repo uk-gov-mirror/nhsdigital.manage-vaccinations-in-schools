@@ -163,8 +163,8 @@ describe "Manage teams" do
 
   def given_my_team_exists
     @team = create(:team, :with_one_nurse)
-    @school = create(:school, team: @team, urn: "12345")
-    @school_last_year = create(:school, urn: "67890")
+    @school = create(:school, team: @team, urn: "12345", name: "Current school")
+    @school_last_year = create(:school, urn: "67890", name: "School last year")
     @school_last_year.attach_to_team!(
       @team,
       academic_year: AcademicYear.pending - 1
@@ -429,7 +429,8 @@ describe "Manage teams" do
   end
 
   def and_other_schools_exist
-    @closed_school = create(:school, :closed, urn: "99999")
+    @closed_school =
+      create(:school, :closed, urn: "99999", name: "Closed school")
     @other_team = create(:team)
     @other_team_school =
       create(
