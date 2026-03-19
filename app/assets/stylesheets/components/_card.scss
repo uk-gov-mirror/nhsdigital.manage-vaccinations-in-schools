@@ -143,6 +143,12 @@ $_orange-text-colour: nhsuk-shade(nhsuk-colour("warm-yellow"), 70%);
   .nhsuk-card__heading-container + .nhsuk-card__content {
     padding-top: 0;
   }
+
+  .nhsuk-button-group .nhsuk-button {
+    @include nhsuk-media-query($from: tablet) {
+      margin-bottom: 0;
+    }
+  }
 }
 
 // Align counts across cards
