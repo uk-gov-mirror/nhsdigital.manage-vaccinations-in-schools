@@ -644,7 +644,7 @@ index_location_year_groups_on_location_id          (location_id)</pre>
       </header>
       <dl>
 
-        <dt id="CLINIC_VALUE_RANGE">CLINIC_VALUE_RANGE</dt>
+        <dt id="DEFAULT_VALUE_RANGE">DEFAULT_VALUE_RANGE</dt>
 
         <dd>
 
@@ -693,7 +693,7 @@ index_location_year_groups_on_location_id          (location_id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="birth_academic_year-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/location/year_group.rb, line 46</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/location/year_group.rb, line 48</span>
   <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">birth_academic_year</span> = <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_birth_academic_year</span>(<span class="ruby-value">academic_year:</span>)
 
   <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">programmes</span>
@@ -738,7 +738,7 @@ index_location_year_groups_on_location_id          (location_id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="programmes-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/location/year_group.rb, line 48</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/location/year_group.rb, line 50</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">programmes</span>
   <span class="ruby-identifier">location_programme_year_groups</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:programme</span>).<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">uniq</span>
 <span class="ruby-keyword">end</span></pre>

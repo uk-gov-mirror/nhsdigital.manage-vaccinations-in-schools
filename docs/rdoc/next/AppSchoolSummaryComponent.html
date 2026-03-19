@@ -887,7 +887,7 @@
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">year_groups_row</span>
-    {
+    <span class="ruby-identifier">row</span> = {
       <span class="ruby-value">key:</span> {
         <span class="ruby-value">text:</span> <span class="ruby-string">&quot;Year groups&quot;</span>
       },
@@ -895,6 +895,18 @@
         <span class="ruby-value">text:</span> <span class="ruby-identifier">helpers</span>.<span class="ruby-identifier">format_year_groups</span>(<span class="ruby-identifier">schoolable</span>.<span class="ruby-identifier">year_groups</span>)
       }
     }
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">change_links</span>[<span class="ruby-value">:year_groups</span>]
+      <span class="ruby-identifier">row</span>[<span class="ruby-value">:actions</span>] = [
+        {
+          <span class="ruby-value">text:</span> <span class="ruby-identifier">change_links</span>[<span class="ruby-value">:year_groups</span>][<span class="ruby-value">:text</span>] <span class="ruby-operator">||</span> <span class="ruby-string">&quot;Change&quot;</span>,
+          <span class="ruby-value">href:</span> <span class="ruby-identifier">change_links</span>[<span class="ruby-value">:year_groups</span>][<span class="ruby-value">:link</span>],
+          <span class="ruby-value">visually_hidden_text:</span> <span class="ruby-string">&quot;year groups&quot;</span>
+        }
+      ]
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">row</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1198,7 +1210,7 @@
           <div class="method-source-code" id="year_groups_row-source">
             <pre class="ruby"><span class="ruby-comment"># File app/components/app_school_summary_component.rb, line 108</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">year_groups_row</span>
-  {
+  <span class="ruby-identifier">row</span> = {
     <span class="ruby-value">key:</span> {
       <span class="ruby-value">text:</span> <span class="ruby-string">&quot;Year groups&quot;</span>
     },
@@ -1206,6 +1218,18 @@
       <span class="ruby-value">text:</span> <span class="ruby-identifier">helpers</span>.<span class="ruby-identifier">format_year_groups</span>(<span class="ruby-identifier">schoolable</span>.<span class="ruby-identifier">year_groups</span>)
     }
   }
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">change_links</span>[<span class="ruby-value">:year_groups</span>]
+    <span class="ruby-identifier">row</span>[<span class="ruby-value">:actions</span>] = [
+      {
+        <span class="ruby-value">text:</span> <span class="ruby-identifier">change_links</span>[<span class="ruby-value">:year_groups</span>][<span class="ruby-value">:text</span>] <span class="ruby-operator">||</span> <span class="ruby-string">&quot;Change&quot;</span>,
+        <span class="ruby-value">href:</span> <span class="ruby-identifier">change_links</span>[<span class="ruby-value">:year_groups</span>][<span class="ruby-value">:link</span>],
+        <span class="ruby-value">visually_hidden_text:</span> <span class="ruby-string">&quot;year groups&quot;</span>
+      }
+    ]
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">row</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
 
