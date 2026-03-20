@@ -195,7 +195,13 @@ class ClassImportsController < ApplicationController
             :school,
             :school_moves,
             :archive_reasons,
-            { patient_locations: :location, school: { team_locations: :team } }
+            {
+              patient_locations: :location,
+              school: {
+                team_locations: :team
+              },
+              school_moves: :school_teams
+            }
           ]
         )
         .from_file

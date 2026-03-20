@@ -174,7 +174,13 @@ class CohortImportsController < ApplicationController
             :school,
             :patient_locations,
             :archive_reasons,
-            { patient_locations: :location, school: { team_locations: :team } }
+            {
+              patient_locations: :location,
+              school: {
+                team_locations: :team
+              },
+              school_moves: :school_teams
+            }
           ]
         )
         .from_file
