@@ -7,11 +7,12 @@ describe GovukNotifyPersonalisation do
   subject(:to_h) do
     personalisation =
       described_class.new(
-        patient:,
-        session:,
         consent:,
         consent_form:,
+        patient:,
         programme_types:,
+        session:,
+        team_location:,
         vaccination_record:
       ).to_h
 
@@ -60,6 +61,7 @@ describe GovukNotifyPersonalisation do
   let(:session) do
     create(:session, location:, team:, programmes:, date: Date.new(2026, 1, 1))
   end
+  let(:team_location) { nil }
   let(:consent) { nil }
   let(:consent_form) { nil }
   let(:vaccination_record) { nil }
@@ -120,6 +122,19 @@ describe GovukNotifyPersonalisation do
           vaccine_is_nasal: "no",
           vaccine_side_effects: ""
         }
+      )
+    end
+  end
+
+  context "with a team location and no session" do
+    let(:location) { create(:school) }
+    let(:team_location) { create(:team_location, team:, location:) }
+    let(:session) { nil }
+
+    it do
+      expect(to_h).to include(
+        consent_link:
+          "http://localhost:4000/consents/#{team_location.id}/hpv/start"
       )
     end
   end

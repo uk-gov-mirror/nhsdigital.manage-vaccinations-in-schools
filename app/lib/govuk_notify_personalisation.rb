@@ -16,6 +16,7 @@ class GovukNotifyPersonalisation
     programme_types: nil,
     session: nil,
     team: nil,
+    team_location: nil,
     vaccination_record: nil
   )
     @academic_year =
@@ -30,10 +31,13 @@ class GovukNotifyPersonalisation
         Patient.find_by(id: consent_form&.matched_patient&.id)
     @session = session || consent_form&.session || vaccination_record&.session
     @team =
-      team || session&.team || consent_form&.team || consent&.team ||
-        vaccination_record&.team
+      team || session&.team || team_location&.team || consent_form&.team ||
+        consent&.team || vaccination_record&.team
+    @team_location =
+      session&.team_location || consent_form&.team_location || team_location
     @subteam =
-      session&.subteam || consent_form&.subteam || vaccination_record&.subteam
+      session&.subteam || team_location&.subteam || consent_form&.subteam ||
+        vaccination_record&.subteam
     @vaccination_record = vaccination_record
 
     @programmes =
@@ -110,6 +114,7 @@ class GovukNotifyPersonalisation
               :session,
               :subteam,
               :team,
+              :team_location,
               :vaccination_record
 
   def batch_name
@@ -132,13 +137,13 @@ class GovukNotifyPersonalisation
   end
 
   def consent_link
-    return nil if session.nil? || programmes.empty?
+    return nil if (session.nil? && team_location.nil?) || programmes.empty?
 
     programme_params = programmes.flat_map { it.variant_for(patient:).to_param }
 
     host +
       start_parent_interface_consent_forms_path(
-        session,
+        session || team_location,
         programme_params.join("-")
       )
   end
@@ -443,13 +448,9 @@ class GovukNotifyPersonalisation
     }."
   end
 
-  def subteam_email
-    (subteam || team).email
-  end
+  def subteam_email = (subteam || team).email
 
-  def subteam_name
-    (subteam || team).name
-  end
+  def subteam_name = (subteam || team).name
 
   def subteam_phone
     format_phone_with_instructions(subteam || team)

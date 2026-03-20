@@ -19,6 +19,7 @@ class SMSDeliveryJob < NotifyDeliveryJob
     sent_by: nil,
     session: nil,
     team: nil,
+    team_location: nil,
     vaccination_record: nil
   )
     template_name_sym = template_name.to_sym
@@ -33,6 +34,7 @@ class SMSDeliveryJob < NotifyDeliveryJob
         programme_types:,
         session:,
         team:,
+        team_location:,
         vaccination_record:
       )
 
