@@ -113,14 +113,7 @@ class GovukNotifyPersonalisation
   end
 
   def consent_deadline
-    return nil if session.nil?
-
-    next_date = session.future_dates.first
-
-    close_consent_at =
-      next_date ? (next_date - 1.day) : session.close_consent_at
-
-    close_consent_at&.to_fs(:short_day_of_week)
+    session&.consent_deadline_date&.to_fs(:short_day_of_week)
   end
 
   def consent_link

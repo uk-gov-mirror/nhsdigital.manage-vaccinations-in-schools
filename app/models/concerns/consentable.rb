@@ -10,6 +10,11 @@ module Consentable
     dates.max - 1.day
   end
 
+  def consent_deadline_date
+    next_date = future_dates.first
+    next_date ? (next_date - 1.day) : close_consent_at
+  end
+
   def can_receive_consent?
     !close_consent_at.nil? && Date.current <= close_consent_at
   end
