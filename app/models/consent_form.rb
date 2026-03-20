@@ -748,7 +748,7 @@ class ConsentForm < ApplicationRecord
 
   def location_is_school? = location.school?
 
-  def location_is_clinic? = location.clinic?
+  def location_is_clinic? = location.generic_clinic? || location.generic_school?
 
   def choose_school?
     location_is_clinic? ? education_setting_school? : !school_confirmed
