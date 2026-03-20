@@ -12,6 +12,7 @@ module ParentInterface
     prepend_before_action :set_team
     prepend_before_action :set_session
     prepend_before_action :set_consent_form
+
     before_action :authenticate_consent_form_user!
     before_action :check_if_past_deadline!
     before_action :set_privacy_policy_url
