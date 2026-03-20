@@ -502,7 +502,8 @@ class GovukNotifyPersonalisation
     elsif programmes.present?
       if patient
         programmes.any? do |programme|
-          patient.vaccine_criteria(programme:, academic_year:).primary_method == method
+          patient.vaccine_criteria(programme:, academic_year:).primary_method ==
+            method
         end
       else
         Vaccine.for_programmes(programmes).exists?(method:)
@@ -517,11 +518,7 @@ class GovukNotifyPersonalisation
       elsif programmes.present?
         if patient
           programmes.flat_map do |programme|
-            method = patient.vaccine_criteria(programme:, academic_year:).primary_method
-            Vaccine
-              .for_programme(programme)
-              .where(method:)
-              .flat_map(&:side_effects)
+            patient.vaccine_criteria(programme:, academic_year:).side_effects
           end
         else
           Vaccine.for_programmes(programmes).flat_map(&:side_effects)
@@ -577,7 +574,10 @@ class GovukNotifyPersonalisation
                 vaccination_record.delivery_method
               )
             elsif patient
-              patient.vaccine_criteria(programme:, academic_year:).primary_method
+              patient.vaccine_criteria(
+                programme:,
+                academic_year:
+              ).primary_method
             end
 
           method_prefix =

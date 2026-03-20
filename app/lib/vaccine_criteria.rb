@@ -43,6 +43,13 @@ class VaccineCriteria
     vaccine_methods&.first
   end
 
+  def side_effects
+    Vaccine
+      .for_programme(programme)
+      .where(method: primary_method)
+      .flat_map(&:side_effects)
+  end
+
   def apply(scope)
     scope = scope.with_disease_types(programme.disease_types)
 
