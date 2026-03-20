@@ -2,14 +2,19 @@
 
 module ParentInterface
   class ConsentFormsController < ConsentForms::BaseController
-    skip_before_action :set_consent_form, only: %i[start create deadline_passed]
-    skip_before_action :authenticate_consent_form_user!,
-                       only: %i[start create deadline_passed]
+    with_options only: %i[start create deadline_passed] do
+      skip_before_action :set_consent_form
+      skip_before_action :authenticate_consent_form_user!
+    end
+
     skip_before_action :check_if_past_deadline!, only: :deadline_passed
 
     before_action :clear_session_edit_variables, only: :confirm
 
     def start
+    end
+
+    def deadline_passed
     end
 
     def create
@@ -34,9 +39,6 @@ module ParentInterface
     end
 
     def cannot_consent_responsibility
-    end
-
-    def deadline_passed
     end
 
     def confirm

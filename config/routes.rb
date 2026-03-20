@@ -88,14 +88,15 @@ Rails.application.routes.draw do
   namespace :parent_interface, path: "/" do
     resources :consent_forms, path: "/consents", only: %i[create] do
       collection do
-        get ":session_slug/:programme_types/start", action: "start", as: :start
+        get ":session_slug/:programme_types/start", action: :start, as: :start
         get ":session_slug/:programme_types/deadline-passed",
-            action: "deadline_passed",
+            action: :deadline_passed,
             as: :deadline_passed
       end
 
       member do
-        get "cannot-consent-responsibility"
+        get "cannot-consent-responsibility",
+            action: :cannot_consent_responsibility
         get "confirm"
         put "record"
         get "submitted"
