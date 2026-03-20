@@ -199,7 +199,7 @@ class GovukNotifyPersonalisation
   end
 
   def mmr_second_dose_required?
-    mmr_programme.present? && patient_eligible_for_additional_dose?
+    mmr_programme.present? && patient_on_last_dose?
   end
 
   def mmr_second_dose_required
@@ -264,17 +264,14 @@ class GovukNotifyPersonalisation
     date.to_fs(:long)
   end
 
-  def patient_eligible_for_additional_dose?
+  def patient_on_last_dose?
     return unless patient
     return if mmr_programme.nil?
 
-    next_dose =
-      patient
-        .reload
-        .programme_status(mmr_programme, academic_year:)
-        .dose_sequence
-
-    next_dose == mmr_programme.maximum_dose_sequence
+    patient
+      .reload
+      .programme_status(mmr_programme, academic_year:)
+      .on_last_dose?
   end
 
   def mmr_or_mmrv_vaccine
