@@ -13,6 +13,8 @@ class PatientPolicy < ApplicationPolicy
 
   def invite_to_clinic? = update?
 
+  def send_consent_request? = update?
+
   def edit_nhs_number? = edit?
 
   def edit_ethnic_group? = edit?

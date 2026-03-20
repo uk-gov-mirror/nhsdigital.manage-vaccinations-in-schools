@@ -24,14 +24,24 @@
         @patient, current_team:, programme_type: @programme.type,
       ) %>
 
-  <% if @can_invite_to_clinic %>
-    <%= govuk_button_to "Invite to community clinic",
-                        invite_to_clinic_patient_programme_path(@patient, @programme.type),
-                        secondary: true %>
-  <% elsif @can_send_clinic_invitation_reminder %>
-    <%= govuk_button_to "Send clinic invitation reminder",
-                        invite_to_clinic_patient_programme_path(@patient, @programme.type),
-                        secondary: true %>
+  <% if @can_invite_to_clinic || @can_send_clinic_invitation_reminder || @can_send_consent_request %>
+    <div class="nhsuk-button-group">
+      <% if @can_invite_to_clinic %>
+        <%= govuk_button_to "Invite to community clinic",
+                            invite_to_clinic_patient_programme_path(@patient, @programme.type),
+                            secondary: true %>
+      <% elsif @can_send_clinic_invitation_reminder %>
+        <%= govuk_button_to "Send clinic invitation reminder",
+                            invite_to_clinic_patient_programme_path(@patient, @programme.type),
+                            secondary: true %>
+      <% end %>
+
+      <% if @can_send_consent_request %>
+        <%= govuk_button_to "Send consent request",
+                            send_consent_request_patient_programme_path(@patient, @programme.type),
+                            secondary: true %>
+      <% end %>
+    </div>
   <% end %>
 <% end %>
 

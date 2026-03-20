@@ -218,6 +218,7 @@ Rails.application.routes.draw do
       member do
         post "invite-to-clinic", action: :invite_to_clinic
         post "record-new-vaccination", action: :record_new_vaccination
+        post "send-consent-request", action: :send_consent_request
       end
     end
 
