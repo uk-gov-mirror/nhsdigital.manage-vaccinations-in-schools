@@ -44,12 +44,15 @@ FactoryBot.define do
       type { "email" }
       recipient { Faker::Internet.email }
       template_id { NotifyTemplate.all_ids(channel: :email).sample }
+      subject { "Message about your child's vaccination" }
+      body { "Dear parent, this is about your child's vaccination." }
     end
 
     trait :sms do
       type { "sms" }
       recipient { Faker::PhoneNumber.phone_number }
       template_id { NotifyTemplate.all_ids(channel: :sms).sample }
+      body { "Dear parent, this is about your child's vaccination." }
     end
 
     delivery_id { SecureRandom.uuid }
