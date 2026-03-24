@@ -5,9 +5,11 @@
 # Table name: notify_log_entries
 #
 #  id              :bigint           not null, primary key
+#  body            :text
 #  delivery_status :integer          default("sending"), not null
 #  purpose         :integer
 #  recipient       :string           not null
+#  subject         :text
 #  type            :integer          not null
 #  created_at      :datetime         not null
 #  consent_form_id :bigint
@@ -134,6 +136,7 @@ class NotifyLogEntry < ApplicationRecord
         ->(session) { for_programme_type(session.programme_types) }
 
   encrypts :recipient, deterministic: true
+  encrypts :subject, :body
 
   accepts_nested_attributes_for :notify_log_entry_programmes
 
