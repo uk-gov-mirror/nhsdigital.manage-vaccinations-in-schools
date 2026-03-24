@@ -3,17 +3,17 @@
 
 <%= h1 "We have received your consent response" %>
 
-<p class="nhsuk-body">
+<p>
   Before you finish using the service, we’d like to ask some questions about your child’s ethnicity.
 </p>
 
-<p class="nhsuk-body">
+<p>
   We ask about ethnicity so that when we look at the number of vaccinations received, we can better
   understand the challenges faced by specific groups. We can then target the support we offer.
 </p>
 
 <%= form_with model: @consent_form, url: wizard_path, method: :put do |f| %>
-  <% content_for(:before_content) { f.govuk_error_summary } %>
+  <%= f.mavis_error_summary %>
 
   <%= f.govuk_radio_buttons_fieldset :ethnicity_question,
                                      legend: { size: "m", text: title, tag: "h2" } do %>

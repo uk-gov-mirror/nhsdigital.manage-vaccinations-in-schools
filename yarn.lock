@@ -2234,9 +2234,9 @@ flat-cache@^6.1.19:
     hookified "^1.13.0"
 
 flatted@^3.3.3:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.3.3.tgz#67c8fad95454a7c7abebf74bb78ee74a44023358"
-  integrity sha512-GX+ysw4PBCz0PzosHDepZGANEuFCMLrnRTiEy9McGjmkCQYwRq4A/X786G/fjM/+OjsWSU1ZrY5qyARZmO/uwg==
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.4.2.tgz#f5c23c107f0f37de8dbdf24f13722b3b98d52726"
+  integrity sha512-PjDse7RzhcPkIJwy5t7KPWQSZ9cAbzQXcafsetQoD7sOJRQlGikNbx7yZp2OotDnJyrDcbyRq3Ttb18iYOqkxA==
 
 for-in@^1.0.2:
   version "1.0.2"
@@ -3533,10 +3533,10 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
 
-nhsuk-frontend@^10.3.1:
-  version "10.3.1"
-  resolved "https://registry.yarnpkg.com/nhsuk-frontend/-/nhsuk-frontend-10.3.1.tgz#154249e1d1cc3e4e043f645242a36bba0b3975b8"
-  integrity sha512-R9DH31TfTA3fgi3U0jSVO6wxXEAQY9j5pYzRF4lB3M/Kx3UxvN+oCCWRjTKC/L6wqcddX3qzByl5wKe3PdNX4Q==
+nhsuk-frontend@^10.4.1:
+  version "10.4.1"
+  resolved "https://registry.yarnpkg.com/nhsuk-frontend/-/nhsuk-frontend-10.4.1.tgz#c5a7b845799ce4a376339bd20ecc6bcd8c64761b"
+  integrity sha512-kgqfkrQpkuWmxeE9QA9gP7pvZlqm5s4JOEN6N3v+ydDHHbNe2KVCjOEC2SBPmZjUVarSUCjBsebs4shucqb0tw==
 
 nice-try@^1.0.4:
   version "1.0.5"

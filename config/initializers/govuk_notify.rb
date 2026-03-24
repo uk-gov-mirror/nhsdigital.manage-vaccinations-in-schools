@@ -6,23 +6,7 @@ GOVUK_NOTIFY_EMAIL_TEMPLATES = {
   clinic_initial_invitation_ryg: "5fe4fb4d-6f0a-4149-a80a-232bdfdf4f73",
   clinic_subsequent_invitation: "a86a3b3f-a848-41d8-9a6f-d38174981388",
   clinic_subsequent_invitation_ryg: "eee59c1b-3af4-4ccd-8653-940887066390",
-  session_school_reminder: "8b8a9566-bb03-4b3c-8abc-5bd5a4b8797d",
-  triage_vaccination_at_clinic: "3c7461bd-e3cf-4ff9-9053-b4e87490aa45",
-  triage_vaccination_at_clinic_rt5: "5cacefcd-44f2-43ff-8fc0-008890406504",
-  triage_vaccination_at_clinic_ryg: "9faef718-bd76-4c30-93ea-fbe8584388a6",
-  triage_vaccination_will_happen: "279c517c-4c52-4a69-96cb-31355bfa4e21",
-  triage_vaccination_will_happen_mmr_second_dose:
-    "6fd910fd-120c-4e58-9ef3-15ffc5bd6edc",
-  triage_vaccination_wont_happen: "d1faf47e-ccc3-4481-975b-1ec34211a21f",
-  triage_delay_vaccination: "0e37d12a-5469-4ad2-aa09-83e0ef56e03e",
-  vaccination_administered_flu: "7238ee27-5840-40e5-b9b9-3130ba4cd4fa",
-  vaccination_administered_hpv: "8a65d7b5-045c-4f26-8f76-6e593c14cb6d",
-  vaccination_administered_menacwy: "38727494-9a81-42b3-9c1f-5c31e55333e7",
-  vaccination_administered_mmr: "0b1095db-fb38-4105-9f01-a364fa8bbb1c",
-  vaccination_administered_td_ipv: "3abe7ca8-a889-484b-ab9f-07523302eb6a",
-  vaccination_already_had: "e37fe0a2-7584-4c25-983a-8f5a11c818a1",
-  vaccination_deleted: "1caf1459-abc9-4944-b8c0-deba906ea005",
-  vaccination_not_administered: "130fe52a-014a-45dd-9f53-8e65c1b8bb79"
+  session_school_reminder: "8b8a9566-bb03-4b3c-8abc-5bd5a4b8797d"
 }.freeze
 
 GOVUK_NOTIFY_SMS_TEMPLATES = {
@@ -31,10 +15,7 @@ GOVUK_NOTIFY_SMS_TEMPLATES = {
   clinic_initial_invitation_ryg: "8ef5712f-bb7f-4911-8f3b-19df6f8a7179",
   clinic_subsequent_invitation: "ce7a6a1b-465e-4be4-b9e0-47ddb64f3adb",
   clinic_subsequent_invitation_ryg: "018f146d-e7b7-4b63-ae26-bb07ca6fe2f9",
-  session_school_reminder: "cc4a7f89-d260-461c-80f0-7e6e9af75e7a",
-  vaccination_administered: "395a3ea1-df07-4dd6-8af1-64cc597ef383",
-  vaccination_already_had: "fab1e355-bde1-47d5-835c-103bfd232b93",
-  vaccination_not_administered: "aae061e0-b847-4d4c-a87a-12508f95a302"
+  session_school_reminder: "cc4a7f89-d260-461c-80f0-7e6e9af75e7a"
 }.freeze
 
 # Here we track email and SMS templates that we used to send but no longer

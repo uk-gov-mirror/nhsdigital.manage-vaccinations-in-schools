@@ -1,4 +1,4 @@
-<%= render "sessions/header" %>
+<% content_for :page_title, "#{t("sessions.tabs.record")} – #{session_title(@session)}" %>
 
 <% if @session.today? %>
   <div class="nhsuk-grid-row">
@@ -27,11 +27,12 @@
                 return_to: :record,
                 show_notes: true,
                 show_vaccine_type: true,
+                heading_level: 3,
               ) %>
         <% end %>
       <% end %>
     </div>
   </div>
 <% else %>
-  <p class="nhsuk-body">You can record vaccinations when a session is in progress.</p>
+  <p>You can record vaccinations when a session is in progress.</p>
 <% end %>

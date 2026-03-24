@@ -1,4 +1,4 @@
-<%= render "sessions/header" %>
+<% content_for :page_title, "#{t("sessions.tabs.patients")} – #{session_title(@session)}" %>
 
 <div class="nhsuk-grid-row">
   <div class="app-grid-column-filters">
@@ -26,6 +26,7 @@
               show_notes: true,
               show_programme_status: true,
               show_registration_status: @registration_statuses.present?,
+              heading_level: 3,
             ) %>
       <% end %>
     <% end %>

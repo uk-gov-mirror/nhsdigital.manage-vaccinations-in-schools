@@ -1,4 +1,4 @@
-<% content_for :before_main do %>
+<% content_for :navigation do %>
   <%= govuk_back_link(href: edit_patient_path(@patient)) %>
 <% end %>
 
@@ -6,7 +6,7 @@
 <% content_for :page_title, legend %>
 
 <%= form_with model: @patient, url: edit_school_patient_path(@patient), method: :put do |f| %>
-  <% content_for(:before_content) { f.govuk_error_summary } %>
+  <%= f.mavis_error_summary %>
 
   <% hint_text =
        safe_join(

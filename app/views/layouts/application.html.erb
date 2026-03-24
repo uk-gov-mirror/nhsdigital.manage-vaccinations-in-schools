@@ -38,17 +38,9 @@
 
     <%= render "layouts/header" %>
 
-    <%= yield :before_container %>
-
-    <div class="nhsuk-width-container">
-      <%= yield :before_main %>
-
-      <main class="nhsuk-main-wrapper" id="main-content" role="main">
-        <%= render(AppFlashMessageComponent.new(flash: flash)) %>
-
-        <%= content_for?(:content) ? yield(:content) : yield %>
-      </main>
-    </div>
+    <main id="main-content">
+      <%= yield :main_content %>
+    </main>
 
     <%= yield :after_main %>
 
@@ -56,7 +48,7 @@
       <%= render "layouts/timeout_warning" %>
     <% end %>
 
-    <footer class="nhsuk-footer" role="contentinfo">
+    <footer class="nhsuk-footer">
       <div class="nhsuk-width-container">
         <div class="nhsuk-footer__meta">
           <h2 class="nhsuk-u-visually-hidden">Support links</h2>

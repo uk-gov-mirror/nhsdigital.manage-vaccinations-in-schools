@@ -88,14 +88,15 @@ Rails.application.routes.draw do
   namespace :parent_interface, path: "/" do
     resources :consent_forms, path: "/consents", only: %i[create] do
       collection do
-        get ":session_slug/:programme_types/start", action: "start", as: :start
+        get ":session_slug/:programme_types/start", action: :start, as: :start
         get ":session_slug/:programme_types/deadline-passed",
-            action: "deadline_passed",
+            action: :deadline_passed,
             as: :deadline_passed
       end
 
       member do
-        get "cannot-consent-responsibility"
+        get "cannot-consent-responsibility",
+            action: :cannot_consent_responsibility
         get "confirm"
         put "record"
         get "submitted"
@@ -239,22 +240,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :programmes, only: :index, param: :type do
-    get "consent-form", on: :member, action: :consent_form
-
-    scope module: :programmes do
-      resource :overview,
-               path: ":academic_year",
-               only: :show,
-               controller: :overview
-      resources :patients, path: ":academic_year/patients", only: :index do
-        get "import", on: :collection
-      end
-      resources :reports, path: ":academic_year/reports", only: :create
-      resources :sessions, path: ":academic_year/sessions", only: :index
-    end
-  end
-
   resources :reports, only: :index
 
   resources :school_moves, path: "school-moves", only: %i[index show update]
@@ -360,18 +345,7 @@ Rails.application.routes.draw do
     get "destroy", action: :confirm_destroy, on: :member, as: "destroy"
   end
 
-  get "vaccination-report/new",
-      to: "vaccination_reports#new",
-      as: :new_vaccination_report
-  post "vaccination-report",
-       to: "vaccination_reports#create",
-       as: :vaccination_report_create
-
-  resource :vaccination_report,
-           only: %i[show update],
-           path: "vaccination-report/:id" do
-    get "download", on: :member
-  end
+  resource :vaccination_report, path: "vaccination-report", only: %i[new create]
 
   get "consent-form/:type",
       to: "consent_form_downloads#show",

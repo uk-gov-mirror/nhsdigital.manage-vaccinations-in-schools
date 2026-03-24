@@ -1,12 +1,12 @@
-<% content_for :before_main do %>
+<% content_for :navigation do %>
   <%= govuk_back_link(href: dashboard_path) %>
 <% end %>
 
 <% title = "Download vaccination report" %>
 <% content_for :page_title, title %>
 
-<%= form_with model: @vaccination_report, url: vaccination_report_create_path, method: :post do |f| %>
-  <%= f.govuk_error_summary %>
+<%= form_with model: @vaccination_report, url: vaccination_report_path, method: :post do |f| %>
+  <%= f.mavis_error_summary %>
 
   <%= h1 title %>
 

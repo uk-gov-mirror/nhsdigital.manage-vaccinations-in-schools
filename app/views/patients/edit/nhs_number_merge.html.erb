@@ -1,4 +1,4 @@
-<% content_for :before_main do %>
+<% content_for :navigation do %>
   <%= govuk_back_link(href: edit_nhs_number_patient_path(@patient)) %>
 <% end %>
 
@@ -9,7 +9,7 @@
   <%= page_title %>
 <% end %>
 
-<p class="nhsuk-body">
+<p>
   Updating the NHS number for <%= @patient.full_name %> will merge their record with an existing record:
 </p>
 
