@@ -36,6 +36,20 @@ class VaccineCriteria
 
   attr_reader :programme, :vaccine_methods, :without_gelatine
 
+  # The first method is the one most likely to be used to vaccinate the
+  # patient. For example, in the case of Flu, the parents will approve
+  # nasal (and then optionally injection).
+  def primary_method
+    vaccine_methods&.first
+  end
+
+  def side_effects
+    Vaccine
+      .for_programme(programme)
+      .where(method: primary_method)
+      .flat_map(&:side_effects)
+  end
+
   def apply(scope)
     scope = scope.with_disease_types(programme.disease_types)
 
