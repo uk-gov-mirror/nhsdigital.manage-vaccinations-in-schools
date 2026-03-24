@@ -53,12 +53,15 @@ describe "HPV vaccination" do
   end
 
   def and_i_record_that_the_patient_wasnt_vaccinated
-    within all("section")[0] do
-      check "I have checked that the above statements are true"
-    end
+    within all("form")[3] do
+      within all("fieldset")[1] do
+        check "I have checked that the above statements are true"
+      end
 
-    within all("section")[1] do
-      choose "No"
+      within all("fieldset")[2] do
+        choose "No"
+      end
+
       click_button "Continue"
     end
   end

@@ -219,21 +219,27 @@ describe "Flu vaccination" do
   def when_i_record_that_the_patient_has_been_vaccinated_with_nasal_spray(
     check_injection_first: false
   )
-    within all("section")[0] do
-      check "I have checked that the above statements are true"
-      choose "Yes" # confirmed identity
-    end
-
-    # Check that I can change my mind injection to nasal.
-    if check_injection_first
-      within all("section")[1] do
-        choose "No — but they can have the injected flu instead"
-        choose "Left arm (upper position)"
+    within all("form")[3] do
+      within all("fieldset")[0] do
+        choose "Yes" # confirmed identity
       end
-    end
 
-    within all("section")[1] do
-      choose "Yes"
+      within all("fieldset")[1] do
+        check "I have checked that the above statements are true"
+      end
+
+      # Check that I can change my mind injection to nasal.
+      if check_injection_first
+        within all("fieldset")[2] do
+          choose "No — but they can have the injected flu instead"
+          choose "Left arm (upper position)"
+        end
+      end
+
+      within all("fieldset")[2] do
+        choose "Yes"
+      end
+
       click_button "Continue"
     end
 
@@ -244,13 +250,16 @@ describe "Flu vaccination" do
   end
 
   def when_i_record_that_the_patient_has_been_vaccinated_with_injection
-    within all("section")[0] do
-      check "I have checked that the above statements are true"
-    end
+    within all("form")[3] do
+      within all("fieldset")[1] do
+        check "I have checked that the above statements are true"
+      end
 
-    within all("section")[1] do
-      choose "Yes"
-      choose "Left arm (upper position)"
+      within all("fieldset")[2] do
+        choose "Yes"
+        choose "Left arm (upper position)"
+      end
+
       click_button "Continue"
     end
 
@@ -259,13 +268,16 @@ describe "Flu vaccination" do
   end
 
   def when_i_record_that_the_patient_has_been_vaccinated_with_injection_instead
-    within all("section")[0] do
-      check "I have checked that the above statements are true"
-    end
+    within all("form")[3] do
+      within all("fieldset")[1] do
+        check "I have checked that the above statements are true"
+      end
 
-    within all("section")[1] do
-      choose "No — but they can have the injected flu instead"
-      choose "Left arm (upper position)"
+      within all("fieldset")[2] do
+        choose "No — but they can have the injected flu instead"
+        choose "Left arm (upper position)"
+      end
+
       click_button "Continue"
     end
 
