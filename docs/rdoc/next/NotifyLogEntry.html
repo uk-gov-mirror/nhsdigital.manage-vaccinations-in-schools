@@ -639,9 +639,11 @@
 <p>Table name: notify_log_entries</p>
 
 <pre>id              :bigint           not null, primary key
+body            :text
 delivery_status :integer          default(&quot;sending&quot;), not null
 purpose         :integer
 recipient       :string           not null
+subject         :text
 type            :integer          not null
 created_at      :datetime         not null
 consent_form_id :bigint
@@ -726,7 +728,7 @@ fk_rails_...  (sent_by_user_id =&gt; users.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="purpose_for_template_name-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/notify_log_entry.rb, line 147</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/notify_log_entry.rb, line 150</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">purpose_for_template_name</span>(<span class="ruby-identifier">template_name_sym</span>)
   <span class="ruby-identifier">name</span> = <span class="ruby-identifier">template_name_sym</span>.<span class="ruby-identifier">to_s</span>
 
@@ -812,7 +814,7 @@ fk_rails_...  (sent_by_user_id =&gt; users.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="programmes-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/notify_log_entry.rb, line 145</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/notify_log_entry.rb, line 148</span>
   <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">programmes</span> = <span class="ruby-identifier">notify_log_entry_programmes</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:programme</span>)
 
   <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">purpose_for_template_name</span>(<span class="ruby-identifier">template_name_sym</span>)
@@ -896,7 +898,7 @@ fk_rails_...  (sent_by_user_id =&gt; users.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="template_name-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/notify_log_entry.rb, line 183</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/notify_log_entry.rb, line 186</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">template_name</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">email?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">sms?</span>
 
@@ -941,7 +943,7 @@ fk_rails_...  (sent_by_user_id =&gt; users.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="title-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/notify_log_entry.rb, line 140</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/notify_log_entry.rb, line 143</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">title</span>
   <span class="ruby-identifier">template_name</span>&amp;.<span class="ruby-identifier">to_s</span>&amp;.<span class="ruby-identifier">humanize</span>.<span class="ruby-identifier">presence</span> <span class="ruby-operator">||</span>
     <span class="ruby-node">&quot;Unknown #{human_enum_name(:type)}&quot;</span>
