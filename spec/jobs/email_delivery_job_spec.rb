@@ -39,6 +39,7 @@ describe EmailDeliveryJob do
         sent_by:,
         session:,
         team:,
+        team_location:,
         vaccination_record:
       )
     end
@@ -61,6 +62,7 @@ describe EmailDeliveryJob do
         programmes:
       )
     end
+    let(:team_location) { session.team_location }
     let(:vaccination_record) { nil }
 
     it "generates personalisation" do
@@ -74,6 +76,7 @@ describe EmailDeliveryJob do
         programme_types:,
         session:,
         team:,
+        team_location:,
         vaccination_record:
       ).and_call_original
       perform_now

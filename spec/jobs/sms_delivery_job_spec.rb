@@ -39,6 +39,7 @@ describe SMSDeliveryJob do
         sent_by:,
         session:,
         team:,
+        team_location:,
         vaccination_record:
       )
     end
@@ -55,6 +56,7 @@ describe SMSDeliveryJob do
     let(:sent_by) { create(:user) }
     let(:session) { create(:session, programmes:) }
     let(:team) { session.team }
+    let(:team_location) { session.team_location }
     let(:vaccination_record) { nil }
 
     it "generates personalisation" do
@@ -68,6 +70,7 @@ describe SMSDeliveryJob do
         programme_types:,
         session:,
         team:,
+        team_location:,
         vaccination_record:
       ).and_call_original
       perform_now

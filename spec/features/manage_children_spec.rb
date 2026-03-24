@@ -100,7 +100,7 @@ describe "Manage children" do
     and_the_important_notice_is_dismissed
   end
 
-  scenario "inviting to community clinic" do
+  scenario "inviting to community clinic and sending consent request" do
     given_patients_exist
     and_a_clinic_session_exists
 
@@ -109,15 +109,34 @@ describe "Manage children" do
     and_i_click_on_a_child
     and_i_click_on_a_programme
     and_i_dont_see_a_community_clinic_session
+    and_i_see_a_invite_to_clinic_button
+    and_i_dont_see_a_send_clinic_invitation_reminder_button
+    and_i_dont_see_a_send_consent_request_button
 
     when_i_click_on_invite_to_clinic
     then_i_see_a_success_banner
-    and_i_see_a_community_clinic_session
+    and_i_dont_see_a_community_clinic_session
     and_i_dont_see_an_invite_to_clinic_button
+    and_i_see_a_send_clinic_invitation_reminder_button
+    and_i_see_a_send_consent_request_button
 
     when_i_click_on_children
     and_i_check_invited_to_clinic
     then_i_see_the_child_has_been_invited
+    and_i_click_on_a_child
+    and_i_click_on_a_programme
+
+    when_i_click_on_send_consent_request
+    then_i_see_a_consent_request_sent_banner
+
+    when_i_click_on_record_new_vaccination
+    then_i_see_the_community_clinic_session
+
+    when_i_click_on_children
+    and_i_check_invited_to_clinic
+    and_i_click_on_a_child
+    and_i_click_on_a_programme
+    then_i_see_a_community_clinic_session
   end
 
   scenario "Removing an NHS number" do
@@ -556,12 +575,48 @@ describe "Manage children" do
     expect(page).to have_content("invited to the clinic")
   end
 
-  def and_i_see_a_community_clinic_session
+  def then_i_see_a_community_clinic_session
     expect(page).to have_content("Community clinic")
+  end
+
+  def and_i_see_a_invite_to_clinic_button
+    expect(page).to have_button("Invite to community clinic")
   end
 
   def and_i_dont_see_an_invite_to_clinic_button
     expect(page).not_to have_button("Invite to community clinic")
+  end
+
+  def and_i_see_a_send_clinic_invitation_reminder_button
+    expect(page).to have_button("Send clinic invitation reminder")
+  end
+
+  def and_i_dont_see_a_send_clinic_invitation_reminder_button
+    expect(page).not_to have_button("Send clinic invitation reminder")
+  end
+
+  def and_i_see_a_send_consent_request_button
+    expect(page).to have_button("Send consent request")
+  end
+
+  def and_i_dont_see_a_send_consent_request_button
+    expect(page).not_to have_button("Send consent request")
+  end
+
+  def when_i_click_on_send_consent_request
+    click_on "Send consent request"
+  end
+
+  def then_i_see_a_consent_request_sent_banner
+    expect(page).to have_content("Consent request sent.")
+  end
+
+  def when_i_click_on_record_new_vaccination
+    click_on "Record a new flu vaccination"
+  end
+
+  def then_i_see_the_community_clinic_session
+    expect(page).to have_content("Community clinic")
   end
 
   def when_i_go_to_the_dashboard
