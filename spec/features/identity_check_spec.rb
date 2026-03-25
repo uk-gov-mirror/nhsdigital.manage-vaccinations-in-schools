@@ -99,13 +99,16 @@ describe "HPV vaccination identity check" do
   end
 
   def and_i_record_a_vaccination_was_given
-    within all("section")[0] do
-      check "I have checked that the above statements are true"
-    end
+    within all("form")[3] do
+      within all("fieldset")[1] do
+        check "I have checked that the above statements are true"
+      end
 
-    within all("section")[1] do
-      choose "Yes"
-      choose "Left arm (upper position)"
+      within all("fieldset")[2] do
+        choose "Yes"
+        choose "Left arm (upper position)"
+      end
+
       click_button "Continue"
     end
 
@@ -114,8 +117,11 @@ describe "HPV vaccination identity check" do
   end
 
   def and_i_record_that_the_patient_was_unwell
-    within all("section")[1] do
-      choose "No"
+    within all("form")[3] do
+      within all("fieldset")[2] do
+        choose "No"
+      end
+
       click_button "Continue"
     end
 

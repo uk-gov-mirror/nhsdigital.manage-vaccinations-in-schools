@@ -37,8 +37,10 @@ describe "Community clinic vaccination session" do
     visit session_record_path(@session)
     click_link @patient.full_name
 
-    within all("section")[1] do
-      choose "No"
+    within all("form")[3] do
+      within all("fieldset")[2] do
+        choose "No"
+      end
       click_button "Continue"
     end
 
