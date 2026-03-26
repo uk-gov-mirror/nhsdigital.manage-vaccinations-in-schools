@@ -1296,7 +1296,7 @@ fk_rails_...  (team_location_id =&gt; team_locations.id)</pre>
   <span class="ruby-comment"># unable to match the consent form to a child, we consider the session</span>
   <span class="ruby-comment"># and therefore the dates to not be accurate enough to display.</span>
 
-  <span class="ruby-identifier">original_session_is_accurate?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">matched?</span>
+  <span class="ruby-identifier">original_session_is_accurate?</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">session</span>.<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">matched?</span>)
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">programmes</span> = <span class="ruby-identifier">consent_form_programmes</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:programme</span>)
@@ -2330,7 +2330,7 @@ fk_rails_...  (team_location_id =&gt; team_locations.id)</pre>
   <span class="ruby-comment"># unable to match the consent form to a child, we consider the session</span>
   <span class="ruby-comment"># and therefore the dates to not be accurate enough to display.</span>
 
-  <span class="ruby-identifier">original_session_is_accurate?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">matched?</span>
+  <span class="ruby-identifier">original_session_is_accurate?</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">session</span>.<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">matched?</span>)
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">programmes</span> = <span class="ruby-identifier">consent_form_programmes</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:programme</span>)
@@ -4200,7 +4200,7 @@ fk_rails_...  (team_location_id =&gt; team_locations.id)</pre>
   <span class="ruby-comment"># unable to match the consent form to a child, we consider the session</span>
   <span class="ruby-comment"># and therefore the dates to not be accurate enough to display.</span>
 
-  <span class="ruby-identifier">original_session_is_accurate?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">matched?</span>
+  <span class="ruby-identifier">original_session_is_accurate?</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">session</span>.<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">matched?</span>)
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">programmes</span> = <span class="ruby-identifier">consent_form_programmes</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:programme</span>)
@@ -4823,7 +4823,7 @@ fk_rails_...  (team_location_id =&gt; team_locations.id)</pre>
   <span class="ruby-comment"># unable to match the consent form to a child, we consider the session</span>
   <span class="ruby-comment"># and therefore the dates to not be accurate enough to display.</span>
 
-  <span class="ruby-identifier">original_session_is_accurate?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">matched?</span>
+  <span class="ruby-identifier">original_session_is_accurate?</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">session</span>.<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">matched?</span>)
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">programmes</span> = <span class="ruby-identifier">consent_form_programmes</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:programme</span>)
@@ -5284,7 +5284,7 @@ fk_rails_...  (team_location_id =&gt; team_locations.id)</pre>
   <span class="ruby-comment"># unable to match the consent form to a child, we consider the session</span>
   <span class="ruby-comment"># and therefore the dates to not be accurate enough to display.</span>
 
-  <span class="ruby-identifier">original_session_is_accurate?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">matched?</span>
+  <span class="ruby-identifier">original_session_is_accurate?</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">session</span>.<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">matched?</span>)
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">programmes</span> = <span class="ruby-identifier">consent_form_programmes</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:programme</span>)
@@ -5851,7 +5851,7 @@ fk_rails_...  (team_location_id =&gt; team_locations.id)</pre>
   <span class="ruby-comment"># unable to match the consent form to a child, we consider the session</span>
   <span class="ruby-comment"># and therefore the dates to not be accurate enough to display.</span>
 
-  <span class="ruby-identifier">original_session_is_accurate?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">matched?</span>
+  <span class="ruby-identifier">original_session_is_accurate?</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">session</span>.<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">matched?</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
 

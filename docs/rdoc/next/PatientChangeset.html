@@ -979,9 +979,12 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
         <span class="ruby-identifier">school_move</span> =
           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">includes</span>(<span class="ruby-value">:school_teams</span>).<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span>
             <span class="ruby-constant">SchoolMove</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">patient:</span>)
+
+        <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
+        <span class="ruby-comment">#  `school_id` set to `nil`.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">assign_attributes</span>(
-          <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
-          <span class="ruby-comment">#  `school_id` set to `nil`.</span>
+          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">home_educated:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">school:</span>
             <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
               (
@@ -991,9 +994,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
                   <span class="ruby-identifier">team</span>.<span class="ruby-identifier">unknown_school</span>
                 <span class="ruby-keyword">end</span>
               ),
-          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">team_id:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">source:</span> <span class="ruby-identifier">school_move_source</span>
         )
+
         <span class="ruby-comment"># TODO: Figure out why this is necessary.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">strict_loading!</span>(<span class="ruby-keyword">false</span>)
         <span class="ruby-identifier">school_move</span>
@@ -1378,9 +1382,12 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
         <span class="ruby-identifier">school_move</span> =
           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">includes</span>(<span class="ruby-value">:school_teams</span>).<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span>
             <span class="ruby-constant">SchoolMove</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">patient:</span>)
+
+        <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
+        <span class="ruby-comment">#  `school_id` set to `nil`.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">assign_attributes</span>(
-          <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
-          <span class="ruby-comment">#  `school_id` set to `nil`.</span>
+          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">home_educated:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">school:</span>
             <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
               (
@@ -1390,9 +1397,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
                   <span class="ruby-identifier">team</span>.<span class="ruby-identifier">unknown_school</span>
                 <span class="ruby-keyword">end</span>
               ),
-          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">team_id:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">source:</span> <span class="ruby-identifier">school_move_source</span>
         )
+
         <span class="ruby-comment"># TODO: Figure out why this is necessary.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">strict_loading!</span>(<span class="ruby-keyword">false</span>)
         <span class="ruby-identifier">school_move</span>
@@ -1693,7 +1701,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="auto_accept_child_attributes-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 372</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 376</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">auto_accept_child_attributes</span>(<span class="ruby-identifier">existing_patient</span>)
   <span class="ruby-identifier">set_child_attribute_if_valid</span>(<span class="ruby-value">:preferred_given_name</span>, <span class="ruby-identifier">existing_patient</span>)
   <span class="ruby-identifier">set_child_attribute_if_valid</span>(<span class="ruby-value">:preferred_family_name</span>, <span class="ruby-identifier">existing_patient</span>)
@@ -1750,7 +1758,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="auto_accept_registration-3F-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 409</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 413</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">auto_accept_registration?</span>
   <span class="ruby-identifier">import_type</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;ClassImport&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1792,7 +1800,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="auto_overwrite_address-3F-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 455</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 459</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">auto_overwrite_address?</span>(<span class="ruby-identifier">existing_patient</span>)
   <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">address_postcode</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">child_attributes</span>[<span class="ruby-string">&quot;address_postcode&quot;</span>] <span class="ruby-operator">&amp;&amp;</span>
     [
@@ -1954,9 +1962,12 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
         <span class="ruby-identifier">school_move</span> =
           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">includes</span>(<span class="ruby-value">:school_teams</span>).<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span>
             <span class="ruby-constant">SchoolMove</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">patient:</span>)
+
+        <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
+        <span class="ruby-comment">#  `school_id` set to `nil`.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">assign_attributes</span>(
-          <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
-          <span class="ruby-comment">#  `school_id` set to `nil`.</span>
+          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">home_educated:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">school:</span>
             <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
               (
@@ -1966,9 +1977,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
                   <span class="ruby-identifier">team</span>.<span class="ruby-identifier">unknown_school</span>
                 <span class="ruby-keyword">end</span>
               ),
-          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">team_id:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">source:</span> <span class="ruby-identifier">school_move_source</span>
         )
+
         <span class="ruby-comment"># TODO: Figure out why this is necessary.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">strict_loading!</span>(<span class="ruby-keyword">false</span>)
         <span class="ruby-identifier">school_move</span>
@@ -2228,7 +2240,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="calculate_review_data-21-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 496</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 500</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">calculate_review_data!</span>
   <span class="ruby-identifier">clear_review_data!</span>
   <span class="ruby-identifier">reset_patient_id!</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient_id</span>.<span class="ruby-identifier">present?</span>
@@ -2288,7 +2300,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="changeset_type-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 484</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 488</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">changeset_type</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">id</span>.<span class="ruby-identifier">nil?</span>
     <span class="ruby-value">:new_patient</span>
@@ -2471,9 +2483,12 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
         <span class="ruby-identifier">school_move</span> =
           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">includes</span>(<span class="ruby-value">:school_teams</span>).<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span>
             <span class="ruby-constant">SchoolMove</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">patient:</span>)
+
+        <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
+        <span class="ruby-comment">#  `school_id` set to `nil`.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">assign_attributes</span>(
-          <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
-          <span class="ruby-comment">#  `school_id` set to `nil`.</span>
+          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">home_educated:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">school:</span>
             <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
               (
@@ -2483,9 +2498,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
                   <span class="ruby-identifier">team</span>.<span class="ruby-identifier">unknown_school</span>
                 <span class="ruby-keyword">end</span>
               ),
-          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">team_id:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">source:</span> <span class="ruby-identifier">school_move_source</span>
         )
+
         <span class="ruby-comment"># TODO: Figure out why this is necessary.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">strict_loading!</span>(<span class="ruby-keyword">false</span>)
         <span class="ruby-identifier">school_move</span>
@@ -2741,7 +2757,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="clear_review_data-21-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 518</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 522</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clear_review_data!</span>
   <span class="ruby-identifier">data</span>[<span class="ruby-string">&quot;review&quot;</span>] = { <span class="ruby-value">patient:</span> {}, <span class="ruby-value">school_move:</span> {} }
   <span class="ruby-identifier">save!</span>
@@ -2784,7 +2800,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="csv_row_number-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 527</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 531</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">csv_row_number</span>
   <span class="ruby-identifier">row_number</span> <span class="ruby-operator">+</span> <span class="ruby-value">2</span>
 <span class="ruby-keyword">end</span></pre>
@@ -2953,9 +2969,12 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
         <span class="ruby-identifier">school_move</span> =
           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">includes</span>(<span class="ruby-value">:school_teams</span>).<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span>
             <span class="ruby-constant">SchoolMove</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">patient:</span>)
+
+        <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
+        <span class="ruby-comment">#  `school_id` set to `nil`.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">assign_attributes</span>(
-          <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
-          <span class="ruby-comment">#  `school_id` set to `nil`.</span>
+          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">home_educated:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">school:</span>
             <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
               (
@@ -2965,9 +2984,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
                   <span class="ruby-identifier">team</span>.<span class="ruby-identifier">unknown_school</span>
                 <span class="ruby-keyword">end</span>
               ),
-          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">team_id:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">source:</span> <span class="ruby-identifier">school_move_source</span>
         )
+
         <span class="ruby-comment"># TODO: Figure out why this is necessary.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">strict_loading!</span>(<span class="ruby-keyword">false</span>)
         <span class="ruby-identifier">school_move</span>
@@ -3224,7 +3244,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="deserialize_attribute-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 413</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 417</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">deserialize_attribute</span>(<span class="ruby-identifier">attributes</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">type</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">attributes</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">key</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">attributes</span>[<span class="ruby-identifier">key</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">String</span>)
     <span class="ruby-identifier">attributes</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-keyword">case</span> <span class="ruby-identifier">type</span>
@@ -3273,7 +3293,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="existing_patients-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 331</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 335</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">existing_patients</span>
   <span class="ruby-identifier">deserialize_attribute</span>(<span class="ruby-identifier">child_attributes</span>, <span class="ruby-string">&quot;date_of_birth&quot;</span>, <span class="ruby-value">:date</span>)
   <span class="ruby-identifier">deserialize_attribute</span>(<span class="ruby-identifier">child_attributes</span>, <span class="ruby-string">&quot;invalidated_at&quot;</span>, <span class="ruby-value">:datetime</span>)
@@ -3475,9 +3495,12 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
         <span class="ruby-identifier">school_move</span> =
           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">includes</span>(<span class="ruby-value">:school_teams</span>).<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span>
             <span class="ruby-constant">SchoolMove</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">patient:</span>)
+
+        <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
+        <span class="ruby-comment">#  `school_id` set to `nil`.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">assign_attributes</span>(
-          <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
-          <span class="ruby-comment">#  `school_id` set to `nil`.</span>
+          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">home_educated:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">school:</span>
             <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
               (
@@ -3487,9 +3510,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
                   <span class="ruby-identifier">team</span>.<span class="ruby-identifier">unknown_school</span>
                 <span class="ruby-keyword">end</span>
               ),
-          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">team_id:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">source:</span> <span class="ruby-identifier">school_move_source</span>
         )
+
         <span class="ruby-comment"># TODO: Figure out why this is necessary.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">strict_loading!</span>(<span class="ruby-keyword">false</span>)
         <span class="ruby-identifier">school_move</span>
@@ -3874,9 +3898,12 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
         <span class="ruby-identifier">school_move</span> =
           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">includes</span>(<span class="ruby-value">:school_teams</span>).<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span>
             <span class="ruby-constant">SchoolMove</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">patient:</span>)
+
+        <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
+        <span class="ruby-comment">#  `school_id` set to `nil`.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">assign_attributes</span>(
-          <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
-          <span class="ruby-comment">#  `school_id` set to `nil`.</span>
+          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">home_educated:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">school:</span>
             <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
               (
@@ -3886,9 +3913,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
                   <span class="ruby-identifier">team</span>.<span class="ruby-identifier">unknown_school</span>
                 <span class="ruby-keyword">end</span>
               ),
-          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">team_id:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">source:</span> <span class="ruby-identifier">school_move_source</span>
         )
+
         <span class="ruby-comment"># TODO: Figure out why this is necessary.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">strict_loading!</span>(<span class="ruby-keyword">false</span>)
         <span class="ruby-identifier">school_move</span>
@@ -4145,7 +4173,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="handle_address_updates-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 430</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 434</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_address_updates</span>(<span class="ruby-identifier">existing_patient</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">child_attributes</span>[<span class="ruby-string">&quot;address_postcode&quot;</span>].<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span>
        <span class="ruby-identifier">child_attributes</span>[<span class="ruby-string">&quot;address_postcode&quot;</span>] <span class="ruby-operator">!=</span>
@@ -4321,9 +4349,12 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
         <span class="ruby-identifier">school_move</span> =
           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">includes</span>(<span class="ruby-value">:school_teams</span>).<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span>
             <span class="ruby-constant">SchoolMove</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">patient:</span>)
+
+        <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
+        <span class="ruby-comment">#  `school_id` set to `nil`.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">assign_attributes</span>(
-          <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
-          <span class="ruby-comment">#  `school_id` set to `nil`.</span>
+          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">home_educated:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">school:</span>
             <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
               (
@@ -4333,9 +4364,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
                   <span class="ruby-identifier">team</span>.<span class="ruby-identifier">unknown_school</span>
                 <span class="ruby-keyword">end</span>
               ),
-          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">team_id:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">source:</span> <span class="ruby-identifier">school_move_source</span>
         )
+
         <span class="ruby-comment"># TODO: Figure out why this is necessary.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">strict_loading!</span>(<span class="ruby-keyword">false</span>)
         <span class="ruby-identifier">school_move</span>
@@ -4596,7 +4628,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="inter_team_move-3F-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 424</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 428</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">inter_team_move?</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient_id</span>.<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">present?</span>
 
@@ -4791,9 +4823,12 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
           <span class="ruby-identifier">school_move</span> =
             <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">includes</span>(<span class="ruby-value">:school_teams</span>).<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span>
               <span class="ruby-constant">SchoolMove</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">patient:</span>)
+
+          <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
+          <span class="ruby-comment">#  `school_id` set to `nil`.</span>
           <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">assign_attributes</span>(
-            <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
-            <span class="ruby-comment">#  `school_id` set to `nil`.</span>
+            <span class="ruby-value">academic_year:</span>,
+            <span class="ruby-value">home_educated:</span> <span class="ruby-keyword">nil</span>,
             <span class="ruby-value">school:</span>
               <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
                 (
@@ -4803,9 +4838,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
                     <span class="ruby-identifier">team</span>.<span class="ruby-identifier">unknown_school</span>
                   <span class="ruby-keyword">end</span>
                 ),
-            <span class="ruby-value">academic_year:</span>,
+            <span class="ruby-value">team_id:</span> <span class="ruby-keyword">nil</span>,
             <span class="ruby-value">source:</span> <span class="ruby-identifier">school_move_source</span>
           )
+
           <span class="ruby-comment"># TODO: Figure out why this is necessary.</span>
           <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">strict_loading!</span>(<span class="ruby-keyword">false</span>)
           <span class="ruby-identifier">school_move</span>
@@ -5190,9 +5226,12 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
         <span class="ruby-identifier">school_move</span> =
           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">includes</span>(<span class="ruby-value">:school_teams</span>).<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span>
             <span class="ruby-constant">SchoolMove</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">patient:</span>)
+
+        <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
+        <span class="ruby-comment">#  `school_id` set to `nil`.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">assign_attributes</span>(
-          <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
-          <span class="ruby-comment">#  `school_id` set to `nil`.</span>
+          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">home_educated:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">school:</span>
             <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
               (
@@ -5202,9 +5241,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
                   <span class="ruby-identifier">team</span>.<span class="ruby-identifier">unknown_school</span>
                 <span class="ruby-keyword">end</span>
               ),
-          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">team_id:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">source:</span> <span class="ruby-identifier">school_move_source</span>
         )
+
         <span class="ruby-comment"># TODO: Figure out why this is necessary.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">strict_loading!</span>(<span class="ruby-keyword">false</span>)
         <span class="ruby-identifier">school_move</span>
@@ -5584,9 +5624,12 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
         <span class="ruby-identifier">school_move</span> =
           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">includes</span>(<span class="ruby-value">:school_teams</span>).<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span>
             <span class="ruby-constant">SchoolMove</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">patient:</span>)
+
+        <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
+        <span class="ruby-comment">#  `school_id` set to `nil`.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">assign_attributes</span>(
-          <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
-          <span class="ruby-comment">#  `school_id` set to `nil`.</span>
+          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">home_educated:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">school:</span>
             <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
               (
@@ -5596,9 +5639,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
                   <span class="ruby-identifier">team</span>.<span class="ruby-identifier">unknown_school</span>
                 <span class="ruby-keyword">end</span>
               ),
-          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">team_id:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">source:</span> <span class="ruby-identifier">school_move_source</span>
         )
+
         <span class="ruby-comment"># TODO: Figure out why this is necessary.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">strict_loading!</span>(<span class="ruby-keyword">false</span>)
         <span class="ruby-identifier">school_move</span>
@@ -6129,7 +6173,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="prepare_patient_changes-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 364</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 368</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">prepare_patient_changes</span>(<span class="ruby-identifier">existing_patient</span>)
   <span class="ruby-identifier">auto_accept_child_attributes</span>(<span class="ruby-identifier">existing_patient</span>)
   <span class="ruby-identifier">handle_address_updates</span>(<span class="ruby-identifier">existing_patient</span>)
@@ -6217,7 +6261,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="reset_patient_id-21-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 523</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 527</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reset_patient_id!</span>
   <span class="ruby-identifier">update_column</span>(<span class="ruby-value">:patient_id</span>, <span class="ruby-keyword">nil</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -6394,9 +6438,12 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
         <span class="ruby-identifier">school_move</span> =
           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">includes</span>(<span class="ruby-value">:school_teams</span>).<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span>
             <span class="ruby-constant">SchoolMove</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">patient:</span>)
+
+        <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
+        <span class="ruby-comment">#  `school_id` set to `nil`.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">assign_attributes</span>(
-          <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
-          <span class="ruby-comment">#  `school_id` set to `nil`.</span>
+          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">home_educated:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">school:</span>
             <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
               (
@@ -6406,9 +6453,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
                   <span class="ruby-identifier">team</span>.<span class="ruby-identifier">unknown_school</span>
                 <span class="ruby-keyword">end</span>
               ),
-          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">team_id:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">source:</span> <span class="ruby-identifier">school_move_source</span>
         )
+
         <span class="ruby-comment"># TODO: Figure out why this is necessary.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">strict_loading!</span>(<span class="ruby-keyword">false</span>)
         <span class="ruby-identifier">school_move</span>
@@ -6682,9 +6730,12 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
         <span class="ruby-identifier">school_move</span> =
           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">includes</span>(<span class="ruby-value">:school_teams</span>).<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span>
             <span class="ruby-constant">SchoolMove</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">patient:</span>)
+
+        <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
+        <span class="ruby-comment">#  `school_id` set to `nil`.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">assign_attributes</span>(
-          <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
-          <span class="ruby-comment">#  `school_id` set to `nil`.</span>
+          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">home_educated:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">school:</span>
             <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
               (
@@ -6694,9 +6745,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
                   <span class="ruby-identifier">team</span>.<span class="ruby-identifier">unknown_school</span>
                 <span class="ruby-keyword">end</span>
               ),
-          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">team_id:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">source:</span> <span class="ruby-identifier">school_move_source</span>
         )
+
         <span class="ruby-comment"># TODO: Figure out why this is necessary.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">strict_loading!</span>(<span class="ruby-keyword">false</span>)
         <span class="ruby-identifier">school_move</span>
@@ -6852,9 +6904,12 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
         <span class="ruby-identifier">school_move</span> =
           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">includes</span>(<span class="ruby-value">:school_teams</span>).<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span>
             <span class="ruby-constant">SchoolMove</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">patient:</span>)
+
+        <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
+        <span class="ruby-comment">#  `school_id` set to `nil`.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">assign_attributes</span>(
-          <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
-          <span class="ruby-comment">#  `school_id` set to `nil`.</span>
+          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">home_educated:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">school:</span>
             <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
               (
@@ -6864,9 +6919,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
                   <span class="ruby-identifier">team</span>.<span class="ruby-identifier">unknown_school</span>
                 <span class="ruby-keyword">end</span>
               ),
-          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">team_id:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">source:</span> <span class="ruby-identifier">school_move_source</span>
         )
+
         <span class="ruby-comment"># TODO: Figure out why this is necessary.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">strict_loading!</span>(<span class="ruby-keyword">false</span>)
         <span class="ruby-identifier">school_move</span>
@@ -7127,7 +7183,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="school_move_to_unknown_school_from_another_team-3F-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 315</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 319</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">school_move_to_unknown_school_from_another_team?</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">persisted?</span>
 
@@ -7300,9 +7356,12 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
         <span class="ruby-identifier">school_move</span> =
           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">includes</span>(<span class="ruby-value">:school_teams</span>).<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span>
             <span class="ruby-constant">SchoolMove</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">patient:</span>)
+
+        <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
+        <span class="ruby-comment">#  `school_id` set to `nil`.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">assign_attributes</span>(
-          <span class="ruby-comment"># TODO: Simplify this once we no longer have changesets with</span>
-          <span class="ruby-comment">#  `school_id` set to `nil`.</span>
+          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">home_educated:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">school:</span>
             <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
               (
@@ -7312,9 +7371,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
                   <span class="ruby-identifier">team</span>.<span class="ruby-identifier">unknown_school</span>
                 <span class="ruby-keyword">end</span>
               ),
-          <span class="ruby-value">academic_year:</span>,
+          <span class="ruby-value">team_id:</span> <span class="ruby-keyword">nil</span>,
           <span class="ruby-value">source:</span> <span class="ruby-identifier">school_move_source</span>
         )
+
         <span class="ruby-comment"># TODO: Figure out why this is necessary.</span>
         <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">strict_loading!</span>(<span class="ruby-keyword">false</span>)
         <span class="ruby-identifier">school_move</span>
@@ -7574,7 +7634,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="set_child_attribute_if_valid-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 391</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 395</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_child_attribute_if_valid</span>(
   <span class="ruby-identifier">attribute</span>,
   <span class="ruby-identifier">existing_patient</span>,
@@ -7630,7 +7690,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="stage_and_handle_pending_changes-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 464</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 468</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">stage_and_handle_pending_changes</span>(<span class="ruby-identifier">existing_patient</span>)
   <span class="ruby-identifier">auto_accepted_changes</span> = <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">changed_attributes</span>.<span class="ruby-identifier">keys</span>
 
