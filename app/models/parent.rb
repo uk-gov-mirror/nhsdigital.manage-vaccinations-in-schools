@@ -68,7 +68,8 @@ class Parent < ApplicationRecord
         -> { where.not(email: [nil, ""]).or(where.not(phone: [nil, ""])) }
 
   def self.match_existing(patient:, email:, phone:, full_name:)
-    if email.present? && (parent = Parent.find_by(email:))
+    base_scope = patient.present? ? patient.parents : Parent
+    if email.present? && (parent = base_scope.find_by(email:))
       return parent
     end
 

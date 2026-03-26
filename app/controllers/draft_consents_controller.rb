@@ -36,6 +36,8 @@ class DraftConsentsController < ApplicationController
       handle_triage
     when :mmrv_vaccine_availability
       handle_mmrv_vaccine_availability
+    when :parent_details
+      handle_parent_details
     else
       @draft_consent.assign_attributes(update_params)
     end
@@ -128,6 +130,22 @@ class DraftConsentsController < ApplicationController
   def handle_mmrv_vaccine_availability
     @draft_consent.assign_attributes(update_params)
     @draft_consent.update_disease_types
+  end
+
+  def handle_parent_details
+    existing_parent =
+      Parent.match_existing(
+        patient: @patient,
+        full_name: update_params[:parent_full_name],
+        email: update_params[:parent_email],
+        phone: update_params[:parent_phone]
+      )
+
+    if existing_parent
+      @draft_consent.new_or_existing_contact = existing_parent.id
+    end
+
+    @draft_consent.assign_attributes(update_params)
   end
 
   def finish_wizard_path
