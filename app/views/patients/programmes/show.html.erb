@@ -10,11 +10,10 @@
 
 <%= render AppPatientNavigationComponent.new(@patient, current_user.programmes, active: @programme.type.to_sym) %>
 
-<%= render AppPatientProgrammeVaccinationCardComponent.new(
+<%= render AppPatientProgrammeVaccinationComponent.new(
       @patient,
-      academic_year: AcademicYear.current,
-      show_caption: false,
-      programme: @programme,
+      @programme,
+      academic_year: @academic_year,
     ) %>
 
 <%= render AppCardComponent.new(section: true) do |card| %>
