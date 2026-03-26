@@ -140,6 +140,19 @@ describe AlreadyHadNotificationSender do
 
           include_examples "sends one email to all parents with valid consents"
         end
+
+        context "when the parents have the same phone number" do
+          let(:performed_at) { Time.zone.today }
+          let(:second_parent) do
+            create(
+              :parent,
+              phone: first_parent.phone,
+              phone_receive_updates: true
+            )
+          end
+
+          include_examples "sends one SMS only to opted-in parents"
+        end
       end
     end
 
