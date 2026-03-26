@@ -23,11 +23,8 @@
       team: current_team,
     ) %>
 
-<%= render AppCardComponent.new(section: true) do |card| %>
-  <% card.with_heading { "Programme activity" } %>
-  <%= render AppActivityLogComponent.new(
-        patient: @patient,
-        programme_type: @programme.type,
-        team: current_team,
-      ) %>
-<% end %>
+<%= render AppPatientProgrammeActivityComponent.new(
+      @patient,
+      @programme,
+      team: current_team,
+    ) %>
