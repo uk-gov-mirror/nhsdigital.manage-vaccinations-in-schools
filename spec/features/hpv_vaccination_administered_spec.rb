@@ -303,7 +303,16 @@ describe "HPV vaccination" do
       matching_notify_email(
         to: @patient.consents.last.parent.email,
         template: :vaccination_administered_hpv
-      ).with_content_including("HPV vaccination", "Gardasil 9")
+      ).with_content_including(
+        "HPV vaccination",
+        "Gardasil 9",
+        "swelling or pain where the injection was given",
+        "a headache",
+        "a high temperature",
+        "dizziness",
+        "feeling sick",
+        "tiredness"
+      )
     )
   end
 
