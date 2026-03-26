@@ -7,6 +7,7 @@ class EmailDeliveryJob < NotifyDeliveryJob
 
   def perform(
     template_name,
+    already_sent_to: [],
     academic_year: nil,
     consent: nil,
     consent_form: nil,
@@ -37,12 +38,11 @@ class EmailDeliveryJob < NotifyDeliveryJob
       )
 
     email_address =
-      if template_name_sym == :consent_unknown_contact_details_warning
-        personalisation.parent&.email
-      else
-        personalisation.consent_form&.parent_email ||
-          personalisation.parent&.email
-      end
+      email_address_for(
+        template_name_sym,
+        personalisation.parent,
+        personalisation.consent_form
+      )
 
     return if email_address.nil?
 
@@ -86,6 +86,8 @@ class EmailDeliveryJob < NotifyDeliveryJob
         nil
       end
 
+    already_sent_to << email_address
+
     NotifyLogEntry.create!(
       body: rendered[:body],
       consent_form: personalisation.consent_form,
@@ -103,5 +105,13 @@ class EmailDeliveryJob < NotifyDeliveryJob
           { programme_type: it.type, disease_types: it.disease_types }
         end
     )
+  end
+
+  def self.email_address_for(template_name, parent, consent_form = nil)
+    if template_name.to_sym == :consent_unknown_contact_details_warning
+      parent&.email
+    else
+      consent_form&.parent_email || parent&.email
+    end
   end
 end
