@@ -38,18 +38,7 @@ class Patient::ProgrammeStatus < ApplicationRecord
   belongs_to :location, optional: true
 
   has_many :patient_locations,
-           -> do
-             includes(
-               location: [
-                 :location_programme_year_groups,
-                 {
-                   team_locations: {
-                     sessions: :session_programme_year_groups
-                   }
-                 }
-               ]
-             )
-           end,
+           -> { includes(location: :location_programme_year_groups) },
            through: :patient
 
   has_many :consents,
@@ -75,10 +64,6 @@ class Patient::ProgrammeStatus < ApplicationRecord
           source: :attendance_records
 
   has_many :parents, -> { contactable }, through: :patient
-
-  has_many :consent_notifications,
-           -> { request.includes(session: :team_location) },
-           through: :patient
 
   GROUPS = %w[
     not_eligible
@@ -207,8 +192,7 @@ class Patient::ProgrammeStatus < ApplicationRecord
         triages:,
         attendance_record:,
         vaccination_records:,
-        parents:,
-        consent_notifications:
+        parents:
       )
   end
 end
