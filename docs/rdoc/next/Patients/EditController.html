@@ -1047,7 +1047,6 @@
           <div class="method-source-code" id="update_school-source">
             <pre class="ruby"><span class="ruby-comment"># File app/controllers/patients/edit_controller.rb, line 78</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">update_school</span>
-  <span class="ruby-ivar">@patient</span>.<span class="ruby-identifier">home_educated</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-ivar">@patient</span>.<span class="ruby-identifier">school_id</span> = <span class="ruby-identifier">school_id</span>
 
   <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">edit_patient_path</span>(<span class="ruby-ivar">@patient</span>) <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@patient</span>.<span class="ruby-identifier">changed?</span>

@@ -894,12 +894,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">existing_patient</span> = <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">first</span>)
       <span class="ruby-identifier">prepare_patient_changes</span>(<span class="ruby-identifier">existing_patient</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(
-        <span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(
-          <span class="ruby-string">&quot;home_educated&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
-          <span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []
-        )
-      )
+      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []))
     <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -973,7 +968,6 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">new_record?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
-           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">not_in_team?</span>(<span class="ruby-value">team:</span>, <span class="ruby-value">academic_year:</span>) <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">archived?</span>(<span class="ruby-value">team:</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">any?</span>
         <span class="ruby-identifier">school_move</span> =
@@ -1009,8 +1003,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">persisted?</span>
 
   <span class="ruby-identifier">from_known_school</span> =
-    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
-      (<span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
+    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>
   <span class="ruby-identifier">to_known_school</span> =
     <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
 
@@ -1297,12 +1290,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">existing_patient</span> = <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">first</span>)
       <span class="ruby-identifier">prepare_patient_changes</span>(<span class="ruby-identifier">existing_patient</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(
-        <span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(
-          <span class="ruby-string">&quot;home_educated&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
-          <span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []
-        )
-      )
+      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []))
     <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -1376,7 +1364,6 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">new_record?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
-           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">not_in_team?</span>(<span class="ruby-value">team:</span>, <span class="ruby-value">academic_year:</span>) <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">archived?</span>(<span class="ruby-value">team:</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">any?</span>
         <span class="ruby-identifier">school_move</span> =
@@ -1412,8 +1399,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">persisted?</span>
 
   <span class="ruby-identifier">from_known_school</span> =
-    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
-      (<span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
+    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>
   <span class="ruby-identifier">to_known_school</span> =
     <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
 
@@ -1659,7 +1645,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="assign_patient_id-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 257</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 252</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">assign_patient_id</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">patient_id</span> = <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">id</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">persisted?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1701,7 +1687,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="auto_accept_child_attributes-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 376</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 369</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">auto_accept_child_attributes</span>(<span class="ruby-identifier">existing_patient</span>)
   <span class="ruby-identifier">set_child_attribute_if_valid</span>(<span class="ruby-value">:preferred_given_name</span>, <span class="ruby-identifier">existing_patient</span>)
   <span class="ruby-identifier">set_child_attribute_if_valid</span>(<span class="ruby-value">:preferred_family_name</span>, <span class="ruby-identifier">existing_patient</span>)
@@ -1758,7 +1744,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="auto_accept_registration-3F-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 413</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 406</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">auto_accept_registration?</span>
   <span class="ruby-identifier">import_type</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;ClassImport&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1800,7 +1786,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="auto_overwrite_address-3F-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 459</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 452</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">auto_overwrite_address?</span>(<span class="ruby-identifier">existing_patient</span>)
   <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">address_postcode</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">child_attributes</span>[<span class="ruby-string">&quot;address_postcode&quot;</span>] <span class="ruby-operator">&amp;&amp;</span>
     [
@@ -1877,12 +1863,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">existing_patient</span> = <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">first</span>)
       <span class="ruby-identifier">prepare_patient_changes</span>(<span class="ruby-identifier">existing_patient</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(
-        <span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(
-          <span class="ruby-string">&quot;home_educated&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
-          <span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []
-        )
-      )
+      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []))
     <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -1956,7 +1937,6 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">new_record?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
-           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">not_in_team?</span>(<span class="ruby-value">team:</span>, <span class="ruby-value">academic_year:</span>) <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">archived?</span>(<span class="ruby-value">team:</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">any?</span>
         <span class="ruby-identifier">school_move</span> =
@@ -1992,8 +1972,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">persisted?</span>
 
   <span class="ruby-identifier">from_known_school</span> =
-    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
-      (<span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
+    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>
   <span class="ruby-identifier">to_known_school</span> =
     <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
 
@@ -2240,7 +2219,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="calculate_review_data-21-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 500</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 493</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">calculate_review_data!</span>
   <span class="ruby-identifier">clear_review_data!</span>
   <span class="ruby-identifier">reset_patient_id!</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient_id</span>.<span class="ruby-identifier">present?</span>
@@ -2300,7 +2279,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="changeset_type-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 488</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 481</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">changeset_type</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">id</span>.<span class="ruby-identifier">nil?</span>
     <span class="ruby-value">:new_patient</span>
@@ -2398,12 +2377,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">existing_patient</span> = <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">first</span>)
       <span class="ruby-identifier">prepare_patient_changes</span>(<span class="ruby-identifier">existing_patient</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(
-        <span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(
-          <span class="ruby-string">&quot;home_educated&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
-          <span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []
-        )
-      )
+      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []))
     <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -2477,7 +2451,6 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">new_record?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
-           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">not_in_team?</span>(<span class="ruby-value">team:</span>, <span class="ruby-value">academic_year:</span>) <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">archived?</span>(<span class="ruby-value">team:</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">any?</span>
         <span class="ruby-identifier">school_move</span> =
@@ -2513,8 +2486,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">persisted?</span>
 
   <span class="ruby-identifier">from_known_school</span> =
-    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
-      (<span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
+    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>
   <span class="ruby-identifier">to_known_school</span> =
     <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
 
@@ -2757,7 +2729,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="clear_review_data-21-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 522</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 515</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clear_review_data!</span>
   <span class="ruby-identifier">data</span>[<span class="ruby-string">&quot;review&quot;</span>] = { <span class="ruby-value">patient:</span> {}, <span class="ruby-value">school_move:</span> {} }
   <span class="ruby-identifier">save!</span>
@@ -2800,7 +2772,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="csv_row_number-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 531</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 524</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">csv_row_number</span>
   <span class="ruby-identifier">row_number</span> <span class="ruby-operator">+</span> <span class="ruby-value">2</span>
 <span class="ruby-keyword">end</span></pre>
@@ -2884,12 +2856,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">existing_patient</span> = <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">first</span>)
       <span class="ruby-identifier">prepare_patient_changes</span>(<span class="ruby-identifier">existing_patient</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(
-        <span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(
-          <span class="ruby-string">&quot;home_educated&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
-          <span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []
-        )
-      )
+      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []))
     <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -2963,7 +2930,6 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">new_record?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
-           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">not_in_team?</span>(<span class="ruby-value">team:</span>, <span class="ruby-value">academic_year:</span>) <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">archived?</span>(<span class="ruby-value">team:</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">any?</span>
         <span class="ruby-identifier">school_move</span> =
@@ -2999,8 +2965,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">persisted?</span>
 
   <span class="ruby-identifier">from_known_school</span> =
-    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
-      (<span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
+    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>
   <span class="ruby-identifier">to_known_school</span> =
     <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
 
@@ -3244,7 +3209,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="deserialize_attribute-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 417</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 410</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">deserialize_attribute</span>(<span class="ruby-identifier">attributes</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">type</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">attributes</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">key</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">attributes</span>[<span class="ruby-identifier">key</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">String</span>)
     <span class="ruby-identifier">attributes</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-keyword">case</span> <span class="ruby-identifier">type</span>
@@ -3293,7 +3258,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="existing_patients-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 335</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 328</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">existing_patients</span>
   <span class="ruby-identifier">deserialize_attribute</span>(<span class="ruby-identifier">child_attributes</span>, <span class="ruby-string">&quot;date_of_birth&quot;</span>, <span class="ruby-value">:date</span>)
   <span class="ruby-identifier">deserialize_attribute</span>(<span class="ruby-identifier">child_attributes</span>, <span class="ruby-string">&quot;invalidated_at&quot;</span>, <span class="ruby-value">:datetime</span>)
@@ -3410,12 +3375,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">existing_patient</span> = <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">first</span>)
       <span class="ruby-identifier">prepare_patient_changes</span>(<span class="ruby-identifier">existing_patient</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(
-        <span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(
-          <span class="ruby-string">&quot;home_educated&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
-          <span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []
-        )
-      )
+      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []))
     <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -3489,7 +3449,6 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">new_record?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
-           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">not_in_team?</span>(<span class="ruby-value">team:</span>, <span class="ruby-value">academic_year:</span>) <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">archived?</span>(<span class="ruby-value">team:</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">any?</span>
         <span class="ruby-identifier">school_move</span> =
@@ -3525,8 +3484,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">persisted?</span>
 
   <span class="ruby-identifier">from_known_school</span> =
-    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
-      (<span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
+    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>
   <span class="ruby-identifier">to_known_school</span> =
     <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
 
@@ -3813,12 +3771,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">existing_patient</span> = <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">first</span>)
       <span class="ruby-identifier">prepare_patient_changes</span>(<span class="ruby-identifier">existing_patient</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(
-        <span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(
-          <span class="ruby-string">&quot;home_educated&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
-          <span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []
-        )
-      )
+      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []))
     <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -3892,7 +3845,6 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">new_record?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
-           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">not_in_team?</span>(<span class="ruby-value">team:</span>, <span class="ruby-value">academic_year:</span>) <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">archived?</span>(<span class="ruby-value">team:</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">any?</span>
         <span class="ruby-identifier">school_move</span> =
@@ -3928,8 +3880,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">persisted?</span>
 
   <span class="ruby-identifier">from_known_school</span> =
-    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
-      (<span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
+    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>
   <span class="ruby-identifier">to_known_school</span> =
     <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
 
@@ -4173,7 +4124,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="handle_address_updates-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 434</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 427</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_address_updates</span>(<span class="ruby-identifier">existing_patient</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">child_attributes</span>[<span class="ruby-string">&quot;address_postcode&quot;</span>].<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span>
        <span class="ruby-identifier">child_attributes</span>[<span class="ruby-string">&quot;address_postcode&quot;</span>] <span class="ruby-operator">!=</span>
@@ -4264,12 +4215,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">existing_patient</span> = <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">first</span>)
       <span class="ruby-identifier">prepare_patient_changes</span>(<span class="ruby-identifier">existing_patient</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(
-        <span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(
-          <span class="ruby-string">&quot;home_educated&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
-          <span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []
-        )
-      )
+      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []))
     <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -4343,7 +4289,6 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">new_record?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
-           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">not_in_team?</span>(<span class="ruby-value">team:</span>, <span class="ruby-value">academic_year:</span>) <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">archived?</span>(<span class="ruby-value">team:</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">any?</span>
         <span class="ruby-identifier">school_move</span> =
@@ -4379,8 +4324,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">persisted?</span>
 
   <span class="ruby-identifier">from_known_school</span> =
-    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
-      (<span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
+    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>
   <span class="ruby-identifier">to_known_school</span> =
     <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
 
@@ -4628,7 +4572,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="inter_team_move-3F-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 428</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 421</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">inter_team_move?</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient_id</span>.<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">present?</span>
 
@@ -4738,12 +4682,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
       <span class="ruby-keyword">if</span> (<span class="ruby-identifier">existing_patient</span> = <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">first</span>)
         <span class="ruby-identifier">prepare_patient_changes</span>(<span class="ruby-identifier">existing_patient</span>)
       <span class="ruby-keyword">else</span>
-        <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(
-          <span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(
-            <span class="ruby-string">&quot;home_educated&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
-            <span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []
-          )
-        )
+        <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []))
       <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
@@ -4817,7 +4756,6 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
         <span class="ruby-keyword">end</span>
 
         <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">new_record?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
-             <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
              <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">not_in_team?</span>(<span class="ruby-value">team:</span>, <span class="ruby-value">academic_year:</span>) <span class="ruby-operator">||</span>
              <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">archived?</span>(<span class="ruby-value">team:</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">any?</span>
           <span class="ruby-identifier">school_move</span> =
@@ -4853,8 +4791,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
     <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">persisted?</span>
 
     <span class="ruby-identifier">from_known_school</span> =
-      <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
-        (<span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
+      <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>
     <span class="ruby-identifier">to_known_school</span> =
       <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
 
@@ -5141,12 +5078,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">existing_patient</span> = <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">first</span>)
       <span class="ruby-identifier">prepare_patient_changes</span>(<span class="ruby-identifier">existing_patient</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(
-        <span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(
-          <span class="ruby-string">&quot;home_educated&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
-          <span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []
-        )
-      )
+      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []))
     <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -5220,7 +5152,6 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">new_record?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
-           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">not_in_team?</span>(<span class="ruby-value">team:</span>, <span class="ruby-value">academic_year:</span>) <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">archived?</span>(<span class="ruby-value">team:</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">any?</span>
         <span class="ruby-identifier">school_move</span> =
@@ -5256,8 +5187,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">persisted?</span>
 
   <span class="ruby-identifier">from_known_school</span> =
-    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
-      (<span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
+    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>
   <span class="ruby-identifier">to_known_school</span> =
     <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
 
@@ -5539,12 +5469,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">existing_patient</span> = <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">first</span>)
       <span class="ruby-identifier">prepare_patient_changes</span>(<span class="ruby-identifier">existing_patient</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(
-        <span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(
-          <span class="ruby-string">&quot;home_educated&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
-          <span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []
-        )
-      )
+      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []))
     <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -5618,7 +5543,6 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">new_record?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
-           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">not_in_team?</span>(<span class="ruby-value">team:</span>, <span class="ruby-value">academic_year:</span>) <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">archived?</span>(<span class="ruby-value">team:</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">any?</span>
         <span class="ruby-identifier">school_move</span> =
@@ -5654,8 +5578,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">persisted?</span>
 
   <span class="ruby-identifier">from_known_school</span> =
-    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
-      (<span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
+    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>
   <span class="ruby-identifier">to_known_school</span> =
     <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
 
@@ -5901,7 +5824,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="parent_relationship_attributes-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 261</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 256</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parent_relationship_attributes</span>(<span class="ruby-identifier">relationship</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">relationship</span>&amp;.<span class="ruby-identifier">downcase</span>
   <span class="ruby-keyword">when</span> <span class="ruby-keyword">nil</span>, <span class="ruby-string">&quot;unknown&quot;</span>
@@ -5954,7 +5877,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="parent_relationships-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 238</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 233</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parent_relationships</span>
   <span class="ruby-identifier">relationships</span> =
     [<span class="ruby-identifier">parent_1_attributes</span>, <span class="ruby-identifier">parent_2_attributes</span>].<span class="ruby-identifier">filter_map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">attrs</span><span class="ruby-operator">|</span>
@@ -6011,7 +5934,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="parents-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 217</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 212</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">parents</span>
   <span class="ruby-ivar">@parents</span> <span class="ruby-operator">||=</span>
     [<span class="ruby-identifier">parent_1_attributes</span>.<span class="ruby-identifier">presence</span>, <span class="ruby-identifier">parent_2_attributes</span>.<span class="ruby-identifier">presence</span>].<span class="ruby-identifier">compact</span>
@@ -6077,12 +6000,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">existing_patient</span> = <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">first</span>)
       <span class="ruby-identifier">prepare_patient_changes</span>(<span class="ruby-identifier">existing_patient</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(
-        <span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(
-          <span class="ruby-string">&quot;home_educated&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
-          <span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []
-        )
-      )
+      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []))
     <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -6173,7 +6091,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="prepare_patient_changes-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 368</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 361</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">prepare_patient_changes</span>(<span class="ruby-identifier">existing_patient</span>)
   <span class="ruby-identifier">auto_accept_child_attributes</span>(<span class="ruby-identifier">existing_patient</span>)
   <span class="ruby-identifier">handle_address_updates</span>(<span class="ruby-identifier">existing_patient</span>)
@@ -6261,7 +6179,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="reset_patient_id-21-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 527</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 520</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reset_patient_id!</span>
   <span class="ruby-identifier">update_column</span>(<span class="ruby-value">:patient_id</span>, <span class="ruby-keyword">nil</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -6353,12 +6271,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">existing_patient</span> = <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">first</span>)
       <span class="ruby-identifier">prepare_patient_changes</span>(<span class="ruby-identifier">existing_patient</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(
-        <span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(
-          <span class="ruby-string">&quot;home_educated&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
-          <span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []
-        )
-      )
+      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []))
     <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -6432,7 +6345,6 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">new_record?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
-           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">not_in_team?</span>(<span class="ruby-value">team:</span>, <span class="ruby-value">academic_year:</span>) <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">archived?</span>(<span class="ruby-value">team:</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">any?</span>
         <span class="ruby-identifier">school_move</span> =
@@ -6468,8 +6380,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">persisted?</span>
 
   <span class="ruby-identifier">from_known_school</span> =
-    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
-      (<span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
+    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>
   <span class="ruby-identifier">to_known_school</span> =
     <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
 
@@ -6712,7 +6623,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="school_move-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 276</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 271</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">school_move</span>
   <span class="ruby-ivar">@school_move</span> <span class="ruby-operator">||=</span>
     <span class="ruby-keyword">begin</span>
@@ -6724,7 +6635,6 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">new_record?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
-           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">not_in_team?</span>(<span class="ruby-value">team:</span>, <span class="ruby-value">academic_year:</span>) <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">archived?</span>(<span class="ruby-value">team:</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">any?</span>
         <span class="ruby-identifier">school_move</span> =
@@ -6819,12 +6729,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">existing_patient</span> = <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">first</span>)
       <span class="ruby-identifier">prepare_patient_changes</span>(<span class="ruby-identifier">existing_patient</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(
-        <span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(
-          <span class="ruby-string">&quot;home_educated&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
-          <span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []
-        )
-      )
+      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []))
     <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -6898,7 +6803,6 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">new_record?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
-           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">not_in_team?</span>(<span class="ruby-value">team:</span>, <span class="ruby-value">academic_year:</span>) <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">archived?</span>(<span class="ruby-value">team:</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">any?</span>
         <span class="ruby-identifier">school_move</span> =
@@ -6934,8 +6838,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">persisted?</span>
 
   <span class="ruby-identifier">from_known_school</span> =
-    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
-      (<span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
+    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>
   <span class="ruby-identifier">to_known_school</span> =
     <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
 
@@ -7183,13 +7086,12 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="school_move_to_unknown_school_from_another_team-3F-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 319</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 313</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">school_move_to_unknown_school_from_another_team?</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">persisted?</span>
 
   <span class="ruby-identifier">from_known_school</span> =
-    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
-      (<span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
+    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>
   <span class="ruby-identifier">to_known_school</span> =
     <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
 
@@ -7271,12 +7173,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">existing_patient</span> = <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">first</span>)
       <span class="ruby-identifier">prepare_patient_changes</span>(<span class="ruby-identifier">existing_patient</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(
-        <span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(
-          <span class="ruby-string">&quot;home_educated&quot;</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">false</span>,
-          <span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []
-        )
-      )
+      <span class="ruby-constant">Patient</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">child_attributes</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-string">&quot;patient_locations&quot;</span> <span class="ruby-operator">=&gt;</span> []))
     <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -7350,7 +7247,6 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
       <span class="ruby-keyword">end</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">new_record?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">school</span> <span class="ruby-operator">||</span>
-           <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">not_in_team?</span>(<span class="ruby-value">team:</span>, <span class="ruby-value">academic_year:</span>) <span class="ruby-operator">||</span>
            <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">archived?</span>(<span class="ruby-value">team:</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school_moves</span>.<span class="ruby-identifier">any?</span>
         <span class="ruby-identifier">school_move</span> =
@@ -7386,8 +7282,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">persisted?</span>
 
   <span class="ruby-identifier">from_known_school</span> =
-    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span>
-      (<span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
+    <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>
   <span class="ruby-identifier">to_known_school</span> =
     <span class="ruby-identifier">home_educated</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">school</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">urn</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>)
 
@@ -7634,7 +7529,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="set_child_attribute_if_valid-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 395</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 388</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">set_child_attribute_if_valid</span>(
   <span class="ruby-identifier">attribute</span>,
   <span class="ruby-identifier">existing_patient</span>,
@@ -7690,7 +7585,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="stage_and_handle_pending_changes-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 468</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 461</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">stage_and_handle_pending_changes</span>(<span class="ruby-identifier">existing_patient</span>)
   <span class="ruby-identifier">auto_accepted_changes</span> = <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">changed_attributes</span>.<span class="ruby-identifier">keys</span>
 

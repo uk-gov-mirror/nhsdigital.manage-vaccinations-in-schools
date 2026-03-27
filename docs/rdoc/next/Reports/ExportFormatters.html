@@ -691,7 +691,7 @@
             </details>
           </div>
           <div class="method-source-code" id="anatomical_site-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 104</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 102</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">anatomical_site</span>(<span class="ruby-value">vaccination_record:</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">vaccination_record</span>.<span class="ruby-identifier">delivery_site</span>
     <span class="ruby-constant">ImmunisationImportRow</span><span class="ruby-operator">::</span><span class="ruby-constant">DELIVERY_SITES</span>.<span class="ruby-identifier">key</span>(
@@ -739,7 +739,7 @@
             </details>
           </div>
           <div class="method-source-code" id="care_setting-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 22</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 20</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">care_setting</span>(<span class="ruby-value">location:</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">location</span>&amp;.<span class="ruby-identifier">school?</span>
     <span class="ruby-constant">ImmunisationImportRow</span><span class="ruby-operator">::</span><span class="ruby-constant">CARE_SETTING_SCHOOL</span>
@@ -785,7 +785,7 @@
             </details>
           </div>
           <div class="method-source-code" id="clinic_name-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 30</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 28</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clinic_name</span>(<span class="ruby-value">location:</span>, <span class="ruby-value">vaccination_record:</span>)
   <span class="ruby-identifier">location</span>&amp;.<span class="ruby-identifier">school?</span> <span class="ruby-operator">?</span> <span class="ruby-string">&quot;&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">vaccination_record</span>.<span class="ruby-identifier">location_name</span>
 <span class="ruby-keyword">end</span></pre>
@@ -827,7 +827,7 @@
             </details>
           </div>
           <div class="method-source-code" id="consent_details-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 55</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 53</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">consent_details</span>(<span class="ruby-value">consents:</span>)
   <span class="ruby-identifier">values</span> =
     <span class="ruby-identifier">consents</span>
@@ -878,7 +878,7 @@
             </details>
           </div>
           <div class="method-source-code" id="consent_status-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 34</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 32</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">consent_status</span>(<span class="ruby-value">patient:</span>, <span class="ruby-value">programme:</span>, <span class="ruby-value">academic_year:</span>)
   <span class="ruby-identifier">programme_status</span> = <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">programme_status</span>(<span class="ruby-identifier">programme</span>, <span class="ruby-value">academic_year:</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">programme_status</span>.<span class="ruby-identifier">consent_given?</span>
@@ -937,7 +937,7 @@
             </details>
           </div>
           <div class="method-source-code" id="dose_sequence-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 118</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 116</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">dose_sequence</span>(<span class="ruby-value">vaccination_record:</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">vaccination_record</span>.<span class="ruby-identifier">administered?</span>
     <span class="ruby-identifier">vaccination_record</span>.<span class="ruby-identifier">dose_sequence</span> <span class="ruby-operator">||</span> <span class="ruby-string">&quot;&quot;</span>
@@ -983,7 +983,7 @@
             </details>
           </div>
           <div class="method-source-code" id="gillick_status-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 86</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 84</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">gillick_status</span>(<span class="ruby-value">gillick_assessment:</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-string">&quot;&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">gillick_assessment</span>.<span class="ruby-identifier">nil?</span>
 
@@ -1031,7 +1031,7 @@
             </details>
           </div>
           <div class="method-source-code" id="health_question_answers-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 68</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 66</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">health_question_answers</span>(<span class="ruby-value">consents:</span>)
   <span class="ruby-identifier">health_answers</span> = <span class="ruby-constant">ConsolidatedHealthAnswers</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">consents</span>).<span class="ruby-identifier">to_h</span>
 
@@ -1087,7 +1087,7 @@
             </details>
           </div>
           <div class="method-source-code" id="psd_status-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 96</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 94</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">psd_status</span>(<span class="ruby-value">patient_specific_direction:</span>)
   <span class="ruby-identifier">patient_specific_direction</span> <span class="ruby-operator">?</span> <span class="ruby-string">&quot;PSD added&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&quot;&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1129,7 +1129,7 @@
             </details>
           </div>
           <div class="method-source-code" id="reason_not_vaccinated-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 126</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 124</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reason_not_vaccinated</span>(<span class="ruby-value">vaccination_record:</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">vaccination_record</span>.<span class="ruby-identifier">administered?</span>
     <span class="ruby-string">&quot;&quot;</span>
@@ -1177,7 +1177,7 @@
             </details>
           </div>
           <div class="method-source-code" id="route_of_vaccination-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 114</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 112</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">route_of_vaccination</span>(<span class="ruby-value">vaccination_record:</span>)
   <span class="ruby-identifier">vaccination_record</span>.<span class="ruby-identifier">delivery_method</span> <span class="ruby-operator">||</span> <span class="ruby-string">&quot;&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1219,7 +1219,7 @@
             </details>
           </div>
           <div class="method-source-code" id="school_name-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 18</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 16</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">school_name</span>(<span class="ruby-value">location:</span>, <span class="ruby-value">patient:</span>)
   <span class="ruby-identifier">location</span>&amp;.<span class="ruby-identifier">school?</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">location</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>&amp;.<span class="ruby-identifier">name</span> <span class="ruby-operator">||</span> <span class="ruby-string">&quot;&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1265,12 +1265,10 @@
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">school_urn</span>(<span class="ruby-value">location:</span>, <span class="ruby-value">patient:</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">location</span>&amp;.<span class="ruby-identifier">school?</span>
     <span class="ruby-identifier">location</span>.<span class="ruby-identifier">urn</span>
-  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">home_educated?</span>
-    <span class="ruby-string">&quot;999999&quot;</span>
   <span class="ruby-keyword">elsif</span> (<span class="ruby-identifier">school</span> = <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">school</span>)
     <span class="ruby-identifier">school</span>.<span class="ruby-identifier">urn</span>
   <span class="ruby-keyword">else</span>
-    <span class="ruby-string">&quot;888888&quot;</span>
+    <span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">URN_UNKNOWN</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -1311,7 +1309,7 @@
             </details>
           </div>
           <div class="method-source-code" id="vaccinated-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 100</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/reports/export_formatters.rb, line 98</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">vaccinated</span>(<span class="ruby-value">vaccination_record:</span>)
   <span class="ruby-identifier">vaccination_record</span>.<span class="ruby-identifier">administered?</span> <span class="ruby-operator">?</span> <span class="ruby-string">&quot;Y&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&quot;N&quot;</span>
 <span class="ruby-keyword">end</span></pre>
