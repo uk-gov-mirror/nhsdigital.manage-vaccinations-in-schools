@@ -5,9 +5,11 @@
 # Table name: notify_log_entries
 #
 #  id              :bigint           not null, primary key
+#  body            :text
 #  delivery_status :integer          default("sending"), not null
 #  purpose         :integer
 #  recipient       :string           not null
+#  subject         :text
 #  type            :integer          not null
 #  created_at      :datetime         not null
 #  consent_form_id :bigint
@@ -42,12 +44,15 @@ FactoryBot.define do
       type { "email" }
       recipient { Faker::Internet.email }
       template_id { NotifyTemplate.all_ids(channel: :email).sample }
+      subject { "Message about your child's vaccination" }
+      body { "Dear parent, this is about your child's vaccination." }
     end
 
     trait :sms do
       type { "sms" }
       recipient { Faker::PhoneNumber.phone_number }
       template_id { NotifyTemplate.all_ids(channel: :sms).sample }
+      body { "Dear parent, this is about your child's vaccination." }
     end
 
     delivery_id { SecureRandom.uuid }

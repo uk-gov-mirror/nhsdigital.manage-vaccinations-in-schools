@@ -8,9 +8,33 @@ class Notifier::Patient
   end
 
   ##
+  # Determine whether a consent request can be sent to the parents of this
+  # patient.
+  def can_send_consent_request?(programmes, academic_year:)
+    programmes.any? do |programme|
+      programme_status = patient.programme_status(programme, academic_year:)
+
+      programme_status.needs_consent_no_response? ||
+        programme_status.needs_consent_request_scheduled? ||
+        programme_status.needs_consent_request_not_scheduled?
+    end
+  end
+
+  ##
   # Send a consent request email and SMS to the parents of this patient.
-  def send_consent_request(programmes, session:, sent_by:)
-    send_consent_notification(programmes, type: :request, session:, sent_by:)
+  def send_consent_request(
+    programmes,
+    sent_by:,
+    session: nil,
+    team_location: nil
+  )
+    send_consent_notification(
+      programmes,
+      type: :request,
+      sent_by:,
+      session:,
+      team_location:
+    )
   end
 
   ##
@@ -36,7 +60,7 @@ class Notifier::Patient
   ##
   # Determine whether a clinic invitation can be sent to the parents of this
   # patient.
-
+  #
   # Normally this would be +true+, but it can be +false+ in some scenarios,
   # for example, if the patient has no parent contact details or has already
   # been invited to the clinic.
@@ -151,8 +175,20 @@ class Notifier::Patient
     end
   end
 
-  def send_consent_notification(programmes, type:, session:, sent_by:)
-    return unless send_notification?(team: session.team)
+  def send_consent_notification(
+    programmes,
+    type:,
+    sent_by:,
+    session: nil,
+    team_location: nil
+  )
+    if session.nil? && team_location.nil?
+      raise "Either session or team_location must be set."
+    end
+
+    team = session&.team || team_location&.team
+
+    return unless send_notification?(team:)
 
     programmes_to_send_for = filter_programmes_notify_parents(programmes)
 
@@ -163,16 +199,21 @@ class Notifier::Patient
         programmes: programmes_to_send_for,
         patient:,
         session:,
+        team_location:,
         type:,
         sent_at: Time.current,
         sent_by:
       )
 
+    location = session&.location || team_location&.location
+    outbreak = session&.outbreak || false
+
     email_template, sms_template =
       generate_consent_templates(
         programmes: programmes_to_send_for,
         patient:,
-        session:,
+        location:,
+        outbreak:,
         type:
       )
 
@@ -186,8 +227,8 @@ class Notifier::Patient
         parent:,
         patient:,
         programme_types:,
-        session:,
-        sent_by:
+        sent_by:,
+        **{ session:, team_location: }.compact
       )
 
       SMSDeliveryJob.perform_later(
@@ -196,16 +237,22 @@ class Notifier::Patient
         parent:,
         patient:,
         programme_types:,
-        session:,
-        sent_by:
+        sent_by:,
+        **{ session:, team_location: }.compact
       )
     end
 
     consent_notification
   end
 
-  def generate_consent_templates(programmes:, patient:, session:, type:)
-    is_school = session.location.school?
+  def generate_consent_templates(
+    programmes:,
+    patient:,
+    location:,
+    outbreak:,
+    type:
+  )
+    is_school = location.school?
     base_template = :"consent_#{is_school ? "school" : "clinic"}_#{type}"
 
     # We can only handle a single programme group or variant in the template.
@@ -222,7 +269,7 @@ class Notifier::Patient
             base_template:,
             group:,
             variant:,
-            session:,
+            outbreak:,
             channel: :email
           )
         if template.blank?
@@ -244,7 +291,7 @@ class Notifier::Patient
             base_template:,
             group:,
             variant:,
-            session:,
+            outbreak:,
             channel: :sms
           )
         template || base_template
@@ -259,21 +306,19 @@ class Notifier::Patient
     base_template:,
     group:,
     variant:,
-    session:,
+    outbreak:,
     channel:
   )
-    is_outbreak = session.outbreak
-
-    combinations = [([group, :outbreak] if is_outbreak), [group]]
+    combinations = [([group, :outbreak] if outbreak), [group]]
     if variant.present? && variant != group
-      combinations.prepend(([variant, :outbreak] if is_outbreak), [variant])
+      combinations.prepend(([variant, :outbreak] if outbreak), [variant])
     end
     combinations.compact!
 
     combinations
       .lazy
       .map { |parts| :"#{base_template}_#{parts.join("_")}" }
-      .detect { NotifyTemplate.exists?(it, channel:, source: :any) }
+      .detect { NotifyTemplate.exists?(it, channel:) }
   end
 
   def programmes_to_send_clinic_invitation_for(

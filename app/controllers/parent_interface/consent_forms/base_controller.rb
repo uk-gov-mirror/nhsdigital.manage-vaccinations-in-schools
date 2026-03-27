@@ -9,6 +9,7 @@ module ParentInterface
     skip_before_action :set_navigation_items
 
     prepend_before_action :set_programmes
+    prepend_before_action :set_location
     prepend_before_action :set_team
     prepend_before_action :set_team_location
     prepend_before_action :set_session
@@ -31,27 +32,40 @@ module ParentInterface
       @session =
         if @consent_form
           @consent_form.session
-        elsif params[:session_slug].present?
-          Session.find_by!(slug: params[:session_slug])
+        elsif (slug = params[:session_slug_or_team_location_id]).present? &&
+              is_session_slug?(slug)
+          Session.find_by!(slug:)
         end
     end
 
     def set_team_location
-      @team_location = @consent_form&.team_location || @session&.team_location
+      @team_location =
+        if @consent_form
+          @consent_form.team_location
+        elsif @session
+          @session.team_location
+        elsif (id = params[:session_slug_or_team_location_id]).present? &&
+              is_team_location_id?(id)
+          TeamLocation.find(id)
+        end
     end
 
     def set_team
       @team = @team_location.team
     end
 
+    def set_location
+      @location = @team_location.location
+    end
+
     def set_programmes
       @programmes =
         if @consent_form
           @consent_form.consent_form_programmes.map(&:programme)
-        elsif @session && params[:programme_types].present?
+        elsif params[:programme_types].present?
           types = params[:programme_types].split("-")
 
-          @session.programmes.flat_map do
+          (@session || @location).programmes.flat_map do
             it.variants.select { it.to_param.in?(types) }
           end
         end
@@ -62,7 +76,7 @@ module ParentInterface
     def set_header_path
       @header_path =
         start_parent_interface_consent_forms_path(
-          @session,
+          @session || @team_location,
           @programmes.map(&:to_param).join("-")
         )
     end
@@ -99,13 +113,22 @@ module ParentInterface
     end
 
     def check_if_past_deadline!
-      return if @session.unscheduled?
-      return if @session.can_receive_consent?
+      if @session.nil? || @session.unscheduled? || @session.can_receive_consent?
+        return
+      end
 
       redirect_to deadline_passed_parent_interface_consent_forms_path(
-                    @session.slug,
+                    @session || @team_location,
                     @programmes.map(&:type).join("-")
                   )
     end
+
+    def is_team_location_id?(string)
+      # We consider the value to be a team location ID if it's just an
+      # integer value.
+      string.to_i.to_s == string
+    end
+
+    def is_session_slug?(string) = !is_team_location_id?(string)
   end
 end

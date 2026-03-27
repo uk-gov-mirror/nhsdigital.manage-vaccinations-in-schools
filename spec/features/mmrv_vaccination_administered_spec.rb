@@ -78,7 +78,7 @@ describe "MMRV vaccination" do
   end
 
   def and_a_patient_has_consented_for_mmrv
-    location = create(:generic_clinic, team: @team)
+    location = @team.generic_clinic
     @session =
       create(:session, team: @team, programmes: [@programme], location:)
     @parent = create(:parent)
@@ -101,7 +101,7 @@ describe "MMRV vaccination" do
   end
 
   def and_a_patient_exists
-    location = create(:generic_clinic, team: @team)
+    location = @team.generic_clinic
     @session =
       create(:session, team: @team, programmes: [@programme], location:)
     @parent = create(:parent)
@@ -181,13 +181,16 @@ describe "MMRV vaccination" do
   def when_i_begin_recording_the_vaccination_for_mmrv
     expect(page).to have_content("Record MMRV vaccination")
 
-    within all("section")[0] do
-      check "I have checked that the above statements are true"
-    end
+    within all("form")[3] do
+      within all("fieldset")[1] do
+        check "I have checked that the above statements are true"
+      end
 
-    within all("section")[1] do
-      choose "Yes"
-      choose "Left arm (upper position)"
+      within all("fieldset")[2] do
+        choose "Yes"
+        choose "Left arm (upper position)"
+      end
+
       click_button "Continue"
     end
   end
@@ -195,13 +198,16 @@ describe "MMRV vaccination" do
   def and_i_begin_recording_the_vaccination_for_mmr
     expect(page).to have_content("Record MMR vaccination")
 
-    within all("section")[0] do
-      check "I have checked that the above statements are true"
-    end
+    within all("form")[3] do
+      within all("fieldset")[1] do
+        check "I have checked that the above statements are true"
+      end
 
-    within all("section")[1] do
-      choose "Yes"
-      choose "Left arm (upper position)"
+      within all("fieldset")[2] do
+        choose "Yes"
+        choose "Left arm (upper position)"
+      end
+
       click_button "Continue"
     end
   end

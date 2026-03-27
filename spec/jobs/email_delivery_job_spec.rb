@@ -39,6 +39,7 @@ describe EmailDeliveryJob do
         sent_by:,
         session:,
         team:,
+        team_location:,
         vaccination_record:
       )
     end
@@ -61,6 +62,7 @@ describe EmailDeliveryJob do
         programmes:
       )
     end
+    let(:team_location) { session.team_location }
     let(:vaccination_record) { nil }
 
     it "generates personalisation" do
@@ -74,6 +76,7 @@ describe EmailDeliveryJob do
         programme_types:,
         session:,
         team:,
+        team_location:,
         vaccination_record:
       ).and_call_original
       perform_now
@@ -84,7 +87,7 @@ describe EmailDeliveryJob do
         email_address: "test@example.com",
         email_reply_to_id: "54bf1d28-8851-43f2-893d-1853f43a50cd",
         personalisation: an_instance_of(Hash),
-        template_id: NotifyTemplate.find(template_name, channel: :email).id
+        template_id: EmailDeliveryJob::PASSTHROUGH_TEMPLATE_ID
       )
       perform_now
     end
@@ -96,7 +99,7 @@ describe EmailDeliveryJob do
         expect(notifications_client).to receive(:send_email).with(
           email_address: "test@example.com",
           personalisation: an_instance_of(Hash),
-          template_id: NotifyTemplate.find(template_name, channel: :email).id
+          template_id: EmailDeliveryJob::PASSTHROUGH_TEMPLATE_ID
         )
         perform_now
       end
@@ -116,6 +119,8 @@ describe EmailDeliveryJob do
       expect(notify_log_entry.patient).to eq(patient)
       expect(notify_log_entry.programmes.map(&:type)).to eq(programme_types)
       expect(notify_log_entry.sent_by).to eq(sent_by)
+      expect(notify_log_entry.subject).to include("has still not had their")
+      expect(notify_log_entry.body).to include("Our records show that")
     end
 
     context "with a non-MMR programme" do
@@ -174,7 +179,7 @@ describe EmailDeliveryJob do
           email_address: "test@example.com",
           email_reply_to_id: "54bf1d28-8851-43f2-893d-1853f43a50cd",
           personalisation: an_instance_of(Hash),
-          template_id: NotifyTemplate.find(template_name, channel: :email).id
+          template_id: EmailDeliveryJob::PASSTHROUGH_TEMPLATE_ID
         )
         perform_now
       end
@@ -186,7 +191,7 @@ describe EmailDeliveryJob do
           expect(notifications_client).to receive(:send_email).with(
             email_address: "test@example.com",
             personalisation: an_instance_of(Hash),
-            template_id: NotifyTemplate.find(template_name, channel: :email).id
+            template_id: EmailDeliveryJob::PASSTHROUGH_TEMPLATE_ID
           )
           perform_now
         end

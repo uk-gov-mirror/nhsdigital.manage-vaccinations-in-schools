@@ -231,12 +231,15 @@ describe "Flu vaccination" do
   end
 
   def then_i_am_able_to_vaccinate_them_with_nasal_via_psd
-    within all("section")[0] do
-      check "I have checked that the above statements are true"
-    end
+    within all("form")[3] do
+      within all("fieldset")[1] do
+        check "I have checked that the above statements are true"
+      end
 
-    within all("section")[1] do
-      choose "Yes"
+      within all("fieldset")[2] do
+        choose "Yes"
+      end
+
       click_button "Continue"
     end
 

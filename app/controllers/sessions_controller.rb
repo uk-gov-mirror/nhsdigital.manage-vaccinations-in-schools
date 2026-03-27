@@ -34,7 +34,6 @@ class SessionsController < ApplicationController
     @draft_session.assign_attributes(create_params)
 
     if params[:school_id].present?
-      @draft_session.location_type = "school"
       @draft_session.location_id = params[:school_id]
       @draft_session.return_to = "school"
     else
@@ -60,7 +59,7 @@ class SessionsController < ApplicationController
           end
 
         send_data(
-          Reports::OfflineSessionExporter.call(@session),
+          Reports::OfflineExporter.from_session(@session),
           filename:
             "#{filename} - exported on #{Date.current.to_fs(:long)}.xlsx",
           disposition: "attachment"

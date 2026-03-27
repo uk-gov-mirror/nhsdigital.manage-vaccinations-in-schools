@@ -16,13 +16,37 @@ class Schools::PatientsController < Schools::BaseController
             academic_year: @academic_year
           }
         )
-        .where(school_id: @location.school_id)
+        .where(school: @location)
         .includes_statuses
         .includes(:clinic_notifications)
 
     patients = @form.apply(scope)
 
-    @pagy, @patients = pagy(patients)
+    respond_to do |format|
+      format.html { @pagy, @patients = pagy(patients) }
+
+      format.xlsx do
+        data =
+          Reports::OfflineExporter.from_patients(
+            patients,
+            team: current_team,
+            programmes: @location.programmes,
+            academic_year: @academic_year
+          )
+
+        location_name =
+          if (urn_and_site = @location.urn_and_site).present?
+            "#{@location.name} (#{urn_and_site})"
+          else
+            @location.name
+          end
+
+        filename =
+          "#{location_name} - exported on #{Date.current.to_fs(:long)}.xlsx"
+
+        send_data(data, filename:, disposition: "attachment")
+      end
+    end
   end
 
   private
@@ -30,12 +54,7 @@ class Schools::PatientsController < Schools::BaseController
   def set_programme_statuses
     @programme_statuses =
       Patient::ProgrammeStatus.statuses.keys -
-        %w[
-          not_eligible
-          needs_consent_request_not_scheduled
-          needs_consent_request_scheduled
-          needs_consent_request_failed
-          needs_consent_follow_up_requested
-        ]
+        Patient::ProgrammeStatus::NOT_ELIGIBLE_STATUSES.keys -
+        %w[needs_consent_follow_up_requested]
   end
 end

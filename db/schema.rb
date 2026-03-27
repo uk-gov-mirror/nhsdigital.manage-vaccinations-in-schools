@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_18_112719) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_22_153818) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -293,12 +293,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_112719) do
     t.enum "programme_types", null: false, array: true, enum_type: "programme_type"
     t.datetime "sent_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.bigint "sent_by_user_id"
-    t.bigint "session_id", null: false
+    t.bigint "session_id"
+    t.bigint "team_location_id"
     t.integer "type", null: false
     t.index ["patient_id"], name: "index_consent_notifications_on_patient_id"
     t.index ["programme_types"], name: "index_consent_notifications_on_programme_types", using: :gin
     t.index ["sent_by_user_id"], name: "index_consent_notifications_on_sent_by_user_id"
     t.index ["session_id"], name: "index_consent_notifications_on_session_id"
+    t.index ["team_location_id"], name: "index_consent_notifications_on_team_location_id"
   end
 
   create_table "consents", force: :cascade do |t|
@@ -540,7 +542,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_112719) do
     t.index ["ods_code"], name: "index_locations_on_ods_code", unique: true
     t.index ["systm_one_code"], name: "index_locations_on_systm_one_code", unique: true
     t.index ["urn", "site"], name: "index_locations_on_urn_and_site", unique: true
-    t.index ["urn"], name: "index_locations_on_urn", unique: true, where: "(site IS NULL)"
+    t.index ["urn"], name: "index_locations_on_urn", unique: true, where: "((type = 0) AND (site IS NULL))"
   end
 
   create_table "notes", force: :cascade do |t|
@@ -556,6 +558,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_112719) do
   end
 
   create_table "notify_log_entries", force: :cascade do |t|
+    t.text "body"
     t.bigint "consent_form_id"
     t.datetime "created_at", null: false
     t.uuid "delivery_id"
@@ -565,6 +568,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_112719) do
     t.integer "purpose"
     t.string "recipient", null: false
     t.bigint "sent_by_user_id"
+    t.text "subject"
     t.uuid "template_id", null: false
     t.integer "type", null: false
     t.index ["consent_form_id"], name: "index_notify_log_entries_on_consent_form_id"
@@ -1243,4 +1247,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_112719) do
   add_index "reporting_api_totals", ["patient_year_group"], name: "ix_rapi_totals_year_group"
   add_index "reporting_api_totals", ["session_location_id"], name: "ix_rapi_totals_session_loc"
   add_index "reporting_api_totals", ["team_id", "academic_year", "programme_type", "status"], name: "ix_rapi_totals_team_year_prog_status"
+
 end

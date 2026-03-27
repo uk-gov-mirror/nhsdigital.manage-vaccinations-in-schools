@@ -110,7 +110,7 @@ describe "School sessions" do
 
     programmes = [@programme, @other_programme]
 
-    @team = create(:team, :with_one_nurse, :with_generic_clinic, programmes:)
+    @team = create(:team, :with_one_nurse, programmes:)
     @location = create(:school, :secondary, team: @team, programmes:)
 
     @parent = create(:parent)
@@ -135,7 +135,14 @@ describe "School sessions" do
       )
 
     patient_already_in_clinic_without_invitation =
-      create(:patient, year_group: 8, location: @location)
+      create(
+        :patient,
+        :consent_no_response,
+        year_group: 8,
+        location: @location,
+        parents: [@parent],
+        programmes:
+      )
     create(
       :patient_location,
       patient: patient_already_in_clinic_without_invitation,
@@ -143,7 +150,14 @@ describe "School sessions" do
     )
 
     patient_already_in_clinic_with_invitation =
-      create(:patient, year_group: 8, location: @location)
+      create(
+        :patient,
+        :consent_no_response,
+        year_group: 8,
+        location: @location,
+        parents: [@parent],
+        programmes:
+      )
     create(
       :patient_location,
       patient: patient_already_in_clinic_with_invitation,
@@ -220,11 +234,6 @@ describe "School sessions" do
   end
 
   def and_i_choose_the_school
-    expect(page).to have_content("What type of session is this?")
-
-    choose "School"
-    click_on "Continue"
-
     expect(page).to have_content("Where is this school session taking place?")
 
     select @location.name
@@ -449,8 +458,18 @@ describe "School sessions" do
   def and_the_parent_receives_an_invitation
     perform_enqueued_jobs
 
-    expect_email_to @parent.email, :clinic_initial_invitation
-    expect_sms_to @parent.phone, :clinic_initial_invitation, :any
+    expect(email_deliveries).to include(
+      matching_notify_email(
+        to: @parent.email,
+        template: :clinic_initial_invitation
+      ).with_content_including("Our records show that", "has not had their")
+    )
+    expect(sms_deliveries).to include(
+      matching_notify_sms(
+        phone_number: @parent.phone,
+        template: :clinic_initial_invitation
+      ).with_content_including("community clinic", "has not had their")
+    )
   end
 
   def given_my_team_is_running_an_hpv_vaccination_programme_for_ods_code(
@@ -461,14 +480,7 @@ describe "School sessions" do
 
     programmes = [@programme, @other_programme]
 
-    @team =
-      create(
-        :team,
-        :with_one_nurse,
-        :with_generic_clinic,
-        programmes:,
-        ods_code:
-      )
+    @team = create(:team, :with_one_nurse, programmes:, ods_code:)
     @location = create(:school, :secondary, team: @team, programmes:)
 
     @parent = create(:parent)
@@ -509,7 +521,14 @@ describe "School sessions" do
       )
 
     patient_already_in_clinic_without_invitation =
-      create(:patient, year_group: 8, location: @location)
+      create(
+        :patient,
+        :consent_no_response,
+        year_group: 8,
+        location: @location,
+        parents: [@parent],
+        programmes:
+      )
     create(
       :patient_location,
       patient: patient_already_in_clinic_without_invitation,
@@ -517,7 +536,14 @@ describe "School sessions" do
     )
 
     patient_already_in_clinic_with_invitation =
-      create(:patient, year_group: 8, location: @location)
+      create(
+        :patient,
+        :consent_no_response,
+        year_group: 8,
+        location: @location,
+        parents: [@parent],
+        programmes:
+      )
     create(
       :patient_location,
       patient: patient_already_in_clinic_with_invitation,
@@ -533,13 +559,33 @@ describe "School sessions" do
 
   def then_the_parent_receives_an_rt5_clinic_invitation
     perform_enqueued_jobs
-    expect_email_to @parent.email, :clinic_initial_invitation_rt5
-    expect_sms_to @parent.phone, :clinic_initial_invitation_rt5, :any
+    expect(email_deliveries).to include(
+      matching_notify_email(
+        to: @parent.email,
+        template: :clinic_initial_invitation_rt5
+      ).with_content_including("community clinic", "2 to 3 working days")
+    )
+    expect(sms_deliveries).to include(
+      matching_notify_sms(
+        phone_number: @parent.phone,
+        template: :clinic_initial_invitation_rt5
+      ).with_content_including("community clinic", "2 to 3 working days")
+    )
   end
 
   def then_the_parent_receives_a_ryg_clinic_invitation
     perform_enqueued_jobs
-    expect_email_to @parent.email, :clinic_initial_invitation_ryg
-    expect_sms_to @parent.phone, :clinic_initial_invitation_ryg, :any
+    expect(email_deliveries).to include(
+      matching_notify_email(
+        to: @parent.email,
+        template: :clinic_initial_invitation_ryg
+      ).with_content_including("swiftqueue.co.uk", "Jepson House")
+    )
+    expect(sms_deliveries).to include(
+      matching_notify_sms(
+        phone_number: @parent.phone,
+        template: :clinic_initial_invitation_ryg
+      ).with_content_including("swiftqueue.co.uk")
+    )
   end
 end

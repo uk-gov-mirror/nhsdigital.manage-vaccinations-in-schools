@@ -8,7 +8,7 @@
 <h2 class="nhsuk-heading-m">Give or refuse consent</h2>
 
 <%= form_with url: url_for(action: :create) do |f| %>
-  <%= hidden_field_tag :session_slug, @session.slug %>
+  <%= hidden_field_tag :session_slug_or_team_location_id, @session&.slug || @team_location.id %>
   <%= hidden_field_tag :programme_types, programme_params %>
   <%= f.govuk_submit "Start now" %>
 <% end %>

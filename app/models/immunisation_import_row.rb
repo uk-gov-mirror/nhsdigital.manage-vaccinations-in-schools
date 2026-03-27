@@ -39,6 +39,8 @@ class ImmunisationImportRow
   CARE_SETTING_SCHOOL = 1
   CARE_SETTING_COMMUNITY = 2
 
+  SESSION_ID_CLINIC = "clinic"
+
   MAX_FIELD_LENGTH = 300
 
   DELIVERY_SITES = {
@@ -91,9 +93,6 @@ class ImmunisationImportRow
     "vaccination contraindicated" => :contraindicated,
     "already had elsewhere" => :already_had
   }.freeze
-
-  SCHOOL_URN_HOME_EDUCATED = "999999"
-  SCHOOL_URN_UNKNOWN = "888888"
 
   attr_reader :team, :type, :patient
 
@@ -349,7 +348,7 @@ class ImmunisationImportRow
     return unless location.nil?
 
     if is_school_setting? || (is_unknown_setting? && clinic_name.blank?)
-      school&.name || school_name&.to_s || "Unknown"
+      school&.school? ? school.name : school_name&.to_s || "Unknown"
     else
       clinic&.name || clinic_name&.to_s || "Unknown"
     end
@@ -375,8 +374,11 @@ class ImmunisationImportRow
 
   def school
     @school ||=
-      if school_urn.present? && school_urn.to_s != SCHOOL_URN_HOME_EDUCATED &&
-           school_urn.to_s != SCHOOL_URN_UNKNOWN
+      if school_urn.to_s == Location::URN_HOME_EDUCATED
+        team.home_educated_school
+      elsif school_urn.to_s == Location::URN_UNKNOWN
+        team.unknown_school
+      elsif school_urn.present?
         Location.school.find_by_urn_and_site(school_urn.to_s) ||
           Location.school.find_by(systm_one_code: school_urn.to_s)
       end
@@ -405,10 +407,18 @@ class ImmunisationImportRow
 
   def session
     @session ||=
-      if (id = session_id&.to_i)
+      if session_id&.to_s == SESSION_ID_CLINIC && academic_year &&
+           (programme_type = programme&.type) && performed_at_date.present?
+        ClinicSessionFactory.call(
+          team:,
+          academic_year:,
+          programme_type:,
+          date: performed_at_date
+        )
+      elsif (id = session_id&.to_i)
         Session
           .joins(:team_location)
-          .where(team_location: { team:, academic_year: AcademicYear.current })
+          .where(team_location: { team: })
           .includes(:location, :session_programme_year_groups)
           .find_by(id:)
       end
@@ -460,7 +470,7 @@ class ImmunisationImportRow
 
   def programmes_by_name
     @programmes_by_name ||=
-      (session || team)
+      team
         .programmes
         .each_with_object({}) do |programme, hash|
           programme.import_names.each do |name|
@@ -496,7 +506,7 @@ class ImmunisationImportRow
   def dose_sequence_required? =
     administered && (offline_recording? || national_reporting_hpv?)
 
-  def academic_year = date_of_vaccination.to_date.academic_year
+  def academic_year = date_of_vaccination&.to_date&.academic_year
 
   def existing_patients(candidates: nil)
     if patient_first_name.blank? || patient_last_name.blank? ||
@@ -1072,19 +1082,19 @@ class ImmunisationImportRow
     field = programme_name || combined_vaccination_and_dose_sequence
 
     if programme
-      is_a_national_reporting_programme =
-        national_reporting_hpv? || national_reporting_flu?
-      if national_reporting? && !is_a_national_reporting_programme
+      if national_reporting? &&
+           !(national_reporting_hpv? || national_reporting_flu?)
         errors.add(
           vaccine_name.header,
           "This vaccine programme is not accepted in this upload."
         )
+      elsif session && !session.programme_types.include?(programme.type)
+        errors.add(
+          field.header,
+          "This programme is not available in this session."
+        )
       end
-
-      return
-    end
-
-    if point_of_care?
+    elsif point_of_care?
       if field.nil?
         errors.add(
           :base,
@@ -1093,10 +1103,7 @@ class ImmunisationImportRow
       elsif field.blank?
         errors.add(field.header, "Enter a programme.")
       else
-        errors.add(
-          field.header,
-          "This programme is not available in this session."
-        )
+        errors.add(field.header, "This programme is not recognised.")
       end
     end
   end
@@ -1120,7 +1127,7 @@ class ImmunisationImportRow
   def validate_school_name
     return if national_reporting?
 
-    school_name_required = school_urn&.to_s == SCHOOL_URN_UNKNOWN
+    school_name_required = school_urn&.to_s == Location::URN_UNKNOWN
 
     if school_name.present?
       if school_name.to_s.length > MAX_FIELD_LENGTH
@@ -1155,8 +1162,9 @@ class ImmunisationImportRow
     end
 
     school_urn_acceptable =
-      school_urn.to_s.in?([SCHOOL_URN_HOME_EDUCATED, SCHOOL_URN_UNKNOWN]) ||
-        Location.school.where_urn_and_site(school_urn.to_s).exists? ||
+      school_urn.to_s.in?(
+        [Location::URN_HOME_EDUCATED, Location::URN_UNKNOWN]
+      ) || Location.school.where_urn_and_site(school_urn.to_s).exists? ||
         Location.school.exists?(systm_one_code: school_urn.to_s)
 
     unless school_urn_acceptable
@@ -1178,7 +1186,7 @@ class ImmunisationImportRow
           session_id.header,
           "A session ID cannot be provided for this record; this record was sourced from an external source."
         )
-      elsif session_id.to_i.nil?
+      elsif session_id.to_s != SESSION_ID_CLINIC && session_id.to_i.nil?
         errors.add(
           session_id.header,
           "The session ID is not recognised. Download the offline spreadsheet " \
@@ -1186,6 +1194,13 @@ class ImmunisationImportRow
             "contact our support team."
         )
       elsif session.nil?
+        errors.add(
+          session_id.header,
+          "The session ID is not recognised. Download the offline spreadsheet " \
+            "and copy the session ID for this row from there, or " \
+            "contact our support team."
+        )
+      elsif session.academic_year != academic_year
         errors.add(
           session_id.header,
           "The session ID is not recognised. Download the offline spreadsheet " \

@@ -29,7 +29,7 @@ namespace :vaccines do
       vaccine.snomed_product_term = data["snomed_product_term"]
       vaccine.upload_name = data["upload_name"]
 
-      vaccine.side_effects = side_effects_for(programme_type, data["method"])
+      vaccine.side_effects = data.fetch("side_effects")
 
       vaccine.save!
 
@@ -82,64 +82,6 @@ namespace :vaccines do
     else
       puts "All vaccine health question chains are correctly linked"
     end
-  end
-end
-
-def side_effects_for(programme_type, method)
-  case programme_type
-  when "flu"
-    if method == "nasal"
-      %w[runny_blocked_nose headache tiredness loss_of_appetite]
-    else
-      %w[
-        swelling
-        headache
-        high_temperature
-        feeling_sick
-        irritable
-        drowsy
-        loss_of_appetite
-        unwell
-      ]
-    end
-  when "hpv"
-    %w[
-      swelling
-      headache
-      high_temperature
-      feeling_sick
-      irritable
-      drowsy
-      loss_of_appetite
-      unwell
-    ]
-  when "menacwy"
-    %w[
-      drowsy
-      feeling_sick
-      headache
-      high_temperature
-      irritable
-      loss_of_appetite
-      rash
-      swelling
-      unwell
-    ]
-  when "mmr"
-    %w[swollen_glands raised_blotchy_rash]
-  when "td_ipv"
-    %w[
-      drowsy
-      feeling_sick
-      headache
-      high_temperature
-      irritable
-      loss_of_appetite
-      swelling
-      unwell
-    ]
-  else
-    raise UnsupportedProgrammeType, programme_type
   end
 end
 
@@ -389,11 +331,20 @@ def create_mmr_health_questions(vaccine)
   blood_thinning.update!(next_question: blood_or_plasma_transfusion)
 
   severe_reaction_mmr =
-    vaccine.health_questions.create!(
-      title:
-        "Has your child had a severe allergic reaction (anaphylaxis) to " \
-          "a previous dose of #{vaccine.programme.name} or any other vaccine?"
-    )
+    if vaccine.disease_types.include?("varicella")
+      vaccine.health_questions.create!(
+        title:
+          "Has your child had a severe allergic reaction (anaphylaxis) to " \
+            "a previous dose of #{vaccine.programme.name} or any other measles, mumps, rubella or " \
+            "varicella (chickenpox) vaccine?"
+      )
+    else
+      vaccine.health_questions.create!(
+        title:
+          "Has your child had a severe allergic reaction (anaphylaxis) to " \
+            "a previous dose of #{vaccine.programme.name} or any other measles, mumps or rubella vaccine?"
+      )
+    end
 
   blood_or_plasma_transfusion.update!(next_question: severe_reaction_mmr)
 

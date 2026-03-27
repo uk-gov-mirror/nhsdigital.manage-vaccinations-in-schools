@@ -16,6 +16,7 @@ class GovukNotifyPersonalisation
     programme_types: nil,
     session: nil,
     team: nil,
+    team_location: nil,
     vaccination_record: nil
   )
     @academic_year =
@@ -30,10 +31,13 @@ class GovukNotifyPersonalisation
         Patient.find_by(id: consent_form&.matched_patient&.id)
     @session = session || consent_form&.session || vaccination_record&.session
     @team =
-      team || session&.team || consent_form&.team || consent&.team ||
-        vaccination_record&.team
+      team || session&.team || team_location&.team || consent_form&.team ||
+        consent&.team || vaccination_record&.team
+    @team_location =
+      session&.team_location || consent_form&.team_location || team_location
     @subteam =
-      session&.subteam || consent_form&.subteam || vaccination_record&.subteam
+      session&.subteam || team_location&.subteam || consent_form&.subteam ||
+        vaccination_record&.subteam
     @vaccination_record = vaccination_record
 
     @programmes =
@@ -45,62 +49,6 @@ class GovukNotifyPersonalisation
       end
   end
 
-  def to_h
-    {
-      batch_name:,
-      catch_up:,
-      consent_deadline:,
-      consent_link:,
-      consented_vaccine_methods_message:,
-      day_month_year_of_vaccination:,
-      delay_vaccination_review_context:,
-      full_and_preferred_patient_name:,
-      has_multiple_dates:,
-      invitation_to_clinic_generic_message:,
-      is_outbreak:,
-      location_name:,
-      invitation_to_clinic_custom_mmr_message:,
-      mmr_or_mmrv_vaccine:,
-      mmr_second_dose_message:,
-      mmr_second_dose_required:,
-      next_or_today_session_date:,
-      next_or_today_session_dates:,
-      next_or_today_session_dates_or:,
-      next_session_date:,
-      next_session_dates:,
-      next_session_dates_or:,
-      not_catch_up:,
-      outcome_administered:,
-      outcome_not_administered:,
-      patient_date_of_birth:,
-      reason_did_not_vaccinate:,
-      reason_for_refusal:,
-      short_patient_name:,
-      short_patient_name_apos:,
-      show_additional_instructions:,
-      subsequent_session_dates_offered_message:,
-      subteam_email:,
-      subteam_name:,
-      subteam_phone:,
-      survey_deadline_date:,
-      talk_to_your_child_message:,
-      team_privacy_notice_url:,
-      team_privacy_policy_url:,
-      today_or_date_of_vaccination:,
-      vaccination:,
-      vaccination_and_dates:,
-      vaccination_and_dates_sms:,
-      vaccination_and_method:,
-      vaccine:,
-      vaccine_and_dose:,
-      vaccine_and_method:,
-      vaccine_brand:,
-      vaccine_is_injection:,
-      vaccine_is_nasal:,
-      vaccine_side_effects:
-    }.compact
-  end
-
   attr_reader :academic_year,
               :consent,
               :consent_form,
@@ -110,35 +58,25 @@ class GovukNotifyPersonalisation
               :session,
               :subteam,
               :team,
+              :team_location,
               :vaccination_record
 
   def batch_name
     vaccination_record&.batch_number
   end
 
-  def catch_up = is_catch_up? ? "yes" : "no"
-
-  def not_catch_up = is_catch_up? ? "no" : "yes"
-
   def consent_deadline
-    return nil if session.nil?
-
-    next_date = session.future_dates.first
-
-    close_consent_at =
-      next_date ? (next_date - 1.day) : session.close_consent_at
-
-    close_consent_at&.to_fs(:short_day_of_week)
+    session&.consent_deadline_date&.to_fs(:short_day_of_week)
   end
 
   def consent_link
-    return nil if session.nil? || programmes.empty?
+    return nil if (session.nil? && team_location.nil?) || programmes.empty?
 
     programme_params = programmes.flat_map { it.variant_for(patient:).to_param }
 
     host +
       start_parent_interface_consent_forms_path(
-        session,
+        session || team_location,
         programme_params.join("-")
       )
   end
@@ -179,11 +117,6 @@ class GovukNotifyPersonalisation
     (consent_form || patient).full_name_with_known_as(context: :parents)
   end
 
-  def has_multiple_dates
-    return nil if session.nil?
-    has_multiple_dates? ? "yes" : "no"
-  end
-
   def host
     if Rails.env.local?
       "http://localhost:4000"
@@ -192,11 +125,7 @@ class GovukNotifyPersonalisation
     end
   end
 
-  def is_outbreak
-    return nil if session.nil?
-
-    session.outbreak? ? "yes" : "no"
-  end
+  def outbreak? = session&.outbreak?
 
   def location_name
     if vaccination_record
@@ -222,8 +151,12 @@ class GovukNotifyPersonalisation
     ].join("\n\n")
   end
 
+  def mmr_second_dose_required?
+    mmr_programme.present? && patient_on_last_dose?
+  end
+
   def mmr_second_dose_required
-    mmr_programme.present? && patient_eligible_for_additional_dose?
+    mmr_second_dose_required?
   end
 
   def invitation_to_clinic_generic_message
@@ -272,29 +205,17 @@ class GovukNotifyPersonalisation
     return if patient.nil?
     return if mmr_programme.nil?
 
-    programme_status = patient.programme_status(mmr_programme, academic_year:)
-
-    date =
-      if programme_status.cannot_vaccinate_delay_vaccination?
-        programme_status.date
-      elsif (first_dose_date = programme_status.date)
-        (first_dose_date + 28.days).to_date
-      end
-
-    date.to_fs(:long)
+    patient
+      .programme_status(mmr_programme, academic_year:)
+      .next_dose_eligible_date
+      &.to_fs(:long)
   end
 
-  def patient_eligible_for_additional_dose?
+  def patient_on_last_dose?
     return unless patient
     return if mmr_programme.nil?
 
-    next_dose =
-      patient
-        .reload
-        .programme_status(mmr_programme, academic_year:)
-        .dose_sequence
-
-    next_dose == mmr_programme.maximum_dose_sequence
+    patient.reload.programme_status(mmr_programme, academic_year:).on_last_dose?
   end
 
   def mmr_or_mmrv_vaccine
@@ -315,13 +236,7 @@ class GovukNotifyPersonalisation
     return if patient.nil? || session.nil?
 
     latest_delayed_triage =
-      patient
-        .triages
-        .not_invalidated
-        .where(programme_type: session.programme_types)
-        .delay_vaccination
-        .order(created_at: :desc)
-        .first
+      patient.latest_delayed_triage(programme_types: session.programme_types)
 
     return if latest_delayed_triage.nil?
 
@@ -380,14 +295,8 @@ class GovukNotifyPersonalisation
       &.to_sentence(last_word_connector: ", or ", two_words_connector: " or ")
   end
 
-  def outcome_administered
-    return nil if vaccination_record.nil?
-    outcome_administered? ? "yes" : "no"
-  end
-
-  def outcome_not_administered
-    return nil if vaccination_record.nil?
-    !outcome_administered? ? "yes" : "no"
+  def outcome_not_administered?
+    vaccination_record.nil? || !outcome_administered?
   end
 
   def patient_date_of_birth
@@ -412,12 +321,7 @@ class GovukNotifyPersonalisation
   end
 
   def short_patient_name
-    [
-      consent_form&.preferred_given_name,
-      consent_form&.given_name,
-      patient&.preferred_given_name,
-      patient&.given_name
-    ].compact_blank.first
+    (consent_form || patient)&.short_name
   end
 
   def short_patient_name_apos
@@ -426,11 +330,8 @@ class GovukNotifyPersonalisation
     short_patient_name + apos
   end
 
-  def show_additional_instructions
-    return if vaccination_record.nil?
-
-    vaccination_record.already_had? ? "no" : "yes"
-  end
+  def show_additional_instructions? =
+    vaccination_record.present? && !vaccination_record.already_had?
 
   def subsequent_session_dates_offered_message
     return nil if session.nil?
@@ -443,13 +344,9 @@ class GovukNotifyPersonalisation
     }."
   end
 
-  def subteam_email
-    (subteam || team).email
-  end
+  def subteam_email = (subteam || team).email
 
-  def subteam_name
-    (subteam || team).name
-  end
+  def subteam_name = (subteam || team).name
 
   def subteam_phone
     format_phone_with_instructions(subteam || team)
@@ -552,23 +449,14 @@ class GovukNotifyPersonalisation
     vaccination_record&.vaccine&.brand
   end
 
-  def vaccine_is_injection = vaccine_is?("injection") ? "yes" : "no"
-
-  def vaccine_is_nasal = vaccine_is?("nasal") ? "yes" : "no"
-
   def vaccine_is?(method)
     if vaccination_record
       vaccination_record.vaccine&.method == method
     elsif programmes.present?
       if patient
         programmes.any? do |programme|
-          # We pick the first method as it's the one most likely to be used
-          # to vaccinate the patient. For example, in the case of Flu, the
-          # parents will approve nasal (and then optionally injection).
-          patient
-            .vaccine_criteria(programme:, academic_year:)
-            .vaccine_methods
-            .first == method
+          patient.vaccine_criteria(programme:, academic_year:).primary_method ==
+            method
         end
       else
         Vaccine.for_programmes(programmes).exists?(method:)
@@ -583,18 +471,7 @@ class GovukNotifyPersonalisation
       elsif programmes.present?
         if patient
           programmes.flat_map do |programme|
-            # We pick the first method as it's the one most likely to be used
-            # to vaccinate the patient. For example, in the case of Flu, the
-            # parents will approve nasal (and then optionally injection).
-            method =
-              patient
-                .vaccine_criteria(programme:, academic_year:)
-                .vaccine_methods
-                .first
-            Vaccine
-              .for_programme(programme)
-              .where(method:)
-              .flat_map(&:side_effects)
+            patient.vaccine_criteria(programme:, academic_year:).side_effects
           end
         else
           Vaccine.for_programmes(programmes).flat_map(&:side_effects)
@@ -650,10 +527,10 @@ class GovukNotifyPersonalisation
                 vaccination_record.delivery_method
               )
             elsif patient
-              patient
-                .vaccine_criteria(programme:, academic_year:)
-                .vaccine_methods
-                .first
+              patient.vaccine_criteria(
+                programme:,
+                academic_year:
+              ).primary_method
             end
 
           method_prefix =

@@ -170,13 +170,20 @@ describe "Flu vaccination" do
   end
 
   def then_i_am_able_to_vaccinate_them(nasal:)
-    check "I have checked that the above statements are true"
-    select @nurse.full_name
-    within all("section")[1] do
-      choose "Yes"
-      choose "Left arm (upper position)" unless nasal
+    within all("form")[3] do
+      within all("fieldset")[1] do
+        check "I have checked that the above statements are true"
+      end
+
+      select @nurse.full_name
+
+      within all("fieldset")[2] do
+        choose "Yes"
+        choose "Left arm (upper position)" unless nasal
+      end
+
+      click_on "Continue"
     end
-    click_on "Continue"
 
     batch = nasal ? @nasal_batch : @injection_batch
 
@@ -196,14 +203,16 @@ describe "Flu vaccination" do
   end
 
   def then_i_am_able_to_vaccinate_them_using_injection_instead_of_nasal
-    check "I have checked that the above statements are true"
+    within all("form")[3] do
+      check "I have checked that the above statements are true"
+      within all("fieldset")[2] do
+        choose "No — but they can have the injected flu instead"
+        choose "Left arm (upper position)"
+        select @nurse.full_name
+      end
 
-    within all("section")[1] do
-      choose "No — but they can have the injected flu instead"
-      choose "Left arm (upper position)"
-      select @nurse.full_name
+      click_on "Continue"
     end
-    click_on "Continue"
 
     choose @injection_batch.number
     click_on "Continue"

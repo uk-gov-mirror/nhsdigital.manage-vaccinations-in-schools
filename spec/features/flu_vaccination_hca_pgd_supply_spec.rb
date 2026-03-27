@@ -144,12 +144,19 @@ describe "Flu vaccination" do
   def then_i_am_able_to_vaccinate_them_nasal_only
     expect(page).not_to have_content("injected flu instead")
 
-    check "I have checked that the above statements are true"
-    select "NURSE, Supplying"
-    within all("section")[1] do
-      choose "Yes"
+    within all("form")[3] do
+      within all("fieldset")[1] do
+        check "I have checked that the above statements are true"
+      end
+
+      select "NURSE, Supplying"
+
+      within all("fieldset")[2] do
+        choose "Yes"
+      end
+
+      click_on "Continue"
     end
-    click_on "Continue"
 
     choose @batch.number
     click_on "Continue"

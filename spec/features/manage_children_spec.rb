@@ -100,7 +100,48 @@ describe "Manage children" do
     and_the_important_notice_is_dismissed
   end
 
-  scenario "inviting to community clinic" do
+  scenario "inviting to community clinic and sending consent request" do
+    given_patients_exist
+    and_a_clinic_session_exists
+
+    when_i_click_on_children
+    and_i_filter_for_children
+    and_i_click_on_a_child
+    and_i_click_on_a_programme
+    and_i_dont_see_a_community_clinic_session
+    and_i_see_a_invite_to_clinic_button
+    and_i_dont_see_a_send_clinic_invitation_reminder_button
+    and_i_dont_see_a_send_consent_request_button
+
+    when_i_click_on_invite_to_clinic
+    then_i_see_a_success_banner
+    and_i_dont_see_a_community_clinic_session
+    and_i_dont_see_an_invite_to_clinic_button
+    and_i_see_a_send_clinic_invitation_reminder_button
+    and_i_see_a_send_consent_request_button
+
+    when_i_click_on_children
+    and_i_check_invited_to_clinic
+    then_i_see_the_child_has_been_invited
+    and_i_can_see_a_button_to_download_offline
+    and_i_click_on_a_child
+    and_i_click_on_a_programme
+
+    when_i_click_on_send_consent_request
+    then_i_see_a_consent_request_sent_banner
+    and_a_clinic_consent_request_is_sent
+
+    when_i_click_on_record_new_vaccination
+    then_i_see_the_community_clinic_session
+
+    when_i_click_on_children
+    and_i_check_invited_to_clinic
+    and_i_click_on_a_child
+    and_i_click_on_a_programme
+    then_i_see_a_community_clinic_session
+  end
+
+  scenario "inviting to community clinic and downloading spreadsheet" do
     given_patients_exist
     and_a_clinic_session_exists
 
@@ -112,12 +153,15 @@ describe "Manage children" do
 
     when_i_click_on_invite_to_clinic
     then_i_see_a_success_banner
-    and_i_see_a_community_clinic_session
+    and_i_dont_see_a_community_clinic_session
     and_i_dont_see_an_invite_to_clinic_button
 
     when_i_click_on_children
     and_i_check_invited_to_clinic
     then_i_see_the_child_has_been_invited
+
+    when_i_click_on_download_offline_spreadsheet
+    then_i_download_an_excel_file
   end
 
   scenario "Removing an NHS number" do
@@ -205,13 +249,7 @@ describe "Manage children" do
   def given_my_team_exists
     @flu = Programme.flu
     @hpv = Programme.hpv
-    @team =
-      create(
-        :team,
-        :with_generic_clinic,
-        :with_one_nurse,
-        programmes: [@flu, @hpv]
-      )
+    @team = create(:team, :with_one_nurse, programmes: [@flu, @hpv])
   end
 
   def given_patients_exist
@@ -400,6 +438,18 @@ describe "Manage children" do
     expect(page).to have_content("Clinic invitationsFlu")
   end
 
+  def and_i_can_see_a_button_to_download_offline
+    expect(page).to have_link("Download offline spreadsheet")
+  end
+
+  def when_i_click_on_download_offline_spreadsheet
+    click_on "Download offline spreadsheet"
+  end
+
+  def then_i_download_an_excel_file
+    expect(page.status_code).to eq(200)
+  end
+
   def when_i_click_on_edit_child_record
     click_on "Edit child record"
   end
@@ -460,7 +510,7 @@ describe "Manage children" do
   end
 
   def when_i_choose_home_schooled
-    select "Home-schooled", from: "What school does the child go to?"
+    select "Home-educated", from: "What school does the child go to?"
     click_on "Continue"
   end
 
@@ -516,10 +566,8 @@ describe "Manage children" do
   end
 
   def and_i_see_the_child_is_home_schooled
-    expect(page).to have_content("Home-schooled")
-    expect(@patient.reload.home_educated).to be true
-    expect(@patient.school).to be_nil
-    expect(@patient.home_educated).to be true
+    expect(page).to have_content("Home-educated")
+    expect(@patient.reload.school).to eq(@team.home_educated_school)
   end
 
   def and_the_important_notice_is_dismissed
@@ -564,12 +612,53 @@ describe "Manage children" do
     expect(page).to have_content("invited to the clinic")
   end
 
-  def and_i_see_a_community_clinic_session
+  def then_i_see_a_community_clinic_session
     expect(page).to have_content("Community clinic")
+  end
+
+  def and_i_see_a_invite_to_clinic_button
+    expect(page).to have_button("Invite to community clinic")
   end
 
   def and_i_dont_see_an_invite_to_clinic_button
     expect(page).not_to have_button("Invite to community clinic")
+  end
+
+  def and_i_see_a_send_clinic_invitation_reminder_button
+    expect(page).to have_button("Send clinic invitation reminder")
+  end
+
+  def and_i_dont_see_a_send_clinic_invitation_reminder_button
+    expect(page).not_to have_button("Send clinic invitation reminder")
+  end
+
+  def and_i_see_a_send_consent_request_button
+    expect(page).to have_button("Send consent request")
+  end
+
+  def and_i_dont_see_a_send_consent_request_button
+    expect(page).not_to have_button("Send consent request")
+  end
+
+  def when_i_click_on_send_consent_request
+    click_on "Send consent request"
+  end
+
+  def then_i_see_a_consent_request_sent_banner
+    expect(page).to have_content("Consent request sent.")
+  end
+
+  def and_a_clinic_consent_request_is_sent
+    expect_email_to(@patient.parents.first.email, :consent_clinic_request)
+    expect_sms_to(@patient.parents.first.phone, :consent_clinic_request)
+  end
+
+  def when_i_click_on_record_new_vaccination
+    click_on "Record a vaccination in clinic"
+  end
+
+  def then_i_see_the_community_clinic_session
+    expect(page).to have_content("Community clinic")
   end
 
   def when_i_go_to_the_dashboard

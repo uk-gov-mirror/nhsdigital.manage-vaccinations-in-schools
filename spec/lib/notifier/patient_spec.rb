@@ -6,12 +6,6 @@ describe Notifier::Patient do
   let(:sent_by) { create(:user) }
 
   describe "#send_consent_request" do
-    subject(:send_consent_request) do
-      travel_to(today) do
-        notifier.send_consent_request(programmes, session:, sent_by:)
-      end
-    end
-
     let(:today) { Date.new(2024, 1, 1) }
 
     let(:parents) { create_list(:parent, 2) }
@@ -21,201 +15,192 @@ describe Notifier::Patient do
     let(:programme_types) { programmes.map(&:type) }
     let(:team) { create(:team, programmes:) }
     let(:session) { create(:session, location:, programmes:, team:) }
+    let(:team_location) { session.team_location }
 
-    context "with a school location" do
-      let(:location) { create(:school, team:) }
-
-      it "creates a record" do
-        expect { send_consent_request }.to change(
-          ConsentNotification,
-          :count
-        ).by(1)
-
-        consent_notification = ConsentNotification.last
-        expect(consent_notification).not_to be_an_initial_reminder
-        expect(consent_notification.programme_types).to eq(programme_types)
-        expect(consent_notification.patient).to eq(patient)
-        expect(consent_notification.sent_at).to eq(today)
+    context "with a session" do
+      subject(:send_consent_request) do
+        travel_to(today) do
+          notifier.send_consent_request(programmes, session:, sent_by:)
+        end
       end
 
-      it "enqueues an email per parent" do
-        expect { send_consent_request }.to have_delivered_email(
-          :consent_school_request_hpv
-        ).with(
-          disease_types:,
-          parent: parents.first,
-          patient:,
-          programme_types:,
-          session:,
-          sent_by:
-        ).and have_delivered_email(:consent_school_request_hpv).with(
-                disease_types:,
-                parent: parents.second,
-                patient:,
-                programme_types:,
-                session:,
-                sent_by:
-              )
-      end
+      context "with a school location" do
+        let(:location) { create(:school, team:) }
 
-      it "enqueues a text per parent" do
-        expect { send_consent_request }.to have_delivered_sms(
-          :consent_school_request
-        ).with(
-          disease_types:,
-          parent: parents.first,
-          patient:,
-          programme_types:,
-          session:,
-          sent_by:
-        ).and have_delivered_sms(:consent_school_request).with(
-                disease_types:,
-                parent: parents.second,
-                patient:,
-                programme_types:,
-                session:,
-                sent_by:
-              )
-      end
+        it "creates a record" do
+          expect { send_consent_request }.to change(
+            ConsentNotification,
+            :count
+          ).by(1)
 
-      context "when parent doesn't want to receive updates by text" do
-        let(:parent) { parents.first }
+          consent_notification = ConsentNotification.last
+          expect(consent_notification).not_to be_an_initial_reminder
+          expect(consent_notification.programme_types).to eq(programme_types)
+          expect(consent_notification.patient).to eq(patient)
+          expect(consent_notification.sent_at).to eq(today)
+        end
 
-        before { parent.update!(phone_receive_updates: false) }
-
-        it "still enqueues a text" do
-          expect { send_consent_request }.to have_delivered_sms(
-            :consent_school_request
+        it "enqueues an email per parent" do
+          expect { send_consent_request }.to have_delivered_email(
+            :consent_school_request_hpv
           ).with(
             disease_types:,
-            parent:,
+            parent: parents.first,
             patient:,
             programme_types:,
             session:,
             sent_by:
-          )
-        end
-      end
-
-      context "for Td/IPV and MenACWY programmes" do
-        let(:programmes) { [Programme.menacwy, Programme.td_ipv] }
-
-        it "enqueues an email per parent" do
-          expect { send_consent_request }.to have_delivered_email(
-            :consent_school_request_doubles
-          ).twice
+          ).and have_delivered_email(:consent_school_request_hpv).with(
+                  disease_types:,
+                  parent: parents.second,
+                  patient:,
+                  programme_types:,
+                  session:,
+                  sent_by:
+                )
         end
 
-        it "enqueues an sms per parent" do
+        it "enqueues a text per parent" do
           expect { send_consent_request }.to have_delivered_sms(
             :consent_school_request
-          ).twice
+          ).with(
+            disease_types:,
+            parent: parents.first,
+            patient:,
+            programme_types:,
+            session:,
+            sent_by:
+          ).and have_delivered_sms(:consent_school_request).with(
+                  disease_types:,
+                  parent: parents.second,
+                  patient:,
+                  programme_types:,
+                  session:,
+                  sent_by:
+                )
         end
-      end
 
-      context "for the flu programme" do
-        let(:programmes) { [Programme.flu] }
+        context "when parent doesn't want to receive updates by text" do
+          let(:parent) { parents.first }
 
-        it "enqueues an email per parent" do
-          expect { send_consent_request }.to have_delivered_email(
-            :consent_school_request_flu
-          ).twice
-        end
+          before { parent.update!(phone_receive_updates: false) }
 
-        it "enqueues an sms per parent" do
-          expect { send_consent_request }.to have_delivered_sms(
-            :consent_school_request
-          ).twice
-        end
-      end
-
-      context "for the MMR(V) programme" do
-        let(:programmes) { [Programme.mmr] }
-
-        context "if the child received their first dose under self-consent and doesn't want parents notified" do
-          before do
-            create(
-              :vaccination_record,
-              programme: Programme.mmr,
+          it "still enqueues a text" do
+            expect { send_consent_request }.to have_delivered_sms(
+              :consent_school_request
+            ).with(
+              disease_types:,
+              parent:,
               patient:,
-              notify_parents: false
-            )
-          end
-
-          it "does not enqueue an email" do
-            expect { send_consent_request }.not_to have_enqueued_job(
-              EmailDeliveryJob
-            )
-          end
-
-          it "does not enqueue an SMS" do
-            expect { send_consent_request }.not_to have_enqueued_job(
-              SMSDeliveryJob
+              programme_types:,
+              session:,
+              sent_by:
             )
           end
         end
 
-        context "when patient is eligible for MMRV" do
-          before do
-            allow(patient).to receive(:eligible_for_mmrv?).and_return(true)
-          end
+        context "for Td/IPV and MenACWY programmes" do
+          let(:programmes) { [Programme.menacwy, Programme.td_ipv] }
 
           it "enqueues an email per parent" do
             expect { send_consent_request }.to have_delivered_email(
-              :consent_school_request_mmrv
+              :consent_school_request_doubles
             ).twice
           end
 
           it "enqueues an sms per parent" do
             expect { send_consent_request }.to have_delivered_sms(
-              :consent_school_request_mmr
+              :consent_school_request
             ).twice
-          end
-
-          context "when session is set to send outbreak requests" do
-            let(:session) do
-              create(:session, location:, programmes:, team:, outbreak: true)
-            end
-
-            it "enqueues an outbreak email per parent" do
-              expect { send_consent_request }.to have_delivered_email(
-                :consent_school_request_mmrv_outbreak
-              ).twice
-            end
-
-            it "enqueues an sms" do
-              expect { send_consent_request }.to have_delivered_sms(
-                :consent_school_request_mmr
-              ).twice
-            end
           end
         end
 
-        context "when patient is not eligible for MMRV" do
-          before do
-            allow(patient).to receive(:eligible_for_mmrv?).and_return(false)
-          end
+        context "for the flu programme" do
+          let(:programmes) { [Programme.flu] }
 
           it "enqueues an email per parent" do
             expect { send_consent_request }.to have_delivered_email(
-              :consent_school_request_mmr
+              :consent_school_request_flu
             ).twice
           end
 
-          it "enqueues an sms" do
+          it "enqueues an sms per parent" do
             expect { send_consent_request }.to have_delivered_sms(
-              :consent_school_request_mmr
+              :consent_school_request
             ).twice
           end
+        end
 
-          context "when session is set to send outbreak style requests" do
-            let(:session) do
-              create(:session, location:, programmes:, team:, outbreak: true)
+        context "for the MMR(V) programme" do
+          let(:programmes) { [Programme.mmr] }
+
+          context "if the child received their first dose under self-consent and doesn't want parents notified" do
+            before do
+              create(
+                :vaccination_record,
+                programme: Programme.mmr,
+                patient:,
+                notify_parents: false
+              )
             end
 
-            it "enqueues an outbreak email per parent" do
+            it "does not enqueue an email" do
+              expect { send_consent_request }.not_to have_enqueued_job(
+                EmailDeliveryJob
+              )
+            end
+
+            it "does not enqueue an SMS" do
+              expect { send_consent_request }.not_to have_enqueued_job(
+                SMSDeliveryJob
+              )
+            end
+          end
+
+          context "when patient is eligible for MMRV" do
+            before do
+              allow(patient).to receive(:eligible_for_mmrv?).and_return(true)
+            end
+
+            it "enqueues an email per parent" do
               expect { send_consent_request }.to have_delivered_email(
-                :consent_school_request_mmr_outbreak
+                :consent_school_request_mmrv
+              ).twice
+            end
+
+            it "enqueues an sms per parent" do
+              expect { send_consent_request }.to have_delivered_sms(
+                :consent_school_request_mmr
+              ).twice
+            end
+
+            context "when session is set to send outbreak requests" do
+              let(:session) do
+                create(:session, location:, programmes:, team:, outbreak: true)
+              end
+
+              it "enqueues an outbreak email per parent" do
+                expect { send_consent_request }.to have_delivered_email(
+                  :consent_school_request_mmrv_outbreak
+                ).twice
+              end
+
+              it "enqueues an sms" do
+                expect { send_consent_request }.to have_delivered_sms(
+                  :consent_school_request_mmr
+                ).twice
+              end
+            end
+          end
+
+          context "when patient is not eligible for MMRV" do
+            before do
+              allow(patient).to receive(:eligible_for_mmrv?).and_return(false)
+            end
+
+            it "enqueues an email per parent" do
+              expect { send_consent_request }.to have_delivered_email(
+                :consent_school_request_mmr
               ).twice
             end
 
@@ -224,83 +209,356 @@ describe Notifier::Patient do
                 :consent_school_request_mmr
               ).twice
             end
+
+            context "when session is set to send outbreak style requests" do
+              let(:session) do
+                create(:session, location:, programmes:, team:, outbreak: true)
+              end
+
+              it "enqueues an outbreak email per parent" do
+                expect { send_consent_request }.to have_delivered_email(
+                  :consent_school_request_mmr_outbreak
+                ).twice
+              end
+
+              it "enqueues an sms" do
+                expect { send_consent_request }.to have_delivered_sms(
+                  :consent_school_request_mmr
+                ).twice
+              end
+            end
+          end
+        end
+      end
+
+      context "with a clinic location" do
+        let(:location) { create(:generic_clinic, team:) }
+
+        it "creates a record" do
+          expect { send_consent_request }.to change(
+            ConsentNotification,
+            :count
+          ).by(1)
+
+          consent_notification = ConsentNotification.last
+          expect(consent_notification).to be_a_request
+          expect(consent_notification.programmes).to eq(programmes)
+          expect(consent_notification.patient).to eq(patient)
+          expect(consent_notification.sent_at).to eq(today)
+        end
+
+        it "enqueues an email per parent" do
+          expect { send_consent_request }.to have_delivered_email(
+            :consent_clinic_request
+          ).with(
+            disease_types:,
+            parent: parents.first,
+            patient:,
+            programme_types:,
+            session:,
+            sent_by:
+          ).and have_delivered_email(:consent_clinic_request).with(
+                  disease_types:,
+                  parent: parents.second,
+                  patient:,
+                  programme_types:,
+                  session:,
+                  sent_by:
+                )
+        end
+
+        it "enqueues a text per parent" do
+          expect { send_consent_request }.to have_delivered_sms(
+            :consent_clinic_request
+          ).with(
+            disease_types:,
+            parent: parents.first,
+            patient:,
+            programme_types:,
+            session:,
+            sent_by:
+          ).and have_delivered_sms(:consent_clinic_request).with(
+                  disease_types:,
+                  parent: parents.second,
+                  patient:,
+                  programme_types:,
+                  session:,
+                  sent_by:
+                )
+        end
+
+        context "when parent doesn't want to receive updates by text" do
+          let(:parent) { parents.first }
+
+          before { parent.update!(phone_receive_updates: false) }
+
+          it "still enqueues a text" do
+            expect { send_consent_request }.to have_delivered_sms(
+              :consent_clinic_request
+            ).with(
+              disease_types:,
+              parent:,
+              patient:,
+              programme_types:,
+              session:,
+              sent_by:
+            )
           end
         end
       end
     end
 
-    context "with a clinic location" do
-      let(:location) { create(:generic_clinic, team:) }
-
-      it "creates a record" do
-        expect { send_consent_request }.to change(
-          ConsentNotification,
-          :count
-        ).by(1)
-
-        consent_notification = ConsentNotification.last
-        expect(consent_notification).to be_a_request
-        expect(consent_notification.programmes).to eq(programmes)
-        expect(consent_notification.patient).to eq(patient)
-        expect(consent_notification.sent_at).to eq(today)
+    context "with a team location" do
+      subject(:send_consent_request) do
+        travel_to(today) do
+          notifier.send_consent_request(programmes, team_location:, sent_by:)
+        end
       end
 
-      it "enqueues an email per parent" do
-        expect { send_consent_request }.to have_delivered_email(
-          :consent_clinic_request
-        ).with(
-          disease_types:,
-          parent: parents.first,
-          patient:,
-          programme_types:,
-          session:,
-          sent_by:
-        ).and have_delivered_email(:consent_clinic_request).with(
-                disease_types:,
-                parent: parents.second,
+      context "with a school location" do
+        let(:location) { create(:school, team:) }
+
+        it "creates a record" do
+          expect { send_consent_request }.to change(
+            ConsentNotification,
+            :count
+          ).by(1)
+
+          consent_notification = ConsentNotification.last
+          expect(consent_notification).not_to be_an_initial_reminder
+          expect(consent_notification.programme_types).to eq(programme_types)
+          expect(consent_notification.patient).to eq(patient)
+          expect(consent_notification.sent_at).to eq(today)
+        end
+
+        it "enqueues an email per parent" do
+          expect { send_consent_request }.to have_delivered_email(
+            :consent_school_request_hpv
+          ).with(
+            disease_types:,
+            parent: parents.first,
+            patient:,
+            programme_types:,
+            team_location:,
+            sent_by:
+          ).and have_delivered_email(:consent_school_request_hpv).with(
+                  disease_types:,
+                  parent: parents.second,
+                  patient:,
+                  programme_types:,
+                  team_location:,
+                  sent_by:
+                )
+        end
+
+        it "enqueues a text per parent" do
+          expect { send_consent_request }.to have_delivered_sms(
+            :consent_school_request
+          ).with(
+            disease_types:,
+            parent: parents.first,
+            patient:,
+            programme_types:,
+            team_location:,
+            sent_by:
+          ).and have_delivered_sms(:consent_school_request).with(
+                  disease_types:,
+                  parent: parents.second,
+                  patient:,
+                  programme_types:,
+                  team_location:,
+                  sent_by:
+                )
+        end
+
+        context "when parent doesn't want to receive updates by text" do
+          let(:parent) { parents.first }
+
+          before { parent.update!(phone_receive_updates: false) }
+
+          it "still enqueues a text" do
+            expect { send_consent_request }.to have_delivered_sms(
+              :consent_school_request
+            ).with(
+              disease_types:,
+              parent:,
+              patient:,
+              programme_types:,
+              team_location:,
+              sent_by:
+            )
+          end
+        end
+
+        context "for Td/IPV and MenACWY programmes" do
+          let(:programmes) { [Programme.menacwy, Programme.td_ipv] }
+
+          it "enqueues an email per parent" do
+            expect { send_consent_request }.to have_delivered_email(
+              :consent_school_request_doubles
+            ).twice
+          end
+
+          it "enqueues an sms per parent" do
+            expect { send_consent_request }.to have_delivered_sms(
+              :consent_school_request
+            ).twice
+          end
+        end
+
+        context "for the flu programme" do
+          let(:programmes) { [Programme.flu] }
+
+          it "enqueues an email per parent" do
+            expect { send_consent_request }.to have_delivered_email(
+              :consent_school_request_flu
+            ).twice
+          end
+
+          it "enqueues an sms per parent" do
+            expect { send_consent_request }.to have_delivered_sms(
+              :consent_school_request
+            ).twice
+          end
+        end
+
+        context "for the MMR(V) programme" do
+          let(:programmes) { [Programme.mmr] }
+
+          context "if the child received their first dose under self-consent and doesn't want parents notified" do
+            before do
+              create(
+                :vaccination_record,
+                programme: Programme.mmr,
                 patient:,
-                programme_types:,
-                session:,
-                sent_by:
+                notify_parents: false
               )
+            end
+
+            it "does not enqueue an email" do
+              expect { send_consent_request }.not_to have_enqueued_job(
+                EmailDeliveryJob
+              )
+            end
+
+            it "does not enqueue an SMS" do
+              expect { send_consent_request }.not_to have_enqueued_job(
+                SMSDeliveryJob
+              )
+            end
+          end
+
+          context "when patient is eligible for MMRV" do
+            before do
+              allow(patient).to receive(:eligible_for_mmrv?).and_return(true)
+            end
+
+            it "enqueues an email per parent" do
+              expect { send_consent_request }.to have_delivered_email(
+                :consent_school_request_mmrv
+              ).twice
+            end
+
+            it "enqueues an sms per parent" do
+              expect { send_consent_request }.to have_delivered_sms(
+                :consent_school_request_mmr
+              ).twice
+            end
+          end
+
+          context "when patient is not eligible for MMRV" do
+            before do
+              allow(patient).to receive(:eligible_for_mmrv?).and_return(false)
+            end
+
+            it "enqueues an email per parent" do
+              expect { send_consent_request }.to have_delivered_email(
+                :consent_school_request_mmr
+              ).twice
+            end
+
+            it "enqueues an sms" do
+              expect { send_consent_request }.to have_delivered_sms(
+                :consent_school_request_mmr
+              ).twice
+            end
+          end
+        end
       end
 
-      it "enqueues a text per parent" do
-        expect { send_consent_request }.to have_delivered_sms(
-          :consent_clinic_request
-        ).with(
-          disease_types:,
-          parent: parents.first,
-          patient:,
-          programme_types:,
-          session:,
-          sent_by:
-        ).and have_delivered_sms(:consent_clinic_request).with(
-                disease_types:,
-                parent: parents.second,
-                patient:,
-                programme_types:,
-                session:,
-                sent_by:
-              )
-      end
+      context "with a clinic location" do
+        let(:location) { create(:generic_clinic, team:) }
 
-      context "when parent doesn't want to receive updates by text" do
-        let(:parent) { parents.first }
+        it "creates a record" do
+          expect { send_consent_request }.to change(
+            ConsentNotification,
+            :count
+          ).by(1)
 
-        before { parent.update!(phone_receive_updates: false) }
+          consent_notification = ConsentNotification.last
+          expect(consent_notification).to be_a_request
+          expect(consent_notification.programmes).to eq(programmes)
+          expect(consent_notification.patient).to eq(patient)
+          expect(consent_notification.sent_at).to eq(today)
+        end
 
-        it "still enqueues a text" do
+        it "enqueues an email per parent" do
+          expect { send_consent_request }.to have_delivered_email(
+            :consent_clinic_request
+          ).with(
+            disease_types:,
+            parent: parents.first,
+            patient:,
+            programme_types:,
+            team_location:,
+            sent_by:
+          ).and have_delivered_email(:consent_clinic_request).with(
+                  disease_types:,
+                  parent: parents.second,
+                  patient:,
+                  programme_types:,
+                  team_location:,
+                  sent_by:
+                )
+        end
+
+        it "enqueues a text per parent" do
           expect { send_consent_request }.to have_delivered_sms(
             :consent_clinic_request
           ).with(
             disease_types:,
-            parent:,
+            parent: parents.first,
             patient:,
             programme_types:,
-            session:,
+            team_location:,
             sent_by:
-          )
+          ).and have_delivered_sms(:consent_clinic_request).with(
+                  disease_types:,
+                  parent: parents.second,
+                  patient:,
+                  programme_types:,
+                  team_location:,
+                  sent_by:
+                )
+        end
+
+        context "when parent doesn't want to receive updates by text" do
+          let(:parent) { parents.first }
+
+          before { parent.update!(phone_receive_updates: false) }
+
+          it "still enqueues a text" do
+            expect { send_consent_request }.to have_delivered_sms(
+              :consent_clinic_request
+            ).with(
+              disease_types:,
+              parent:,
+              patient:,
+              programme_types:,
+              team_location:,
+              sent_by:
+            )
+          end
         end
       end
     end

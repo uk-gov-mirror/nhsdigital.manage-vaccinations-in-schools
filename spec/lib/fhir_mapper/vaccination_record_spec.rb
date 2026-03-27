@@ -11,6 +11,7 @@ describe FHIRMapper::VaccinationRecord do
   let(:session) do
     create(:session, location: school, programmes: [programme], team:)
   end
+  let(:source) { "service" }
   let(:patient) { create(:patient, session:) }
   let(:vaccination_outcome) { :administered }
   let(:vaccine) { vaccination_record.vaccine }
@@ -23,6 +24,7 @@ describe FHIRMapper::VaccinationRecord do
       patient:,
       programme:,
       session:,
+      source:,
       vaccine: programme.vaccines.first,
       outcome: vaccination_outcome,
       nhs_immunisations_api_id:,
@@ -202,7 +204,7 @@ describe FHIRMapper::VaccinationRecord do
       end
     end
 
-    describe "occurenceDateTime" do
+    describe "occurrenceDateTime" do
       subject { immunisation_fhir.occurrenceDateTime }
 
       it { should eq vaccination_record.performed_at.iso8601(3) }
@@ -223,8 +225,16 @@ describe FHIRMapper::VaccinationRecord do
 
       context "when the vaccination record was imported and has no session" do
         let(:session) { nil }
+        let(:source) { "historical_upload" }
 
         it { should be false }
+      end
+
+      context "when the vaccination record was imported by a national reporting user" do
+        let(:session) { nil }
+        let(:source) { "national_reporting" }
+
+        it { should be true }
       end
     end
 
@@ -490,6 +500,48 @@ describe FHIRMapper::VaccinationRecord do
             let(:dose_quantity) { 0.2 }
 
             it { should be true }
+          end
+        end
+      end
+
+      describe "the parsed dose_sequence value" do
+        subject { record.dose_sequence }
+
+        let(:fixture_file_name) { "fhir/flu/fhir_record_full.json" }
+
+        before do
+          allow(fhir_immunization.protocolApplied.sole).to receive(
+            :doseNumberPositiveInt
+          ).and_return(dose_number)
+        end
+
+        context "when doseNumberPositiveInt is nil" do
+          let(:dose_number) { nil }
+
+          it { should be_nil }
+
+          it "does not include a dose sequence note" do
+            expect(record.notes.to_s).not_to include("Reported dose sequence")
+          end
+        end
+
+        context "when doseNumberPositiveInt is less than the maximum dose sequence for flu" do
+          let(:dose_number) { 1 }
+
+          it { should eq 1 }
+
+          it "does not include a dose sequence note" do
+            expect(record.notes.to_s).not_to include("Reported dose sequence")
+          end
+        end
+
+        context "when doseNumberPositiveInt exceeds the maximum dose sequence for flu" do
+          let(:dose_number) { 3 }
+
+          it { should be_nil }
+
+          it "records the out-of-range dose sequence in notes" do
+            expect(record.notes.to_s).to include("Reported dose sequence: 3")
           end
         end
       end

@@ -23,7 +23,7 @@ module ParentInterface
           consent_form =
             ConsentForm.create!(
               original_session: @session,
-              team_location: @session.team_location
+              team_location: @team_location
             )
 
           @programmes.each do |programme|

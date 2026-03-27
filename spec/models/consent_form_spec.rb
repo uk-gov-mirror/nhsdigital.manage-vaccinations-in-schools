@@ -684,11 +684,7 @@ describe ConsentForm do
     let(:team) { create(:team, programmes:) }
 
     let!(:school) { create(:school, team:) }
-    let!(:generic_clinic) { create(:generic_clinic, team:) }
-
-    let!(:generic_clinic_session) do
-      create(:session, location: generic_clinic, team:, programmes:)
-    end
+    let!(:generic_clinic) { team.generic_clinic }
 
     context "with a consent form from a school" do
       let(:consent_form) do
@@ -703,7 +699,7 @@ describe ConsentForm do
       end
 
       context "with no school session" do
-        it { should eq(generic_clinic_session) }
+        it { should be_nil }
       end
 
       context "with an unscheduled school session" do
@@ -741,7 +737,7 @@ describe ConsentForm do
       end
 
       context "with no school session" do
-        it { should eq(generic_clinic_session) }
+        it { should be_nil }
       end
 
       context "with an unscheduled school session" do
@@ -749,7 +745,7 @@ describe ConsentForm do
           create(:session, :unscheduled, location: school, team:, programmes:)
         end
 
-        it { should eq(generic_clinic_session) }
+        it { should be_nil }
       end
 
       context "with an unscheduled and scheduled school session" do
@@ -758,7 +754,7 @@ describe ConsentForm do
           create(:session, :scheduled, location: school, team:, programmes:)
         end
 
-        it { should eq(generic_clinic_session) }
+        it { should be_nil }
       end
     end
 
@@ -776,7 +772,7 @@ describe ConsentForm do
       end
 
       context "with no school session" do
-        it { should eq(generic_clinic_session) }
+        it { should be_nil }
       end
 
       context "with an unscheduled school session" do
@@ -784,7 +780,7 @@ describe ConsentForm do
           create(:session, :unscheduled, location: school, team:, programmes:)
         end
 
-        it { should eq(generic_clinic_session) }
+        it { should be_nil }
       end
 
       context "with an unscheduled and scheduled school session" do
@@ -793,7 +789,7 @@ describe ConsentForm do
           create(:session, :scheduled, location: school, team:, programmes:)
         end
 
-        it { should eq(generic_clinic_session) }
+        it { should be_nil }
       end
     end
   end
@@ -1077,9 +1073,8 @@ describe ConsentForm do
           :count
         ).by(1)
 
-        school_move = patient.school_moves.first
-        expect(school_move.school).to be_nil
-        expect(school_move.home_educated).to be(true)
+        school_move = patient.school_moves.includes(:school).first
+        expect(school_move.school).to eq(team.home_educated_school)
       end
     end
   end

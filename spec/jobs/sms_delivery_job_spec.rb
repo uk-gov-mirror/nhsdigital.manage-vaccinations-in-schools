@@ -39,6 +39,7 @@ describe SMSDeliveryJob do
         sent_by:,
         session:,
         team:,
+        team_location:,
         vaccination_record:
       )
     end
@@ -55,6 +56,7 @@ describe SMSDeliveryJob do
     let(:sent_by) { create(:user) }
     let(:session) { create(:session, programmes:) }
     let(:team) { session.team }
+    let(:team_location) { session.team_location }
     let(:vaccination_record) { nil }
 
     it "generates personalisation" do
@@ -68,6 +70,7 @@ describe SMSDeliveryJob do
         programme_types:,
         session:,
         team:,
+        team_location:,
         vaccination_record:
       ).and_call_original
       perform_now
@@ -97,6 +100,7 @@ describe SMSDeliveryJob do
       expect(notify_log_entry.patient).to eq(patient)
       expect(notify_log_entry.programmes.map(&:type)).to eq(programme_types)
       expect(notify_log_entry.sent_by).to eq(sent_by)
+      expect(notify_log_entry.body).to include("Give or refuse consent for")
     end
 
     context "when the parent doesn't have a phone number" do

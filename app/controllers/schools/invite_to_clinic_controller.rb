@@ -21,7 +21,7 @@ class Schools::InviteToClinicController < Schools::BaseController
       )
 
     if @form.valid?
-      clinic_notifcations =
+      clinic_notifications =
         @patients_to_invite.filter_map do |patient|
           patient.notifier.send_clinic_invitation(
             Programme.find_all(@form.programme_types),
@@ -34,7 +34,7 @@ class Schools::InviteToClinicController < Schools::BaseController
 
       flash[
         :success
-      ] = "#{I18n.t("children", count: clinic_notifcations.count)} invited to the clinic"
+      ] = "#{I18n.t("children", count: clinic_notifications.count)} invited to the clinic"
 
       redirect_to @back_link_path
     else
@@ -45,7 +45,7 @@ class Schools::InviteToClinicController < Schools::BaseController
   private
 
   def check_can_send_clinic_invitations
-    render status: :not_found unless @location.generic_clinic?
+    render status: :not_found unless @location.generic_school?
   end
 
   def set_back_link_path
@@ -70,7 +70,7 @@ class Schools::InviteToClinicController < Schools::BaseController
             academic_year: @academic_year
           }
         )
-        .where(school_id: @location.school_id)
+        .where(school: @location)
         .not_archived(team: current_team)
         .includes_statuses
         .has_programme_status(

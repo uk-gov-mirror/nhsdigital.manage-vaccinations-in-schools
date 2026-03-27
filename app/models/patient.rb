@@ -578,6 +578,15 @@ class Patient < ApplicationRecord
     programme_status(programme, academic_year:).vaccine_criteria
   end
 
+  def latest_delayed_triage(programme_types:)
+    triages
+      .not_invalidated
+      .where(programme_type: programme_types)
+      .delay_vaccination
+      .order(created_at: :desc)
+      .first
+  end
+
   def eligible_for_mmrv?
     date_of_birth >= Programme::MIN_MMRV_ELIGIBILITY_DATE
   end
@@ -775,11 +784,10 @@ class Patient < ApplicationRecord
       date_of_birth: consent_form.date_of_birth,
       family_name: consent_form.family_name,
       given_name: consent_form.given_name,
-      home_educated: consent_form.home_educated,
       nhs_number: consent_form.nhs_number,
       preferred_family_name: consent_form.preferred_family_name,
       preferred_given_name: consent_form.preferred_given_name,
-      school: consent_form.school
+      school: consent_form.school_for_school_move
     )
   end
 

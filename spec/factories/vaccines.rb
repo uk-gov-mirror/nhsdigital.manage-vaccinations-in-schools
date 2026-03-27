@@ -148,8 +148,19 @@ FactoryBot.define do
     end
 
     trait :mmrv do
-      mmr
+      programme_type { "mmr" }
       disease_types { Programme::Variant::DISEASE_TYPES["mmrv"] }
+      injection
+
+      after(:create) do |vaccine|
+        bleeding_disorder =
+          create(:health_question, :bleeding_disorder, vaccine:)
+        mmrv_vaccination = create(:health_question, :mmrv_vaccination, vaccine:)
+        extra_support = create(:health_question, :extra_support, vaccine:)
+
+        bleeding_disorder.update!(next_question: mmrv_vaccination)
+        mmrv_vaccination.update!(next_question: extra_support)
+      end
     end
 
     trait :td_ipv do
@@ -183,6 +194,7 @@ FactoryBot.define do
         disease_types { data["disease_types"] }
         manufacturer { data["manufacturer"] }
         add_attribute(:method) { data["method"] }
+        side_effects { data.fetch("side_effects") }
         upload_name { data["upload_name"] }
         nivs_name { data["nivs_name"] }
         snomed_product_code { data["snomed_product_code"] }

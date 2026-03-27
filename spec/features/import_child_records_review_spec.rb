@@ -25,7 +25,7 @@ describe "Import child records review" do
 
   def given_i_am_signed_in
     programmes = [Programme.hpv, Programme.menacwy, Programme.td_ipv]
-    @team = create(:team, :with_generic_clinic, :with_one_nurse, programmes:)
+    @team = create(:team, :with_one_nurse, programmes:)
     @user = @team.users.first
 
     # Create a school in this team (children can be uploaded here)
@@ -58,13 +58,6 @@ describe "Import child records review" do
         address_postcode: "SW1A 1AA",
         school: @other_school
       )
-
-    create(
-      :patient_location,
-      patient: @patient,
-      location: @other_school,
-      academic_year: AcademicYear.current
-    )
   end
 
   def when_i_visit_the_import_page
