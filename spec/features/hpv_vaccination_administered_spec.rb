@@ -302,6 +302,7 @@ describe "HPV vaccination" do
     expect(email_deliveries).to include(
       matching_notify_email(
         to: @patient.consents.last.parent.email,
+        subject: "Your child had their HPV vaccination today",
         template: :vaccination_administered_hpv
       ).with_content_including(
         "HPV vaccination",
@@ -311,7 +312,7 @@ describe "HPV vaccination" do
         "a high temperature",
         "dizziness",
         "feeling sick",
-        "tiredness"
+        "general tiredness"
       )
     )
   end
