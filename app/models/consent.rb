@@ -7,6 +7,7 @@
 #  id                                              :bigint           not null, primary key
 #  academic_year                                   :integer          not null
 #  disease_types                                   :enum             not null, is an Array
+#  follow_up_requested                             :boolean
 #  health_answers                                  :jsonb            not null
 #  invalidated_at                                  :datetime
 #  notes                                           :text             default(""), not null
@@ -201,6 +202,7 @@ class Consent < ApplicationRecord
             academic_year: consent_form.academic_year,
             consent_form:,
             disease_types: consent_form_programme.disease_types,
+            follow_up_requested: consent_form_programme.follow_up_requested,
             health_answers: consent_form.health_answers,
             notes: consent_form_programme.notes,
             parent:,
