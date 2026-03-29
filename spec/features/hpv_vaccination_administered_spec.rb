@@ -312,7 +312,7 @@ describe "HPV vaccination" do
         "a high temperature",
         "dizziness",
         "feeling sick",
-        "general tiredness"
+        "tiredness"
       )
     )
   end
