@@ -173,14 +173,9 @@ class ImmunisationImport < ApplicationRecord
 
     ArchiveReason.import(archive_reasons, on_duplicate_key_ignore: :all)
 
-    [
-      [:vaccination_records, vaccination_records],
-      [:patients, @patients_batch],
-      [:patient_locations, patient_locations.select { it.id.present? }]
-    ].each do |association, collection|
-      link_records_by_type(association, collection)
-      collection.clear
-    end
+    Imports::JoinRecords.call(self, vaccination_records)
+    Imports::JoinRecords.call(self, patients)
+    Imports::JoinRecords.call(self, patient_locations.select { it.id.present? })
 
     @patients_batch.clear
     @vaccination_records_batch.clear
