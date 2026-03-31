@@ -31,9 +31,15 @@ class Reports::SystmOneExporter
       1 => "Y0da5",
       nil => "Y0da5"
     },
+    "MMR VaxPro" => {
+      nil => "Yb9ZN"
+    },
     "Nimenrix" => {
       1 => "YOfcf",
       nil => "YOfcf"
+    },
+    "Priorix" => {
+      nil => "Yav8l"
     },
     "Revaxis" => {
       1 => "Y3417",
@@ -231,14 +237,14 @@ class Reports::SystmOneExporter
     vaccine_brand = vaccination_record.vaccine.brand
     dose_sequence = vaccination_record.dose_sequence
 
-    mapping =
-      if programme.mmr?
+    if programme.mmr?
+      procedure_mapping =
         PROCEDURE_DOSE_MAPPINGS.dig(programme.variant_type, dose_sequence)
-      else
-        PRODUCT_DOSE_MAPPINGS.dig(vaccine_brand, dose_sequence)
-      end
+      return procedure_mapping if procedure_mapping.present?
+    end
 
-    return mapping if mapping.present?
+    product_mapping = PRODUCT_DOSE_MAPPINGS.dig(vaccine_brand, dose_sequence)
+    return product_mapping if product_mapping.present?
 
     dose_sequence ? "#{vaccine_brand} Part #{dose_sequence}" : vaccine_brand
   end
