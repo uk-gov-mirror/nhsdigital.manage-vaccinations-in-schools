@@ -44,7 +44,6 @@ class CareplusExport < ApplicationRecord
 
   validates :academic_year, :scheduled_at, presence: true
   validates :date_from, :date_to, presence: true
-  validates :programme_types, presence: true
   validates :date_to,
             comparison: {
               greater_than_or_equal_to: :date_from

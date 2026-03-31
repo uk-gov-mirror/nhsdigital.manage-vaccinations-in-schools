@@ -108,6 +108,9 @@ module MavisCLI
             **scope_args
           )
 
+        programme_types =
+          records.unscope(:order).distinct.pluck(:programme_type)
+
         csv = ::Reports::AutomatedCareplusExporter.call(**scope_args)
 
         now = Time.current
@@ -121,7 +124,7 @@ module MavisCLI
             academic_year: academic_year_value,
             date_from: parsed_start_date,
             date_to: parsed_end_date,
-            programme_types: team.programme_types,
+            programme_types:,
             scheduled_at: now,
             sent_at: now,
             status: :sent,

@@ -55,7 +55,6 @@ describe CareplusExport do
     it { should validate_presence_of(:scheduled_at) }
     it { should validate_presence_of(:date_from) }
     it { should validate_presence_of(:date_to) }
-    it { should validate_presence_of(:programme_types) }
 
     describe "date_from_must_precede_date_to" do
       context "when date_to is before date_from" do
