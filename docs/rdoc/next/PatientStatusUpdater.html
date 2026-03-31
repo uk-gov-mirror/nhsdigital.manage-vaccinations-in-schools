@@ -713,7 +713,7 @@
         <span class="ruby-value">:vaccination_records</span>,
         <span class="ruby-value">:parents</span>
       )
-      .<span class="ruby-identifier">find_in_batches</span>(<span class="ruby-value">batch_size:</span> <span class="ruby-value">10_000</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">batch</span><span class="ruby-operator">|</span>
+      .<span class="ruby-identifier">find_in_batches</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">batch</span><span class="ruby-operator">|</span>
         <span class="ruby-identifier">batch</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:assign</span>)
 
         <span class="ruby-constant">Patient</span><span class="ruby-operator">::</span><span class="ruby-constant">ProgrammeStatus</span>.<span class="ruby-identifier">import!</span>(
@@ -1278,7 +1278,7 @@
       <span class="ruby-value">:vaccination_records</span>,
       <span class="ruby-value">:parents</span>
     )
-    .<span class="ruby-identifier">find_in_batches</span>(<span class="ruby-value">batch_size:</span> <span class="ruby-value">10_000</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">batch</span><span class="ruby-operator">|</span>
+    .<span class="ruby-identifier">find_in_batches</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">batch</span><span class="ruby-operator">|</span>
       <span class="ruby-identifier">batch</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:assign</span>)
 
       <span class="ruby-constant">Patient</span><span class="ruby-operator">::</span><span class="ruby-constant">ProgrammeStatus</span>.<span class="ruby-identifier">import!</span>(
