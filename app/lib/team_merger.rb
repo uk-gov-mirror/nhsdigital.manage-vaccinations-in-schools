@@ -17,11 +17,16 @@ class TeamMerger
 
   attr_reader :source_teams, :new_team_attrs, :errors, :dry_run_report
 
+  ## Initializes a merger for the given source teams and attributes for the new
+  # team that will replace them.
+  #
+  # The +source_teams+ attribute is a list of the teams to be merged.
+  #
+  # The +new_team_attrs+ hash is used to create the merged team, and should
+  # contain all attributes necessary to create a new team.
   def initialize(source_teams:, new_team_attrs:)
     @source_teams = source_teams
     @new_team_attrs = new_team_attrs
-    @errors = []
-    @dry_run_report = []
   end
 
   def valid?
@@ -40,12 +45,11 @@ class TeamMerger
     append_batch_skips
     append_archive_reason_merges
 
-    valid?
-    if @errors.empty?
+    if valid?
       @dry_run_report << "Merge would succeed."
     else
       @dry_run_report << "Merge would ABORT with #{@errors.size} error(s):"
-      @errors.each { |e| @dry_run_report << "  ERROR: #{e}" }
+      @dry_run_report += @errors.map { "  ERROR: #{it}" }
     end
 
     @dry_run_report
@@ -57,22 +61,16 @@ class TeamMerger
     result =
       ActiveRecord::Base.transaction do
         merged_team = Team.create!(new_team_attrs)
-        Rails.logger.debug "Migrating simple tables..."
+
         migrate_simple_tables(merged_team)
-        Rails.logger.debug "Migrating batches..."
         migrate_batches(merged_team)
-        Rails.logger.debug "Migrating archive reasons..."
         migrate_archive_reasons(merged_team)
-        Rails.logger.debug "Migrating important notices..."
         migrate_important_notices(merged_team)
-        Rails.logger.debug "Migrating subteams..."
         migrate_subteams(merged_team)
-        Rails.logger.debug "Migrating generic locations..."
         migrate_generic_locations(merged_team)
-        Rails.logger.debug "Migrating team locations..."
         migrate_team_locations(merged_team)
-        Rails.logger.debug "Migrating users..."
         migrate_teams_users(merged_team)
+
         Rails.logger.debug "Migrating patients..."
         PatientTeamUpdater.call(
           team_scope:
@@ -80,6 +78,7 @@ class TeamMerger
               Team.where(id: merged_team.id)
             )
         )
+
         Rails.logger.debug "Destroying old teams..."
         source_teams.each(&:destroy!)
         merged_team
@@ -124,10 +123,10 @@ class TeamMerger
       PatientTeam
         .where(team_id: source_team_ids)
         .joins(
-          "LEFT JOIN archive_reasons ar ON ar.patient_id = patient_teams.patient_id
-                                       AND ar.team_id = patient_teams.team_id"
+          "LEFT JOIN archive_reasons ON archive_reasons.patient_id = patient_teams.patient_id
+                                       AND archive_reasons.team_id = patient_teams.team_id"
         )
-        .where("ar.id IS NULL")
+        .where("archive_reasons.id IS NULL")
         .distinct
         .pluck(:patient_id)
   end
@@ -161,12 +160,16 @@ class TeamMerger
   end
 
   def migrate_simple_tables(merged_team)
+    Rails.logger.debug "Migrating simple tables..."
+
     SIMPLE_MODELS.each do |model|
       model.where(team_id: source_team_ids).update_all(team_id: merged_team.id)
     end
   end
 
   def migrate_batches(merged_team)
+    Rails.logger.debug "Migrating batches..."
+
     keep_ids =
       Batch
         .where(team_id: source_team_ids)
@@ -178,6 +181,8 @@ class TeamMerger
   end
 
   def migrate_archive_reasons(merged_team)
+    Rails.logger.debug "Migrating archive reasons..."
+
     patient_ids_with_reasons =
       ArchiveReason.where(team_id: source_team_ids).distinct.pluck(:patient_id)
 
@@ -222,6 +227,8 @@ class TeamMerger
   end
 
   def migrate_important_notices(merged_team)
+    Rails.logger.debug "Migrating important notices..."
+
     keep_ids =
       ImportantNotice
         .where(team_id: source_team_ids)
@@ -238,10 +245,14 @@ class TeamMerger
   end
 
   def migrate_subteams(merged_team)
+    Rails.logger.debug "Migrating subteams..."
+
     Subteam.where(team_id: source_team_ids).update_all(team_id: merged_team.id)
   end
 
   def migrate_teams_users(merged_team)
+    Rails.logger.debug "Migrating users..."
+
     sql = <<~SQL
       INSERT INTO teams_users (team_id, user_id)
       SELECT DISTINCT #{merged_team.id}, user_id
@@ -256,6 +267,8 @@ class TeamMerger
   end
 
   def migrate_team_locations(merged_team)
+    Rails.logger.debug "Migrating team locations..."
+
     source_teams.each do |source_team|
       source_team.team_locations.find_each do |tl|
         if TeamLocation.exists?(
@@ -272,6 +285,8 @@ class TeamMerger
   end
 
   def migrate_generic_locations(merged_team)
+    Rails.logger.debug "Migrating generic locations..."
+
     source_gl_tl_ids =
       TeamLocation
         .joins(:location)
