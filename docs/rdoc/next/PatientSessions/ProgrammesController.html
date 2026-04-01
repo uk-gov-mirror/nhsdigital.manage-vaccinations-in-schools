@@ -564,8 +564,6 @@
       </summary>
       <ul class="nav-list" role="directory">
 
-        <li ><a href="#method-i-record_already_vaccinated">record_already_vaccinated</a></li>
-
         <li ><a href="#method-i-show">show</a></li>
 
       </ul>
@@ -647,78 +645,6 @@
        </header>
 
 
-      <div id="method-i-record_already_vaccinated" class="method-detail anchor-link ">
-        <div class="method-header">
-
-            <div class="method-heading">
-              <a href="#method-i-record_already_vaccinated" title="Link to this method">
-                <span class="method-name">record_already_vaccinated</span>
-                <span class="method-args">()</span>
-              </a>
-            </div>
-
-        </div>
-
-
-          <div class="method-controls">
-            <details class="method-source-toggle">
-              <summary>Source</summary>
-            </details>
-          </div>
-          <div class="method-source-code" id="record_already_vaccinated-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/controllers/patient_sessions/programmes_controller.rb, line 10</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">record_already_vaccinated</span>
-  <span class="ruby-identifier">authorize</span> <span class="ruby-constant">VaccinationRecord</span>.<span class="ruby-identifier">new</span>(
-              <span class="ruby-value">patient:</span> <span class="ruby-ivar">@patient</span>,
-              <span class="ruby-value">session:</span> <span class="ruby-ivar">@session</span>,
-              <span class="ruby-value">programme:</span> <span class="ruby-ivar">@programme</span>
-            )
-
-  <span class="ruby-identifier">draft_vaccination_record</span> =
-    <span class="ruby-constant">DraftVaccinationRecord</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">request_session:</span> <span class="ruby-identifier">session</span>, <span class="ruby-value">current_user:</span>)
-
-  <span class="ruby-identifier">draft_vaccination_record</span>.<span class="ruby-identifier">clear_attributes</span>
-
-  <span class="ruby-identifier">first_active_wizard_step</span> =
-    <span class="ruby-identifier">eligible_for_mmr_or_mmrv?</span> <span class="ruby-operator">?</span> <span class="ruby-value">:mmr_or_mmrv</span> <span class="ruby-operator">:</span> <span class="ruby-value">:date_and_time</span>
-
-  <span class="ruby-identifier">draft_vaccination_record</span>.<span class="ruby-identifier">update!</span>(
-    <span class="ruby-value">dose_sequence:</span>,
-    <span class="ruby-value">first_active_wizard_step:</span>,
-    <span class="ruby-value">location_id:</span> <span class="ruby-keyword">nil</span>,
-    <span class="ruby-value">location_name:</span> <span class="ruby-string">&quot;Unknown&quot;</span>,
-    <span class="ruby-value">outcome:</span> <span class="ruby-value">:administered</span>,
-    <span class="ruby-value">patient:</span> <span class="ruby-ivar">@patient</span>,
-    <span class="ruby-value">performed_ods_code:</span> <span class="ruby-identifier">current_team</span>.<span class="ruby-identifier">organisation</span>.<span class="ruby-identifier">ods_code</span>,
-    <span class="ruby-value">programme:</span> <span class="ruby-identifier">programme_for_record_already_vaccinated</span>,
-    <span class="ruby-value">reported_by_id:</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span>,
-    <span class="ruby-value">session:</span> <span class="ruby-ivar">@session</span>,
-    <span class="ruby-value">source:</span> <span class="ruby-value">:manual_report</span>
-  )
-
-  <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">draft_vaccination_record_path</span>(
-                <span class="ruby-identifier">first_active_wizard_step</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">dasherize</span>
-              )
-<span class="ruby-keyword">end</span></pre>
-          </div>
-
-
-
-        <div class="method-description">
-
-
-          
-
-
-        </div>
-
-
-
-
-
-      </div>
-
-
       <div id="method-i-show" class="method-detail anchor-link ">
         <div class="method-header">
 
@@ -738,9 +664,8 @@
             </details>
           </div>
           <div class="method-source-code" id="show-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/controllers/patient_sessions/programmes_controller.rb, line 6</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/controllers/patient_sessions/programmes_controller.rb, line 8</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">show</span>
-  <span class="ruby-identifier">render</span> <span class="ruby-value">layout:</span> <span class="ruby-string">&quot;full&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
 
