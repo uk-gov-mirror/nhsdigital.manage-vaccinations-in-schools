@@ -355,7 +355,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_30_075714) do
     t.string "full_name", null: false
     t.bigint "patient_id", null: false
     t.string "phone"
+    t.boolean "phone_receive_updates", default: false, null: false
     t.enum "relationship", null: false, enum_type: "contact_relationship"
+    t.string "relationship_other_name"
     t.enum "source", null: false, enum_type: "contact_source"
     t.enum "type", null: false, enum_type: "contact_type"
     t.datetime "updated_at", null: false
