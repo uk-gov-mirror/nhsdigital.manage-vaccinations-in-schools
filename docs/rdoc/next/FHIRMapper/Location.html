@@ -645,6 +645,23 @@
 
 
 
+    <section class="constants-list">
+      <header>
+        <h3 id="untitled-constants"><a href="#untitled-constants">Constants</a></h3>
+      </header>
+      <dl>
+
+        <dt id="UNKNOWN_IDENTIFIER">UNKNOWN_IDENTIFIER</dt>
+
+        <dd>
+
+          
+        </dd>
+
+
+      </dl>
+    </section>
+
 
 
 
@@ -733,13 +750,13 @@
             </details>
           </div>
           <div class="method-source-code" id="fhir_reference-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/location.rb, line 14</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/location.rb, line 16</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">fhir_reference</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">school?</span>
-    <span class="ruby-identifier">value</span> = <span class="ruby-identifier">urn</span> <span class="ruby-operator">||</span> <span class="ruby-string">&quot;X99999&quot;</span>
+    <span class="ruby-identifier">value</span> = <span class="ruby-identifier">urn</span> <span class="ruby-operator">||</span> <span class="ruby-constant">UNKNOWN_IDENTIFIER</span>
     <span class="ruby-identifier">system</span> = <span class="ruby-string">&quot;https://fhir.hl7.org.uk/Id/urn-school-number&quot;</span>
   <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">clinic?</span>
-    <span class="ruby-identifier">value</span> = <span class="ruby-identifier">ods_code</span> <span class="ruby-operator">||</span> <span class="ruby-string">&quot;X99999&quot;</span>
+    <span class="ruby-identifier">value</span> = <span class="ruby-identifier">ods_code</span> <span class="ruby-operator">||</span> <span class="ruby-constant">UNKNOWN_IDENTIFIER</span>
     <span class="ruby-identifier">system</span> = <span class="ruby-string">&quot;https://fhir.nhs.uk/Id/ods-organization-code&quot;</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">UnknownValueError</span>, <span class="ruby-node">&quot;Unsupported location type: #{type}&quot;</span>
