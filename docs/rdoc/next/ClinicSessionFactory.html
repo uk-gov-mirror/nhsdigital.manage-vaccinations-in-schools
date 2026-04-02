@@ -690,7 +690,7 @@
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">new_session</span>
-    <span class="ruby-constant">Session</span>.<span class="ruby-identifier">create!</span>(<span class="ruby-value">team_location:</span>, <span class="ruby-value">dates:</span> [<span class="ruby-identifier">date</span>])
+    <span class="ruby-constant">Session</span>.<span class="ruby-identifier">create!</span>(<span class="ruby-value">team_location:</span>, <span class="ruby-value">dates:</span> [<span class="ruby-identifier">date</span>], <span class="ruby-value">requires_registration:</span> <span class="ruby-keyword">false</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -891,7 +891,7 @@
           <div class="method-source-code" id="new_session-source">
             <pre class="ruby"><span class="ruby-comment"># File app/lib/clinic_session_factory.rb, line 58</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">new_session</span>
-  <span class="ruby-constant">Session</span>.<span class="ruby-identifier">create!</span>(<span class="ruby-value">team_location:</span>, <span class="ruby-value">dates:</span> [<span class="ruby-identifier">date</span>])
+  <span class="ruby-constant">Session</span>.<span class="ruby-identifier">create!</span>(<span class="ruby-value">team_location:</span>, <span class="ruby-value">dates:</span> [<span class="ruby-identifier">date</span>], <span class="ruby-value">requires_registration:</span> <span class="ruby-keyword">false</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
 
