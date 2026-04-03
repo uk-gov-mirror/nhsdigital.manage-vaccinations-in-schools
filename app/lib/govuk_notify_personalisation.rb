@@ -3,8 +3,10 @@
 class GovukNotifyPersonalisation
   include Rails.application.routes.url_helpers
 
+  include PatientsHelper
   include PhoneHelper
   include ProgrammesHelper
+  include TeamsHelper
   include VaccinationRecordsHelper
   include VaccinesHelper
 
