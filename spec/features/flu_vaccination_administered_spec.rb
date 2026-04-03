@@ -346,10 +346,11 @@ describe "Flu vaccination" do
     vaccine =
       VaccinationRecord.includes(:vaccine).find_by!(patient: @patient).vaccine
 
-    side_effects =
+    method_and_side_effects =
       case vaccine.brand
       when "Fluenz"
         [
+          "Method: nasal spray",
           "a runny or blocked nose",
           "loss of appetite",
           "tiredness",
@@ -357,6 +358,7 @@ describe "Flu vaccination" do
         ]
       when "Cell-based Trivalent Influenza Vaccine Seqirus"
         [
+          "Method: injection",
           "an aching body",
           "a slightly raised temperature",
           "swelling or pain where the injection was given"
@@ -370,7 +372,7 @@ describe "Flu vaccination" do
         to: @patient.consents.last.parent.email,
         subject: "Your child had their flu vaccination today",
         template: :vaccination_administered_flu
-      ).with_content_including("Vaccination: flu", *side_effects)
+      ).with_content_including("Vaccination: flu", *method_and_side_effects)
     )
   end
 
