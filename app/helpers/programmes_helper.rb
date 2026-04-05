@@ -9,4 +9,11 @@ module ProgrammesHelper
       programme.name_in_sentence
     end
   end
+
+  def programme_disease_names(programme)
+    programme
+      .disease_types
+      .map { I18n.t!(it, scope: :disease_types) }
+      .to_sentence
+  end
 end
