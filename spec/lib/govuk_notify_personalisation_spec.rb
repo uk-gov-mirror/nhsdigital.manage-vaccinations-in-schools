@@ -79,7 +79,7 @@ describe GovukNotifyPersonalisation do
         full_and_preferred_patient_name: "John Smith",
         location_name: "Hogwarts",
         invitation_to_clinic_custom_mmr_message: "",
-        mmr_second_dose_required: false,
+        mmr_second_dose_required?: false,
         invitation_to_clinic_generic_message:
           "They can have this vaccination at a community clinic. If you’d like " \
             "to book a clinic appointment, please contact us using the details " \
@@ -432,7 +432,7 @@ describe GovukNotifyPersonalisation do
       context "generic message inviting patient to generic clinic" do
         it do
           expect(personalisation).to have_attributes(
-            mmr_second_dose_required: false,
+            mmr_second_dose_required?: false,
             vaccination: "MMR vaccination",
             invitation_to_clinic_generic_message:
               "They can have this vaccination at a community clinic. " \
@@ -448,7 +448,7 @@ describe GovukNotifyPersonalisation do
 
         it do
           expect(personalisation).to have_attributes(
-            mmr_second_dose_required: false,
+            mmr_second_dose_required?: false,
             vaccination: "MMR vaccination",
             invitation_to_clinic_custom_mmr_message: ""
           )
@@ -461,7 +461,7 @@ describe GovukNotifyPersonalisation do
 
         it do
           expect(personalisation).to have_attributes(
-            mmr_second_dose_required: false,
+            mmr_second_dose_required?: false,
             vaccination: "MMR vaccination",
             invitation_to_clinic_custom_mmr_message: ""
           )
@@ -485,7 +485,7 @@ describe GovukNotifyPersonalisation do
         context "generic message inviting patient to generic clinic for their 2nd dose" do
           it do
             expect(personalisation).to have_attributes(
-              mmr_second_dose_required: true,
+              mmr_second_dose_required?: true,
               vaccination: "2nd dose of the MMR vaccination",
               invitation_to_clinic_generic_message:
                 "If you would like your local GP surgery to give John their 2nd dose, " \
@@ -506,7 +506,7 @@ describe GovukNotifyPersonalisation do
 
           it do
             expect(personalisation).to have_attributes(
-              mmr_second_dose_required: true,
+              mmr_second_dose_required?: true,
               vaccination: "2nd dose of the MMR vaccination",
               invitation_to_clinic_custom_mmr_message:
                 "It’s important to wait at least 28 days after the 1st dose of an MMR or " \
@@ -524,7 +524,7 @@ describe GovukNotifyPersonalisation do
 
           it do
             expect(personalisation).to have_attributes(
-              mmr_second_dose_required: true,
+              mmr_second_dose_required?: true,
               vaccination: "2nd dose of the MMR vaccination",
               invitation_to_clinic_custom_mmr_message:
                 "It’s important to wait at least 28 days after the 1st dose of an MMR " \

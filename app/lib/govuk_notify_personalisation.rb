@@ -143,27 +143,23 @@ class GovukNotifyPersonalisation
     mmr_programme.present? && patient_on_last_dose?
   end
 
-  def mmr_second_dose_required
-    mmr_second_dose_required?
-  end
-
   def invitation_to_clinic_generic_message
     [
       (
-        if mmr_second_dose_required
+        if mmr_second_dose_required?
           "If you would like your local GP surgery to give #{short_patient_name} " \
             "their 2nd dose, contact the surgery in the usual way."
         end
       ),
-      "#{mmr_second_dose_required ? "Alternatively, they" : "They"} can have this vaccination " \
+      "#{mmr_second_dose_required? ? "Alternatively, they" : "They"} can have this vaccination " \
         "at a community clinic. If you’d like to book a clinic appointment, please contact " \
         "us using the details below.",
-      (mmr_second_dose_waiting_period_message if mmr_second_dose_required)
+      (mmr_second_dose_waiting_period_message if mmr_second_dose_required?)
     ].compact.join("\n\n")
   end
 
   def invitation_to_clinic_custom_mmr_message
-    return "" unless mmr_second_dose_required
+    return "" unless mmr_second_dose_required?
 
     case team&.organisation&.ods_code
     when "RT5" # Leicestershire Partnership Trust (LPT)
@@ -388,7 +384,7 @@ class GovukNotifyPersonalisation
       # We're sending about a vaccination that will take place.
       names = programme_names
 
-      if mmr_second_dose_required
+      if mmr_second_dose_required?
         names = names.map { it == "MMR" ? "2nd dose of the MMR" : it }
       end
 
