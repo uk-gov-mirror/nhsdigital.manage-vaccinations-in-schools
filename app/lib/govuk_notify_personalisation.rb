@@ -65,10 +65,6 @@ class GovukNotifyPersonalisation
               :team_location,
               :vaccination_record
 
-  def batch_name
-    vaccination_record&.batch_number
-  end
-
   def consent_deadline
     session&.consent_deadline_date&.to_fs(:short_day_of_week)
   end
@@ -111,10 +107,6 @@ class GovukNotifyPersonalisation
     return "" if consented_vaccine_methods.nil?
 
     "You’ve agreed for #{short_patient_name} to have the #{consented_vaccine_methods}."
-  end
-
-  def day_month_year_of_vaccination
-    vaccination_record&.performed_at&.to_date&.to_fs(:uk_short)
   end
 
   def full_and_preferred_patient_name
@@ -364,16 +356,6 @@ class GovukNotifyPersonalisation
 
   delegate :privacy_notice_url, :privacy_policy_url, to: :team, prefix: true
 
-  def today_or_date_of_vaccination
-    return if vaccination_record.nil?
-
-    if vaccination_record.performed_at.today?
-      "today"
-    else
-      "on #{vaccination_record.performed_at.to_date.to_fs(:long)}"
-    end
-  end
-
   def vaccination
     if vaccination_record.present?
       # We're sending communication about a specific vaccination that took place.
@@ -431,10 +413,6 @@ class GovukNotifyPersonalisation
     "#{programme_names_and_methods.to_sentence} vaccine".pluralize(
       programme_names_and_methods.length
     )
-  end
-
-  def vaccine_brand
-    vaccination_record&.vaccine&.brand
   end
 
   def vaccine_is?(method)

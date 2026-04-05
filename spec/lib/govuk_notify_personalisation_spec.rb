@@ -696,13 +696,9 @@ describe GovukNotifyPersonalisation do
 
     it do
       expect(personalisation).to have_attributes(
-        day_month_year_of_vaccination: "01/01/2024",
-        today_or_date_of_vaccination: "on 1 January 2024",
-        vaccine_and_dose: "HPV 1st dose",
-        vaccine_brand: "Gardasil 9"
+        vaccine_and_dose: "HPV 1st dose"
       )
     end
-
   end
 
   context "with a not-administered vaccination record" do
@@ -717,9 +713,7 @@ describe GovukNotifyPersonalisation do
 
     it do
       expect(personalisation).to have_attributes(
-        day_month_year_of_vaccination: "01/01/2024",
-        reason_did_not_vaccinate: "the nurse decided John was not well",
-        today_or_date_of_vaccination: "on 1 January 2024"
+        reason_did_not_vaccinate: "the nurse decided John was not well"
       )
     end
   end
