@@ -47,3 +47,6 @@ sync_national_reporting_to_imms_api: >-
   Sync immunisations records uploaded as part of national reporting to the NHS Immunisations API.
 
 testing_api: Basic API useful for automated testing.
+
+vaccinating_16_plus_year_olds: >-
+  Enable functionality related to recording vaccinations for patients over the age of 16.
