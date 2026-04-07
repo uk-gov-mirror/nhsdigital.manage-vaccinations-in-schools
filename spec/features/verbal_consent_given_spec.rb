@@ -121,6 +121,7 @@ describe "Verbal consent" do
         :patient,
         given_name: "Bob",
         family_name: "Smith",
+        session: @session,
         date_of_birth: Programme::MIN_MMRV_ELIGIBILITY_DATE - 1.year
       )
     @contact =
@@ -203,12 +204,7 @@ describe "Verbal consent" do
       "Choose who you are trying to get consent from"
     )
 
-    parent_label =
-      @patient
-        .parent_relationships
-        .includes(:parent)
-        .find_by(patient: @patient)
-        .label_with_parent
+    parent_label = @contact.label
 
     choose parent_label
     click_button "Continue"
@@ -278,10 +274,10 @@ describe "Verbal consent" do
     parent_relationship = @patient.parent_relationships.first
 
     expect(consent).to have_attributes(
-      parent_full_name: @parent.full_name,
-      parent_email: @parent.email,
-      parent_phone: @parent.phone,
-      parent_phone_receive_updates: @parent.phone_receive_updates,
+      parent_full_name: @contact.full_name,
+      parent_email: @contact.email,
+      parent_phone: @contact.phone,
+      parent_phone_receive_updates: @contact.phone_receive_updates,
       parent_relationship_type: parent_relationship.type
     )
 
@@ -292,9 +288,9 @@ describe "Verbal consent" do
 
   def and_i_can_see_the_consent_response_details(number_of_health_questions:)
     click_link @patient.full_name, match: :first
-    click_link @parent.full_name
+    click_link @contact.full_name
 
-    expect(page).to have_content("Consent response from #{@parent.full_name}")
+    expect(page).to have_content("Consent response from #{@contact.full_name}")
     expect(page).to have_content(["Date", Date.current.to_fs(:long)].join)
     expect(page).to have_content(["Response", "Consent given"].join)
     expect(page).to have_content(["Method", "By phone"].join)
@@ -305,12 +301,12 @@ describe "Verbal consent" do
     )
     expect(page).to have_content(["School", @patient.school.name].join)
 
-    expect(page).to have_content(["Name", @parent.full_name].join)
+    expect(page).to have_content(["Name", @contact.full_name].join)
     expect(page).to have_content(
       ["Relationship", @patient.parent_relationships.first.label].join
     )
-    expect(page).to have_content(["Email address", @parent.email].join("\n"))
-    expect(page).to have_content(["Phone number", @parent.phone].join("\n"))
+    expect(page).to have_content(["Email address", @contact.email].join("\n"))
+    expect(page).to have_content(["Phone number", @contact.phone].join("\n"))
 
     expect(page).to have_content("Answers to health questions")
     expect(page).to have_content(
@@ -322,7 +318,7 @@ describe "Verbal consent" do
   def then_an_email_is_sent_to_the_parent_confirming_their_consent
     expect(email_deliveries).to include(
       matching_notify_email(
-        to: @parent.email,
+        to: @contact.email,
         template: :consent_confirmation_given
       ).with_content_including("You’ve given consent", "withdraw your consent")
     )
@@ -331,7 +327,7 @@ describe "Verbal consent" do
   def and_a_text_is_sent_to_the_parent_confirming_their_consent
     expect(sms_deliveries).to include(
       matching_notify_sms(
-        phone_number: @parent.phone,
+        phone_number: @contact.phone,
         template: :consent_confirmation_given
       ).with_content_including(
         "You've given consent for Alex",
@@ -348,7 +344,7 @@ describe "Verbal consent" do
     click_on "Back"
     click_on "Session activity and notes"
     expect(page).to have_content("Consent confirmation given", count: 2)
-    expect(page).to have_content(@parent.email)
-    expect(page).to have_content(@parent.phone)
+    expect(page).to have_content(@contact.email)
+    expect(page).to have_content(@contact.phone)
   end
 end
