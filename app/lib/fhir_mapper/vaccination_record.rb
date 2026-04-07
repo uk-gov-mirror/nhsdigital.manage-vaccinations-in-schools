@@ -158,6 +158,12 @@ module FHIRMapper
       attrs[:nhs_immunisations_api_snomed_reason_code] = reason_coding&.code
       attrs[:nhs_immunisations_api_snomed_reason_term] = reason_coding&.display
 
+      product_coding = vaccine_product_coding_from_fhir(fhir_record)
+      attrs[:nhs_immunisations_api_snomed_product_code] = product_coding&.code
+      attrs[
+        :nhs_immunisations_api_snomed_product_term
+      ] = product_coding&.display
+
       attrs[:vaccine] = Vaccine.from_fhir_record(fhir_record)
       attrs[:batch_number] = fhir_record.lotNumber&.to_s
 
@@ -372,6 +378,12 @@ module FHIRMapper
 
     private_class_method def self.reason_coding_from_fhir(fhir_record)
       fhir_record.reasonCode&.first&.coding&.find do
+        it.system == "http://snomed.info/sct"
+      end
+    end
+
+    private_class_method def self.vaccine_product_coding_from_fhir(fhir_record)
+      fhir_record.vaccineCode&.coding&.find do
         it.system == "http://snomed.info/sct"
       end
     end

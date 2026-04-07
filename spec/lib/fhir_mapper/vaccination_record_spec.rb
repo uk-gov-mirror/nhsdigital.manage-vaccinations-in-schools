@@ -722,6 +722,15 @@ describe FHIRMapper::VaccinationRecord do
         its(:nhs_immunisations_api_snomed_reason_term) do
           should eq "Disease outbreak (event)"
         end
+
+        its(:nhs_immunisations_api_snomed_product_code) do
+          should eq "43207411000001105"
+        end
+
+        its(:nhs_immunisations_api_snomed_product_term) do
+          should eq "Cell-based trivalent influenza vaccine (surface antigen, inactivated) suspension for injection " \
+                      "0.5ml pre-filled syringes (Seqirus UK Ltd)"
+        end
       end
 
       context "with a record with not full dose" do
@@ -770,6 +779,14 @@ describe FHIRMapper::VaccinationRecord do
 
         its(:nhs_immunisations_api_snomed_reason_term) do
           should eq "Disease outbreak (event)"
+        end
+
+        its(:nhs_immunisations_api_snomed_product_code) do
+          should eq "43208811000001106"
+        end
+
+        its(:nhs_immunisations_api_snomed_product_term) do
+          should eq "Fluenz (trivalent) vaccine nasal suspension 0.2ml unit dose (AstraZeneca UK Ltd) (product)"
         end
 
         its(:notes) do
@@ -824,6 +841,14 @@ describe FHIRMapper::VaccinationRecord do
 
         its(:nhs_immunisations_api_snomed_reason_term) do
           should eq "Disease outbreak (event)"
+        end
+
+        its(:nhs_immunisations_api_snomed_product_code) do
+          should eq "43208811000001106"
+        end
+
+        its(:nhs_immunisations_api_snomed_product_term) do
+          should eq "Fluenz (trivalent) vaccine nasal suspension 0.2ml unit dose (AstraZeneca UK Ltd) (product)"
         end
 
         its(:notes) do
@@ -886,6 +911,14 @@ describe FHIRMapper::VaccinationRecord do
         its(:nhs_immunisations_api_snomed_reason_code) { should be_nil }
         its(:nhs_immunisations_api_snomed_reason_term) { should be_nil }
 
+        its(:nhs_immunisations_api_snomed_product_code) do
+          should eq "43208811000001106"
+        end
+
+        its(:nhs_immunisations_api_snomed_product_term) do
+          should eq "Fluenz (trivalent) vaccine nasal suspension 0.2ml unit dose (AstraZeneca UK Ltd)"
+        end
+
         its(:notes) { should be_nil }
       end
 
@@ -941,6 +974,15 @@ describe FHIRMapper::VaccinationRecord do
           should eq "Disease outbreak (event)"
         end
 
+        its(:nhs_immunisations_api_snomed_product_code) do
+          should eq "43207411000001106"
+        end
+
+        its(:nhs_immunisations_api_snomed_product_term) do
+          should eq "Cell-based trivalent influenza vaccine (surface antigen, inactivated) suspension for injection " \
+                      "0.5ml pre-filled syringes (Seqirus UK Ltd)"
+        end
+
         its(:notes) do
           should include(
                    "SNOMED product code: 43207411000001106",
@@ -994,6 +1036,9 @@ describe FHIRMapper::VaccinationRecord do
         its(:nhs_immunisations_api_snomed_reason_code) { should be_nil }
         its(:nhs_immunisations_api_snomed_reason_term) { should be_nil }
 
+        its(:nhs_immunisations_api_snomed_product_code) { should be_nil }
+        its(:nhs_immunisations_api_snomed_product_term) { should be_nil }
+
         its(:notes) do
           should include(
                    "Reported dose number string: Dose sequence not recorded"
@@ -1043,6 +1088,14 @@ describe FHIRMapper::VaccinationRecord do
         its(:nhs_immunisations_api_snomed_reason_code) { should be_nil }
         its(:nhs_immunisations_api_snomed_reason_term) { should be_nil }
 
+        its(:nhs_immunisations_api_snomed_product_code) do
+          should eq "43208811000001106"
+        end
+
+        its(:nhs_immunisations_api_snomed_product_term) do
+          should eq "Fluenz (trivalent) vaccine nasal suspension 0.2ml unit dose (AstraZeneca UK Ltd)"
+        end
+
         its(:notes) { should be_nil }
       end
 
@@ -1085,6 +1138,15 @@ describe FHIRMapper::VaccinationRecord do
 
         its(:nhs_immunisations_api_snomed_reason_code) { should be_nil }
         its(:nhs_immunisations_api_snomed_reason_term) { should be_nil }
+
+        its(:nhs_immunisations_api_snomed_product_code) do
+          should eq "43207411000001105"
+        end
+
+        its(:nhs_immunisations_api_snomed_product_term) do
+          should eq "Cell-based trivalent influenza vaccine (surface antigen, inactivated) suspension for injection " \
+                      "0.5ml pre-filled syringes (Seqirus UK Ltd)"
+        end
 
         its(:notes) { should be_nil }
       end
@@ -1132,6 +1194,15 @@ describe FHIRMapper::VaccinationRecord do
 
         its(:nhs_immunisations_api_snomed_reason_code) { should be_nil }
         its(:nhs_immunisations_api_snomed_reason_term) { should be_nil }
+
+        its(:nhs_immunisations_api_snomed_product_code) do
+          should eq "43207411000001105"
+        end
+
+        its(:nhs_immunisations_api_snomed_product_term) do
+          should eq "Cell-based trivalent influenza vaccine (surface antigen, inactivated) suspension for injection " \
+                      "0.5ml pre-filled syringes (Seqirus UK Ltd)"
+        end
 
         its(:notes) { should be_nil }
       end
@@ -1185,6 +1256,14 @@ describe FHIRMapper::VaccinationRecord do
         its(:nhs_immunisations_api_snomed_reason_code) { should eq "723620004" }
         its(:nhs_immunisations_api_snomed_reason_term) { should be_nil }
 
+        its(:nhs_immunisations_api_snomed_product_code) do
+          should eq "43208811000001106"
+        end
+
+        its(:nhs_immunisations_api_snomed_product_term) do
+          should eq "Fluenz (trivalent) vaccine nasal suspension 0.2ml unit dose (AstraZeneca UK Ltd) (product)"
+        end
+
         its(:notes) { should be_nil }
       end
 
@@ -1237,6 +1316,9 @@ describe FHIRMapper::VaccinationRecord do
         its(:nhs_immunisations_api_snomed_reason_code) { should be_nil }
         its(:nhs_immunisations_api_snomed_reason_term) { should be_nil }
 
+        its(:nhs_immunisations_api_snomed_product_code) { should be_nil }
+        its(:nhs_immunisations_api_snomed_product_term) { should be_nil }
+
         its(:notes) { should be_nil }
       end
 
@@ -1280,6 +1362,9 @@ describe FHIRMapper::VaccinationRecord do
 
         its(:nhs_immunisations_api_snomed_reason_code) { should be_nil }
         its(:nhs_immunisations_api_snomed_reason_term) { should be_nil }
+
+        its(:nhs_immunisations_api_snomed_product_code) { should be_nil }
+        its(:nhs_immunisations_api_snomed_product_term) { should be_nil }
 
         its(:notes) do
           should include(
@@ -1345,6 +1430,15 @@ describe FHIRMapper::VaccinationRecord do
         its(:nhs_immunisations_api_snomed_reason_code) { should eq "723620004" }
         its(:nhs_immunisations_api_snomed_reason_term) { should be_nil }
 
+        its(:nhs_immunisations_api_snomed_product_code) do
+          should eq "33493111000001108"
+        end
+
+        its(:nhs_immunisations_api_snomed_product_term) do
+          should eq "Gardasil 9 vaccine suspension for injection 0.5ml pre-filled syringes " \
+                      "(Merck Sharp & Dohme (UK) Ltd) (product)"
+        end
+
         its(:notes) { should be_nil }
       end
     end
@@ -1407,6 +1501,14 @@ describe FHIRMapper::VaccinationRecord do
         its(:nhs_immunisations_api_snomed_reason_code) { should eq "723620004" }
         its(:nhs_immunisations_api_snomed_reason_term) { should be_nil }
 
+        its(:nhs_immunisations_api_snomed_product_code) do
+          should eq "39779611000001104"
+        end
+
+        its(:nhs_immunisations_api_snomed_product_term) do
+          should eq "MenQuadfi vaccine solution for injection 0.5ml vials (Sanofi) (product)"
+        end
+
         its(:notes) { should include("Reported dose number string: Unknown") }
       end
     end
@@ -1468,6 +1570,15 @@ describe FHIRMapper::VaccinationRecord do
 
         its(:nhs_immunisations_api_snomed_reason_code) { should eq "723620004" }
         its(:nhs_immunisations_api_snomed_reason_term) { should be_nil }
+
+        its(:nhs_immunisations_api_snomed_product_code) do
+          should eq "7374511000001107"
+        end
+
+        its(:nhs_immunisations_api_snomed_product_term) do
+          should eq "Revaxis vaccine suspension for injection 0.5ml pre-filled syringes (Sanofi) " \
+                      "1 pre-filled disposable injection (product)"
+        end
 
         its(:notes) { should include("Reported dose number string: Unknown") }
       end
@@ -1535,6 +1646,15 @@ describe FHIRMapper::VaccinationRecord do
         its(:nhs_immunisations_api_snomed_reason_code) { should eq "723620004" }
         its(:nhs_immunisations_api_snomed_reason_term) { should be_nil }
 
+        its(:nhs_immunisations_api_snomed_product_code) do
+          should eq "13968211000001108"
+        end
+
+        its(:nhs_immunisations_api_snomed_product_term) do
+          should eq "M-M-RVAXPRO vaccine powder and solvent for suspension for injection 0.5ml pre-filled syringes " \
+                      "(Merck Sharp & Dohme (UK) Ltd) (product)"
+        end
+
         its(:notes) { should include("Reported dose number string: Unknown") }
       end
     end
@@ -1600,6 +1720,15 @@ describe FHIRMapper::VaccinationRecord do
 
         its(:nhs_immunisations_api_snomed_reason_code) { should eq "723620004" }
         its(:nhs_immunisations_api_snomed_reason_term) { should be_nil }
+
+        its(:nhs_immunisations_api_snomed_product_code) do
+          should eq "45525711000001102"
+        end
+
+        its(:nhs_immunisations_api_snomed_product_term) do
+          should eq "Priorix Tetra vaccine powder and solvent for solution for injection 0.5ml pre-filled syringes " \
+                      "(GlaxoSmithKline UK Ltd) (product)"
+        end
 
         its(:notes) { should include("Reported dose number string: Unknown") }
       end
