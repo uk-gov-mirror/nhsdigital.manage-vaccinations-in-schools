@@ -16,10 +16,11 @@
           end
         end %>
 
-    <%= govuk_button_link_to "Add a new batch",
-                             new_vaccine_batch_path(vaccine),
-                             secondary: true,
-                             aria: { label: "Add a new #{vaccine.brand} batch" } %>
+    <%= render AppActionLinkComponent.new(
+          href: new_vaccine_batch_path(vaccine),
+          text: "Add a new batch",
+          aria: { label: "Add a new #{vaccine.brand} batch" },
+        ) %>
 
     <% if (batches = @batches_by_vaccine_id[vaccine.id]).present? %>
       <%= govuk_table do |table| %>
