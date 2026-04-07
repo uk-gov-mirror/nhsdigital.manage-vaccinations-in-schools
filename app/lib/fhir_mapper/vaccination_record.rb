@@ -180,7 +180,6 @@ module FHIRMapper
         )
       else
         attrs[:disease_types] = attrs[:programme].disease_types
-        notes << vaccine_batch_notes_from_fhir(fhir_record)
         attrs[:full_dose] = true
       end
 
@@ -317,21 +316,6 @@ module FHIRMapper
       else
         true
       end
-    end
-
-    private_class_method def self.vaccine_batch_notes_from_fhir(fhir_record)
-      fhir_vaccine =
-        fhir_record.vaccineCode&.coding&.find do
-          it.system == "http://snomed.info/sct"
-        end
-
-      vaccine_snomed_code = fhir_vaccine&.code
-      vaccine_description = fhir_vaccine&.display.presence
-
-      [
-        ("SNOMED product code: #{vaccine_snomed_code}" if vaccine_snomed_code),
-        ("SNOMED description: #{vaccine_description}" if vaccine_description)
-      ].compact.join("\n").presence
     end
 
     def fhir_user_performer(reference_id:)

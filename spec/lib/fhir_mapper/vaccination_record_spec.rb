@@ -982,13 +982,6 @@ describe FHIRMapper::VaccinationRecord do
           should eq "Cell-based trivalent influenza vaccine (surface antigen, inactivated) suspension for injection " \
                       "0.5ml pre-filled syringes (Seqirus UK Ltd)"
         end
-
-        its(:notes) do
-          should include(
-                   "SNOMED product code: 43207411000001106",
-                   "SNOMED description: Cell-based trivalent influenza vaccine"
-                 )
-        end
       end
 
       context "with a record from a GP which is very sparse" do
