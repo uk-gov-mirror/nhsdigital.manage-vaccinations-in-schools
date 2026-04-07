@@ -693,8 +693,11 @@
     <span class="ruby-keyword">return</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">vaccination_record</span>.<span class="ruby-identifier">update!</span>(
-    <span class="ruby-value">nhs_immunisations_api_sync_pending_at:</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">current</span>
+  <span class="ruby-comment"># Do not trigger the sync through the commit hook as we want to perform</span>
+  <span class="ruby-comment"># the sync synchronously instead of enqueueing a background job.</span>
+  <span class="ruby-identifier">vaccination_record</span>.<span class="ruby-identifier">update_columns</span>(
+    <span class="ruby-value">nhs_immunisations_api_sync_pending_at:</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">current</span>,
+    <span class="ruby-value">touch:</span> <span class="ruby-keyword">true</span>
   )
   <span class="ruby-constant">NHS</span><span class="ruby-operator">::</span><span class="ruby-constant">ImmunisationsAPI</span>.<span class="ruby-identifier">sync_immunisation</span>(<span class="ruby-identifier">vaccination_record</span>)
   <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Successfully synced vaccination record #{vaccination_record_id}&quot;</span>
