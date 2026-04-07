@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Verbal consent" do
-  before { Flipper.enable(:patient_contacts) }
+  before { Flipper.disable(:patient_contacts) }
 
   scenario "Given HPV" do
     given_an_hpv_programme_is_underway
@@ -116,15 +116,15 @@ describe "Verbal consent" do
     @team = create(:team, :with_one_nurse, programmes:)
     @session = create(:session, team: @team, programmes:)
 
+    @parent = create(:parent)
     @patient =
       create(
         :patient,
-        given_name: "Bob",
-        family_name: "Smith",
+        given_name: "Alex",
+        session: @session,
+        parents: [@parent],
         date_of_birth: Programme::MIN_MMRV_ELIGIBILITY_DATE - 1.year
       )
-    @contact =
-      create(:contact, :email, full_name: "Alice Smith", patient: @patient)
 
     PatientStatusUpdater.call
   end
