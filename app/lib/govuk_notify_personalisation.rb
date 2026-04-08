@@ -478,7 +478,7 @@ class GovukNotifyPersonalisation
             patient.vaccine_criteria(programme:, academic_year:).side_effects
           end
         else
-          Vaccine.for_programmes(programmes).flat_map(&:side_effects)
+          Vaccine.for_programmes(programmes).active.flat_map(&:side_effects)
         end
       end
 
