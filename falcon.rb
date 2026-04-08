@@ -72,7 +72,7 @@ unless ENV["SERVICE_CONNECT_PORT"].to_s.empty?
 
     endpoint do
       Async::HTTP::Endpoint.parse(
-        "http://0.0.0.0:#{ENV["SERVICE_DIRECT_PORT"]}"
+        "http://0.0.0.0:#{ENV["SERVICE_CONNECT_PORT"]}"
       ).with(protocol: protocol)
     end
   end
