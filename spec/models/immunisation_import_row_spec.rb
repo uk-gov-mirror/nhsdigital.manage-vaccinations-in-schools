@@ -575,6 +575,18 @@ describe ImmunisationImportRow do
         end
       end
 
+      context "with an invalid dose sequence for MMR" do
+        let(:programmes) { [Programme.mmr] }
+        let(:data) { { "PROGRAMME" => "MMR", "DOSE_SEQUENCE" => "unknown" } }
+
+        it "has the correct error message" do
+          immunisation_import_row.valid?
+          expect(immunisation_import_row.errors["DOSE_SEQUENCE"]).to include(
+            "Enter a dose sequence number, for example, 1 or 2."
+          )
+        end
+      end
+
       context "with an invalid dose sequence" do
         let(:programmes) { [Programme.hpv] }
 
