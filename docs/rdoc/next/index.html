@@ -563,15 +563,6 @@
 </thead>
 <tbody>
 <tr>
-<td><a href="https://github.com/nhsuk/manage-vaccinations-in-schools/deployments/heroku">Heroku</a></td>
-<td>mavis-pr-xxxx.herokuapp.com</td>
-<td>PR review apps</td>
-<td>❌</td>
-<td>pull request branch</td>
-<td>automated</td>
-<td><a href="config/environments/staging_rb.html"><code>staging</code></a></td>
-</tr>
-<tr>
 <td><a href="https://github.com/nhsuk/manage-vaccinations-in-schools/deployments/test">Test</a></td>
 <td><a href="https://test.mavistesting.com">test.mavistesting.com</a></td>
 <td>Internal testing (manual)</td>
@@ -619,10 +610,10 @@
 </tbody>
 </table>
 
-<span id="label-Documentation" class="legacy-anchor"></span>
-<h2 id="documentation"><a href="#documentation">Documentation</a></h2>
+<span id="label-API+Documentation" class="legacy-anchor"></span>
+<h2 id="api-documentation"><a href="#api-documentation"><a href="API.html"><code>API</code></a> Documentation</a></h2>
 
-<p>We have two Rdoc versions:</p>
+<p>We have two RDoc versions:</p>
 <ol><li>
 <p><a href="https://nhsuk.github.io/manage-vaccinations-in-schools/rdoc/next">next</a> - useful for dev work (based off the <code>next</code> branch).</p>
 </li><li>
@@ -661,11 +652,8 @@
 
 <pre class="shell">bin/bundle exec rladr new title</pre>
 
-<span id="label-Development+toolchain" class="legacy-anchor"></span>
-<h3 id="development-toolchain"><a href="#development-toolchain">Development toolchain</a></h3>
-
-<span id="label-Mise" class="legacy-anchor"></span>
-<h4 id="mise"><a href="#mise">Mise</a></h4>
+<span id="label-Installing+dependencies" class="legacy-anchor"></span>
+<h3 id="installing-dependencies"><a href="#installing-dependencies">Installing dependencies</a></h3>
 
 <p>This project uses <code>mise</code>. Use the following to set up (replace <code>brew</code> and package names depending on your platform):</p>
 
@@ -694,17 +682,42 @@ brew install yarn</pre>
 
 <pre class="shell">mise install</pre>
 
-<p>After installing Postgres via <code>mise</code>, run the database in the background, and connect to it to create a user:</p>
+<span id="label-Background+services" class="legacy-anchor"></span>
+<h3 id="background-services"><a href="#background-services">Background services</a></h3>
+
+<p>For the application to start successfully, PostgreSQL and Redis/Valkey must be running.</p>
+
+<span id="label-PostgreSQL" class="legacy-anchor"></span>
+<h4 id="postgresql"><a href="#postgresql">PostgreSQL</a></h4>
+
+<p>If using <code>brew</code>, the simplest option is to run <code>brew services start postgresql</code>.</p>
+
+<p>Alternatively, you can run the server manually:</p>
 
 <pre class="shell">pg_ctl start
 psql -U postgres -c &quot;CREATE USER $(whoami); ALTER USER $(whoami) WITH SUPERUSER;&quot;</pre>
 
-<span id="label-Local+development" class="legacy-anchor"></span>
-<h3 id="local-development"><a href="#local-development">Local development</a></h3>
+<span id="label-Redis-2FValkey" class="legacy-anchor"></span>
+<h4 id="redisvalkey"><a href="#redisvalkey">Redis/Valkey</a></h4>
 
-<p>To run the project locally:</p>
+<p>If using <code>brew</code>, the simplest option is to run <code>brew services start redis</code>.</p>
 
-<pre class="shell">bin/setup</pre>
+<p>Alternatively, you can run the server manually:</p>
+
+<pre class="shell">redis-server</pre>
+
+<span id="label-Running+locally" class="legacy-anchor"></span>
+<h3 id="running-locally"><a href="#running-locally">Running locally</a></h3>
+
+<p>When running for the first time, <code>bin/setup</code> will automatically install Ruby dependencies and set up the database.</p>
+
+<p>This application also comes with a <code>Procfile.dev</code> for use with <code>foreman</code> in development environments. Use the script <code>bin/dev</code> to run it:</p>
+
+<pre class="shell">$ bin/dev
+13:07:31 web.1  | started with pid 73965
+13:07:31 css.1  | started with pid 73966
+13:07:31 js.1   | started with pid 73967
+...</pre>
 
 <span id="label-Branching+strategy" class="legacy-anchor"></span>
 <h3 id="branching-strategy"><a href="#branching-strategy">Branching strategy</a></h3>
@@ -737,34 +750,8 @@ psql -U postgres -c &quot;CREATE USER $(whoami); ALTER USER $(whoami) WITH SUPER
 
 <pre class="diff">+  &quot;solargraph.useBundler&quot;: true,</pre>
 
-<span id="label-PostgreSQL" class="legacy-anchor"></span>
-<h3 id="postgresql"><a href="#postgresql">PostgreSQL</a></h3>
-
-<p>The script <code>bin/db</code> is included to start up PostgreSQL for setups that don’t use system-started services. <a href="Note.html"><code>Note</code></a> that this is meant to be a handy script to manage PostgreSQL, not run a console like <code>rails db</code> does.</p>
-
-<pre class="shell">$ bin/db
-pg_ctl: no server running
-$ bin/db start
-waiting for server to start.... done
-server started
-$ bin/db
-pg_ctl: server is running (PID: 79113)</pre>
-
-<p>This script attempts to be installation agnostic by relying on <code>pg_config</code> to determine postgres’s installation directory and setting up logging accordingly.</p>
-
-<span id="label-Development+server" class="legacy-anchor"></span>
-<h3 id="development-server"><a href="#development-server">Development server</a></h3>
-
-<p>This application comes with a <code>Procfile.dev</code> for use with <code>foreman</code> in development environments. Use the script <code>bin/dev</code> to run it:</p>
-
-<pre class="shell">$ bin/dev
-13:07:31 web.1  | started with pid 73965
-13:07:31 css.1  | started with pid 73966
-13:07:31 js.1   | started with pid 73967
-...</pre>
-
 <span id="label-Debugging+with+binding.pry" class="legacy-anchor"></span>
-<h4 id="debugging-with-bindingpry"><a href="#debugging-with-bindingpry">Debugging with <code>binding.pry</code></a></h4>
+<h3 id="debugging-with-bindingpry"><a href="#debugging-with-bindingpry">Debugging with <code>binding.pry</code></a></h3>
 
 <p>TTY echo can get mangled when using <code>binding.pry</code> in <code>bin/dev</code>. To work around this, you can run <code>rails s</code> directly if you’re not working with any JS or CSS assets.</p>
 
@@ -813,7 +800,7 @@ RAILS_ENV=end_to_end bin/mavis gias import --input-file=spec/fixtures/dfe-school
 <p>You can generate an example programme by seeding the database with <code>rails db:seed:replant</code>.</p>
 
 <span id="label-Adding+a+test+user" class="legacy-anchor"></span>
-<h4 id="adding-a-test-user"><a href="#adding-a-test-user">Adding a test user</a></h4>
+<h3 id="adding-a-test-user"><a href="#adding-a-test-user">Adding a test user</a></h3>
 
 <p>You can add a new user to an environment using the <code>users:create</code> <a href="docs/rake-tasks_md.html#userscreateemailpasswordgiven_namefamily_nameteam_ods_code">rake task</a>:</p>
 
@@ -835,11 +822,6 @@ rails users:create\[user@example.com,password123,John,Doe,R1L\]</pre>
 <pre>http://localhost:4000/rails/view_components</pre>
 
 <p>The previews are defined in <code>spec/components/previews</code>.</p>
-
-<span id="label-Deploying" class="legacy-anchor"></span>
-<h3 id="deploying"><a href="#deploying">Deploying</a></h3>
-
-<p>This app can be deployed to AWS using the relevant <a href=".github/workflows/deploy.yml">github workflow</a>. The infrastructure configuration is located in <a href="https://github.com/NHSDigital/manage-vaccinations-in-schools-infrastructure">its own repository</a></p>
 
 <span id="label-Notify" class="legacy-anchor"></span>
 <h3 id="notify"><a href="#notify">Notify</a></h3>
@@ -886,12 +868,12 @@ rails users:create\[user@example.com,password123,John,Doe,R1L\]</pre>
 <p>The <code>private_key</code> will automatically be used to generate a JWK on the <code>/oidc/jwks</code> endpoint, which is used by CIS2 to validate the JWT we use to request the access token from CIS2.</p>
 
 <span id="label-Reporting" class="legacy-anchor"></span>
-<h3 id="reporting"><a href="#reporting">Reporting</a></h3>
+<h2 id="reporting"><a href="#reporting">Reporting</a></h2>
 
 <p>See <a href="docs/reporting_md.html">docs/reporting.md</a>.</p>
 
 <span id="label-Key+Rotation" class="legacy-anchor"></span>
-<h4 id="key-rotation"><a href="#key-rotation">Key Rotation</a></h4>
+<h3 id="key-rotation"><a href="#key-rotation">Key Rotation</a></h3>
 
 <p>Keys should be rotated regularly. When a new key is introduced it’s JWK will automatically be added to the JWKS generated for <code>/oidc/jwks</code>, but the old public key can also be added to <a href="JWKSController.html#EXTRA_JWK"><code>JWKSController::EXTRA_JWK</code></a> to ensure a smooth roll-over.</p>
 
