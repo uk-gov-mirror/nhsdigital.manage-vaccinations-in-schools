@@ -11,7 +11,6 @@ class TeamMerger
     ImmunisationImport,
     PatientSpecificDirection,
     SchoolMoveLogEntry,
-    SchoolMove,
     Triage
   ].freeze
 
@@ -344,6 +343,10 @@ class TeamMerger
 
         VaccinationRecord.where(location_id: source_ids).update_all(
           location_id: merged_loc.id
+        )
+
+        SchoolMove.where(school_id: source_ids).update_all(
+          school_id: merged_loc.id
         )
 
         keep_ids =
