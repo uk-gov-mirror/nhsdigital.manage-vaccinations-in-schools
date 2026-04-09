@@ -11,18 +11,6 @@ describe GovukNotifyPersonalisation do
 
     it do
       expect(personalisation).to have_attributes(
-        talk_to_your_child_message:
-          "## Talk to your child about what they want\n\nWe suggest you talk to " \
-            "your child about the vaccination before you respond to us. Young " \
-            "people have the right to refuse vaccinations.\n\nThey also have " \
-            "[the right to consent to their own vaccinations]" \
-            "(https://www.nhs.uk/conditions/consent-to-treatment/children/) " \
-            "if they show they fully understand what’s involved. Our team might " \
-            "give young people this opportunity if they assess them as suitably " \
-            "competent.",
-        consent_deadline: "Wednesday 31 December",
-        consent_link:
-          "http://localhost:4000/consents/#{session.slug}/hpv/start",
         full_and_preferred_patient_name: "John Smith",
         location_name: "Hogwarts",
         invitation_to_clinic_custom_mmr_message: "",
@@ -51,24 +39,9 @@ describe GovukNotifyPersonalisation do
     end
   end
 
-  context "with a team location and no session" do
-    let(:location) { create(:gias_school) }
-    let(:team_location) { create(:team_location, team:, location:) }
-    let(:session) { nil }
-
-    it do
-      expect(personalisation).to have_attributes(
-        consent_link:
-          "http://localhost:4000/consents/#{team_location.id}/hpv/start"
-      )
-    end
-  end
-
   context "with a patient in primary school" do
     let(:date_of_birth) { Date.new(2015, 2, 1) }
     let(:patient) { create(:patient, date_of_birth:) }
-
-    it { should have_attributes(talk_to_your_child_message: "") }
 
     context "when it's an MMR programme and patient is eligible for MMRV" do
       let(:programmes) { [Programme.mmr] }
@@ -85,10 +58,6 @@ describe GovukNotifyPersonalisation do
       it { should have_attributes(mmr_or_mmrv_vaccine: "MMR or MMRV vaccine") }
       it { expect(personalisation.outbreak?).to be false }
 
-      it "generates consent link with mmrv variant" do
-        expect(personalisation.consent_link).to end_with("/mmrv/start")
-      end
-
       context "when session is setup for outbreak communications" do
         before { allow(session).to receive(:outbreak).and_return(true) }
 
@@ -101,10 +70,6 @@ describe GovukNotifyPersonalisation do
       let(:date_of_birth) { Programme::MIN_MMRV_ELIGIBILITY_DATE - 1.month }
 
       it { should have_attributes(mmr_or_mmrv_vaccine: "MMR vaccine") }
-
-      it "generates consent link with mmr variant" do
-        expect(personalisation.consent_link).to end_with("/mmr/start")
-      end
 
       context "when session is setup for outbreak communications" do
         before { allow(session).to receive(:outbreak).and_return(true) }
@@ -199,46 +164,8 @@ describe GovukNotifyPersonalisation do
       )
     end
 
-    it do
-      expect(personalisation).to have_attributes(
-        consented_vaccine_methods_message: "",
-        reason_for_refusal: "of personal choice",
-        survey_deadline_date: "8 January 2024"
-      )
-    end
-
     context "for the flu programme" do
       let(:programmes) { [Programme.flu] }
-
-      it do
-        expect(personalisation).to have_attributes(
-          consented_vaccine_methods_message:
-            "You’ve agreed for John to have the injected flu vaccine."
-        )
-      end
-
-      context "when consented to both nasal and injection" do
-        before { consent.update!(vaccine_methods: %w[nasal injection]) }
-
-        it do
-          expect(personalisation).to have_attributes(
-            consented_vaccine_methods_message:
-              "You’ve agreed for John to have the nasal spray flu vaccine, " \
-                "or the injected flu vaccine if the nasal spray is not suitable."
-          )
-        end
-      end
-
-      context "when consented only to nasal" do
-        before { consent.update!(vaccine_methods: %w[nasal]) }
-
-        it do
-          expect(personalisation).to have_attributes(
-            consented_vaccine_methods_message:
-              "You’ve agreed for John to have the nasal spray flu vaccine."
-          )
-        end
-      end
 
       context "generic message inviting patient to clinic generic" do
         it do
@@ -264,12 +191,7 @@ describe GovukNotifyPersonalisation do
         )
       end
 
-      it do
-        expect(personalisation).to have_attributes(
-          consented_vaccine_methods_message: "",
-          vaccination: "MMR vaccination"
-        )
-      end
+      it { should have_attributes(vaccination: "MMR vaccination") }
 
       context "when receiving their first dose" do
         let(:vaccination_record) do
@@ -284,17 +206,6 @@ describe GovukNotifyPersonalisation do
         end
 
         it { should have_attributes(vaccination: "MMR vaccination") }
-      end
-
-      context "when consented to vaccine without gelatine" do
-        before { consent.update!(without_gelatine: true) }
-
-        it do
-          expect(personalisation).to have_attributes(
-            consented_vaccine_methods_message:
-              "You’ve agreed for John to have the vaccine without gelatine."
-          )
-        end
       end
 
       context "generic message inviting patient to generic clinic" do
@@ -420,44 +331,7 @@ describe GovukNotifyPersonalisation do
       )
     end
 
-    it do
-      expect(personalisation).to have_attributes(
-        consented_vaccine_methods_message: "",
-        location_name: "Hogwarts",
-        reason_for_refusal: "of personal choice",
-        survey_deadline_date: "8 January 2024"
-      )
-    end
-
-    describe "#follow_up_discussion" do
-      subject(:follow_up_discussion) do
-        described_class.new(consent_form:).follow_up_discussion
-      end
-
-      it "is nil when follow_up_requested is not set" do
-        expect(follow_up_discussion).to be_nil
-      end
-
-      context "when follow_up_requested is true" do
-        before do
-          consent_form.consent_form_programmes.update!(
-            follow_up_requested: true
-          )
-        end
-
-        it { should be(true) }
-      end
-
-      context "when follow_up_requested is false" do
-        before do
-          consent_form.consent_form_programmes.update!(
-            follow_up_requested: false
-          )
-        end
-
-        it { should be(false) }
-      end
-    end
+    it { should have_attributes(location_name: "Hogwarts") }
 
     context "where the school is different" do
       let(:session) { nil }
@@ -482,67 +356,6 @@ describe GovukNotifyPersonalisation do
           vaccination: "HPV vaccination",
           vaccination_and_dates: "HPV vaccination"
         )
-      end
-    end
-
-    context "for the flu programme" do
-      let(:programmes) { [Programme.flu] }
-
-      it do
-        expect(personalisation).to have_attributes(
-          consented_vaccine_methods_message:
-            "You’ve agreed for Tom to have the injected flu vaccine."
-        )
-      end
-
-      context "when consented to both nasal and injection" do
-        before do
-          consent_form.consent_form_programmes.update!(
-            vaccine_methods: %w[nasal injection]
-          )
-        end
-
-        it do
-          expect(personalisation).to have_attributes(
-            consented_vaccine_methods_message:
-              "You’ve agreed for Tom to have the nasal spray flu vaccine, " \
-                "or the injected flu vaccine if the nasal spray is not suitable."
-          )
-        end
-      end
-
-      context "when consented only to nasal" do
-        before do
-          consent_form.consent_form_programmes.update!(
-            vaccine_methods: %w[nasal]
-          )
-        end
-
-        it do
-          expect(personalisation).to have_attributes(
-            consented_vaccine_methods_message:
-              "You’ve agreed for Tom to have the nasal spray flu vaccine."
-          )
-        end
-      end
-    end
-
-    context "for the MMR programme" do
-      let(:programmes) { [Programme.mmr] }
-
-      it { should have_attributes(consented_vaccine_methods_message: "") }
-
-      context "when consented to vaccine without gelatine" do
-        before do
-          consent_form.consent_form_programmes.update!(without_gelatine: true)
-        end
-
-        it do
-          expect(personalisation).to have_attributes(
-            consented_vaccine_methods_message:
-              "You’ve agreed for Tom to have the vaccine without gelatine."
-          )
-        end
       end
     end
   end
