@@ -217,15 +217,15 @@ class ImmunisationImport < ApplicationRecord
 
     PatientTeamUpdater.call(patient_scope: patients)
     PatientStatusUpdater.call(patient_scope: Patient.where(id: patients.ids))
+  end
+
+  def post_commit!
+    vaccination_records.sync_all_to_nhs_immunisations_api
 
     vaccination_records
       .includes(:patient, :team, :subteam)
       .find_each do |vaccination_record|
         AlreadyHadNotificationSender.call(vaccination_record:)
       end
-  end
-
-  def post_commit!
-    vaccination_records.sync_all_to_nhs_immunisations_api
   end
 end
