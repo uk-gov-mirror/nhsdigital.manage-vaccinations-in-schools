@@ -42,7 +42,12 @@ class Imports::IssuesController < ApplicationController
     @patients =
       policy_scope(Patient).with_pending_changes_for_team(
         team: current_team
-      ).includes(:gp_practice, :school, :school_moves)
+      ).includes(
+        :gp_practice,
+        :school,
+        :school_moves,
+        parent_relationships: [:parent]
+      )
 
     @import_issues =
       (@vaccination_records + @patients).uniq do |record|
@@ -55,7 +60,9 @@ class Imports::IssuesController < ApplicationController
       if params[:type] == "vaccination-record"
         @vaccination_records.with_discarded.find(params[:id])
       else
-        @patients.find(params[:id])
+        @patients.includes(:gp_practice, :school, :school_moves, :parents).find(
+          params[:id]
+        )
       end
 
     authorize @record, policy_class: Import::IssuePolicy
