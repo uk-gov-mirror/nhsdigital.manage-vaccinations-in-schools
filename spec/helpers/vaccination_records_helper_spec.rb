@@ -46,7 +46,7 @@ describe VaccinationRecordsHelper do
     end
 
     context "with a location association" do
-      let(:location) { build(:school, name: "Shelbyville School") }
+      let(:location) { build(:gias_school, name: "Shelbyville School") }
       let(:vaccination_record) do
         build(:vaccination_record, location_name: nil, location:)
       end
