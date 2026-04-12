@@ -205,7 +205,9 @@ describe AppActivityLogComponent do
         template_id:
           NotifyTemplate.find(:consent_school_request_hpv, channel: :email).id,
         consent_form: nil,
+        parent: mum,
         patient:,
+        purpose: :consent_request,
         programme_types: %w[hpv],
         recipient: "test@example.com",
         created_at: Date.new(2025, 5, 10),
