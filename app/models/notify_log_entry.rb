@@ -125,7 +125,14 @@ class NotifyLogEntry < ApplicationRecord
          vaccination_administered: 10,
          vaccination_already_had: 11,
          vaccination_not_administered: 12,
-         vaccination_deleted: 13
+         vaccination_deleted: 13,
+         consent_confirmation_given: 14,
+         consent_confirmation_refused: 15,
+         consent_confirmation_given_triage: 16,
+         consent_confirmation_given_clinic: 17,
+         clinic_initial_invitation: 18,
+         clinic_subsequent_invitation: 19,
+         triage_vaccination_will_happen_second_dose: 20
        }
 
   validates :purpose, presence: true
