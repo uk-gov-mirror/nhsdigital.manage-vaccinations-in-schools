@@ -6,7 +6,7 @@
                                         ]) %>
 <% end %>
 
-<% title = "Uploaded #{@type} record duplicates #{@existing_or_deleted.with_indefinite_article} record" %>
+<% title = "Uploaded record closely matches #{@existing_or_deleted.with_indefinite_article} record" %>
 
 <span class="nhsuk-caption-l"><%= @patient.full_name %></span>
 <%= h1 title, page_title: "#{@patient.full_name} – #{title}" %>
