@@ -766,7 +766,7 @@
             </details>
           </div>
           <div class="method-source-code" id="new-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 258</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 253</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(
   <span class="ruby-value">focus_config:</span> {},
   <span class="ruby-value">node_order:</span> <span class="ruby-constant">DEFAULT_NODE_ORDER</span>,
@@ -836,7 +836,7 @@
             </details>
           </div>
           <div class="method-source-code" id="class_text_for_obj-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 414</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 409</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">class_text_for_obj</span>(<span class="ruby-identifier">obj</span>)
   <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">underscore</span> <span class="ruby-operator">+</span> (<span class="ruby-identifier">obj</span>.<span class="ruby-identifier">in?</span>(<span class="ruby-ivar">@focus</span>) <span class="ruby-operator">?</span> <span class="ruby-string">&quot;_focused&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&quot;&quot;</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -878,7 +878,7 @@
             </details>
           </div>
           <div class="method-source-code" id="escape_special_chars-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 453</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 448</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">escape_special_chars</span>(<span class="ruby-identifier">text</span>)
   <span class="ruby-identifier">text</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&quot;@&quot;</span>, <span class="ruby-string">&quot;\\@&quot;</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -920,7 +920,7 @@
             </details>
           </div>
           <div class="method-source-code" id="get_associated_objects-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 383</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 378</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_associated_objects</span>(<span class="ruby-identifier">obj</span>, <span class="ruby-identifier">association_name</span>)
   <span class="ruby-identifier">obj</span>
     .<span class="ruby-identifier">send</span>(<span class="ruby-identifier">association_name</span>)
@@ -964,7 +964,7 @@
             </details>
           </div>
           <div class="method-source-code" id="graph-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 277</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 272</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">graph</span>(<span class="ruby-operator">**</span><span class="ruby-identifier">objects</span>)
   <span class="ruby-ivar">@nodes</span> = <span class="ruby-constant">Set</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@edges</span> = <span class="ruby-constant">Set</span>.<span class="ruby-identifier">new</span>
@@ -1047,7 +1047,7 @@
             </details>
           </div>
           <div class="method-source-code" id="introspect-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 362</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 357</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">introspect</span>(<span class="ruby-identifier">obj</span>)
   <span class="ruby-identifier">associations_list</span> = <span class="ruby-identifier">traversals</span>[<span class="ruby-identifier">obj</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">underscore</span>.<span class="ruby-identifier">to_sym</span>]
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">associations_list</span>.<span class="ruby-identifier">blank?</span>
@@ -1106,7 +1106,7 @@
             </details>
           </div>
           <div class="method-source-code" id="load_association-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 389</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 384</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">load_association</span>(<span class="ruby-identifier">associated_objects</span>)
   <span class="ruby-constant">Array</span>(
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">associated_objects</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">ActiveRecord</span><span class="ruby-operator">::</span><span class="ruby-constant">Relation</span>)
@@ -1154,7 +1154,7 @@
             </details>
           </div>
           <div class="method-source-code" id="node_display_name-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 418</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 413</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">node_display_name</span>(<span class="ruby-identifier">obj</span>)
   <span class="ruby-identifier">klass</span> = <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">underscore</span>.<span class="ruby-identifier">humanize</span>
   <span class="ruby-node">&quot;#{klass} #{obj.id}&quot;</span>
@@ -1197,7 +1197,7 @@
             </details>
           </div>
           <div class="method-source-code" id="node_link-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 405</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 400</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">node_link</span>(<span class="ruby-identifier">obj</span>)
   <span class="ruby-node">&quot;/inspect/graph/#{obj.class.name.underscore.pluralize}/#{obj.id}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1239,7 +1239,7 @@
             </details>
           </div>
           <div class="method-source-code" id="node_name-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 409</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 404</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">node_name</span>(<span class="ruby-identifier">obj</span>)
   <span class="ruby-identifier">klass</span> = <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">underscore</span>
   <span class="ruby-node">&quot;#{klass}-#{obj.id}&quot;</span>
@@ -1282,7 +1282,7 @@
             </details>
           </div>
           <div class="method-source-code" id="node_text-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 457</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 452</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">node_text</span>(<span class="ruby-identifier">obj</span>)
   <span class="ruby-identifier">text</span> = <span class="ruby-node">&quot;\&quot;#{node_display_name(obj)}&quot;</span>
 
@@ -1346,7 +1346,7 @@
             </details>
           </div>
           <div class="method-source-code" id="node_types_in_graph-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 444</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 439</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">node_types_in_graph</span>
   <span class="ruby-ivar">@nodes</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">node</span><span class="ruby-operator">|</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">underscore</span>.<span class="ruby-identifier">to_sym</span> }.<span class="ruby-identifier">uniq</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1388,7 +1388,7 @@
             </details>
           </div>
           <div class="method-source-code" id="node_with_class-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 483</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 478</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">node_with_class</span>(<span class="ruby-identifier">obj</span>)
   <span class="ruby-node">&quot;#{node_name(obj)}[#{node_text(obj)}]:::#{class_text_for_obj(obj)}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1430,7 +1430,7 @@
             </details>
           </div>
           <div class="method-source-code" id="non_breaking_text-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 448</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 443</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">non_breaking_text</span>(<span class="ruby-identifier">text</span>)
   <span class="ruby-comment"># Insert non-breaking spaces and hyphens to prevent Mermaid from breaking the line</span>
   <span class="ruby-identifier">text</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&quot; &quot;</span>, <span class="ruby-string">&quot;&amp;nbsp;&quot;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&quot;-&quot;</span>, <span class="ruby-string">&quot;#8209;&quot;</span>)
@@ -1473,7 +1473,7 @@
             </details>
           </div>
           <div class="method-source-code" id="order_nodes-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 399</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 394</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">order_nodes</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">nodes</span>)
   <span class="ruby-identifier">nodes</span>.<span class="ruby-identifier">sort_by</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">node</span><span class="ruby-operator">|</span>
     <span class="ruby-ivar">@node_order</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">node</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">underscore</span>) <span class="ruby-operator">||</span> <span class="ruby-constant">Float</span><span class="ruby-operator">::</span><span class="ruby-constant">INFINITY</span>
@@ -1517,7 +1517,7 @@
             </details>
           </div>
           <div class="method-source-code" id="patients_with_pii_in_graph-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 423</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 418</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">patients_with_pii_in_graph</span>
   <span class="ruby-identifier">result</span> = <span class="ruby-constant">Set</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@nodes</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">node</span><span class="ruby-operator">|</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Patient</span>) })
 
@@ -1576,7 +1576,7 @@
             </details>
           </div>
           <div class="method-source-code" id="render_clicks-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 358</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 353</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">render_clicks</span>
   <span class="ruby-ivar">@nodes</span>.<span class="ruby-identifier">map</span> { <span class="ruby-node">&quot;  click #{node_name(it)} \&quot;#{node_link(it)}\&quot;&quot;</span> }
 <span class="ruby-keyword">end</span></pre>
@@ -1618,7 +1618,7 @@
             </details>
           </div>
           <div class="method-source-code" id="render_edges-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 354</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 349</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">render_edges</span>
   <span class="ruby-ivar">@edges</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">from</span>, <span class="ruby-identifier">to</span><span class="ruby-operator">|</span> <span class="ruby-node">&quot;  #{node_name(from)} --&gt; #{node_name(to)}&quot;</span> }
 <span class="ruby-keyword">end</span></pre>
@@ -1660,7 +1660,7 @@
             </details>
           </div>
           <div class="method-source-code" id="render_nodes-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 350</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 345</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">render_nodes</span>
   <span class="ruby-ivar">@nodes</span>.<span class="ruby-identifier">to_a</span>.<span class="ruby-identifier">map</span> { <span class="ruby-node">&quot;  #{node_with_class(it)}&quot;</span> }
 <span class="ruby-keyword">end</span></pre>
@@ -1702,7 +1702,7 @@
             </details>
           </div>
           <div class="method-source-code" id="render_styles-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 327</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 322</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">render_styles</span>
   <span class="ruby-identifier">object_types</span> = <span class="ruby-ivar">@nodes</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">node</span><span class="ruby-operator">|</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">underscore</span>.<span class="ruby-identifier">to_sym</span> }.<span class="ruby-identifier">uniq</span>
 
@@ -1763,7 +1763,7 @@
             </details>
           </div>
           <div class="method-source-code" id="traversals-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 322</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/graph_records.rb, line 317</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">traversals</span>
   <span class="ruby-ivar">@traversals</span> <span class="ruby-operator">||=</span>
     (<span class="ruby-constant">DEFAULT_TRAVERSALS</span>[<span class="ruby-ivar">@primary_type</span>] <span class="ruby-operator">||</span> {}).<span class="ruby-identifier">merge</span>(<span class="ruby-ivar">@traversals_config</span>)

@@ -755,6 +755,8 @@
     <span class="ruby-node">&quot;#{id_info}#{formatted_details}&quot;</span>
   <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">item</span>[<span class="ruby-value">:description</span>].<span class="ruby-identifier">present?</span>
     <span class="ruby-identifier">item</span>[<span class="ruby-value">:description</span>]
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-string">&quot;&quot;</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -795,7 +797,7 @@
             </details>
           </div>
           <div class="method-source-code" id="format_event_details-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/components/app_timeline_component.rb, line 73</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/components/app_timeline_component.rb, line 75</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">format_event_details</span>(<span class="ruby-identifier">details</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-string">&quot;&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">details</span>.<span class="ruby-identifier">blank?</span>
 
@@ -909,7 +911,7 @@
             </details>
           </div>
           <div class="method-source-code" id="format_time-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/components/app_timeline_component.rb, line 69</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/components/app_timeline_component.rb, line 71</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">format_time</span>(<span class="ruby-identifier">date_time</span>)
   <span class="ruby-identifier">date_time</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%H:%M:%S&quot;</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -951,7 +953,7 @@
             </details>
           </div>
           <div class="method-source-code" id="govuk_tag-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/components/app_timeline_component.rb, line 102</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/components/app_timeline_component.rb, line 104</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">govuk_tag</span>(<span class="ruby-value">text:</span>, <span class="ruby-value">colour:</span>)
   <span class="ruby-identifier">helpers</span>.<span class="ruby-identifier">govuk_tag</span>(<span class="ruby-value">text:</span> <span class="ruby-identifier">text</span>, <span class="ruby-value">colour:</span> <span class="ruby-identifier">colour</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -1031,6 +1033,8 @@
       <span class="ruby-node">&quot;#{id_info}#{formatted_details}&quot;</span>
     <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">item</span>[<span class="ruby-value">:description</span>].<span class="ruby-identifier">present?</span>
       <span class="ruby-identifier">item</span>[<span class="ruby-value">:description</span>]
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-string">&quot;&quot;</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
@@ -1109,7 +1113,7 @@
             </details>
           </div>
           <div class="method-source-code" id="tag_colour-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/components/app_timeline_component.rb, line 97</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/components/app_timeline_component.rb, line 99</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tag_colour</span>(<span class="ruby-identifier">type</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-string">&quot;light-blue&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">type</span>.<span class="ruby-identifier">end_with?</span>(<span class="ruby-string">&quot;-Audit&quot;</span>)
   <span class="ruby-constant">EVENT_COLOUR_MAPPING</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-identifier">type</span>, <span class="ruby-string">&quot;grey&quot;</span>)
