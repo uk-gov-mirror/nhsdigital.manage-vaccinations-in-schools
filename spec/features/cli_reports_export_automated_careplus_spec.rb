@@ -51,6 +51,30 @@ describe "mavis reports export-automated-careplus" do
     end
   end
 
+  context "when inserting vaccination record links fails" do
+    it "rolls back the export record too" do
+      given_an_organisation_with_a_single_team
+      programme = Programme.hpv
+      session = create(:session, team: @team, programmes: [programme])
+      create(:vaccination_record, session:, programme:)
+
+      allow(CareplusExportVaccinationRecord).to receive(:insert_all!).and_raise(
+        ActiveRecord::ActiveRecordError
+      )
+
+      expect {
+        capture_output do
+          command(
+            "--ods_code=#{@organisation.ods_code}",
+            "--output=#{output_path}"
+          )
+        end
+      }.to raise_error(ActiveRecord::ActiveRecordError).and(
+        not_change(CareplusExport, :count)
+      )
+    end
+  end
+
   context "when the organisation does not exist" do
     it "warns and does not create an export" do
       when_i_run_the_command_with_options_and_capture_error(

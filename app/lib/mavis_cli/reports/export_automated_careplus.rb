@@ -116,33 +116,35 @@ module MavisCLI
         # we'll create the export with status "sent" for now
         # in the future we'll change this to "pending" or
         # prevent this tool from creating database entries at all
-        careplus_export =
-          CareplusExport.create!(
-            team:,
-            academic_year: academic_year_value,
-            date_from: parsed_start_date,
-            date_to: parsed_end_date,
-            programme_types: team.programme_types,
-            scheduled_at: now,
-            sent_at: now,
-            status: :sent,
-            csv_filename: File.basename(output),
-            csv_data: csv
-          )
+        ActiveRecord::Base.transaction do
+          careplus_export =
+            CareplusExport.create!(
+              team:,
+              academic_year: academic_year_value,
+              date_from: parsed_start_date,
+              date_to: parsed_end_date,
+              programme_types: team.programme_types,
+              scheduled_at: now,
+              sent_at: now,
+              status: :sent,
+              csv_filename: File.basename(output),
+              csv_data: csv
+            )
 
-        if records.any?
-          now_iso = now.iso8601(6)
-          CareplusExportVaccinationRecord.insert_all!(
-            records.map do |record|
-              {
-                careplus_export_id: careplus_export.id,
-                vaccination_record_id: record.id,
-                change_type: 0,
-                created_at: now_iso,
-                updated_at: now_iso
-              }
-            end
-          )
+          if records.any?
+            now_iso = now.iso8601(6)
+            CareplusExportVaccinationRecord.insert_all!(
+              records.map do |record|
+                {
+                  careplus_export_id: careplus_export.id,
+                  vaccination_record_id: record.id,
+                  change_type: 0,
+                  created_at: now_iso,
+                  updated_at: now_iso
+                }
+              end
+            )
+          end
         end
 
         File.write(output, csv)
