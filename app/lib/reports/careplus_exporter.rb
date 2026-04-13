@@ -110,41 +110,14 @@ class Reports::CareplusExporter
     include_missing_nhs_number:
   )
     scope =
-      VaccinationRecord
-        .kept
+      team
+        .vaccination_records
         .sourced_from_service
         .for_programmes(programmes)
-        .joins(session: :team_location)
-        .where(team_location: { team_id: team.id })
         .for_academic_year(academic_year)
         .administered
         .order_by_performed_at
-
-    if start_date.present?
-      scope =
-        scope.where(
-          "vaccination_records.created_at >= ?",
-          start_date.beginning_of_day
-        ).or(
-          scope.where(
-            "vaccination_records.updated_at >= ?",
-            start_date.beginning_of_day
-          )
-        )
-    end
-
-    if end_date.present?
-      scope =
-        scope.where(
-          "vaccination_records.created_at <= ?",
-          end_date.end_of_day
-        ).or(
-          scope.where(
-            "vaccination_records.updated_at <= ?",
-            end_date.end_of_day
-          )
-        )
-    end
+        .created_or_updated_between(start_date, end_date)
 
     scope =
       scope.joins(:patient).merge(
