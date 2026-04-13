@@ -9,8 +9,8 @@ describe "mavis reports export-automated-careplus" do
 
   after { File.delete(output_path) if File.exist?(output_path) }
 
-  context "with a valid organisation and single team" do
-    it "exports the CSV, creates an export record, and reports success" do
+  context "when there are no matching records" do
+    it "informs the user and does not create an export" do
       given_an_organisation_with_a_single_team
 
       when_i_run_the_command_with_options(
@@ -20,25 +20,18 @@ describe "mavis reports export-automated-careplus" do
         "--output=#{output_path}"
       )
 
-      then_a_careplus_export_is_created_with(
-        team: @team,
-        academic_year: AcademicYear.current,
-        date_from: Date.new(2025, 9, 1),
-        date_to: Date.new(2026, 3, 10),
-        status: "sent",
-        csv_filename: File.basename(output_path)
+      expect(@output).to include(
+        "No records found. No CarePlus report was created."
       )
-      and_the_output_file_is_written
-      and_the_success_message_is_displayed
+      and_no_careplus_export_is_created
+      expect(File.exist?(output_path)).to be(false)
     end
   end
 
   context "when there are matching vaccination records" do
-    it "links them to the export and sets programme_types from the records" do
+    it "exports the CSV, creates an export record, links records, and reports success" do
       given_an_organisation_with_a_single_team
-      programme = Programme.hpv
-      session = create(:session, team: @team, programmes: [programme])
-      vaccination_record = create(:vaccination_record, session:, programme:)
+      given_a_vaccination_record_for_the_team
 
       when_i_run_the_command_with_options(
         "--ods_code=#{@organisation.ods_code}",
@@ -46,17 +39,17 @@ describe "mavis reports export-automated-careplus" do
       )
 
       export = CareplusExport.last
-      expect(export.vaccination_records).to include(vaccination_record)
-      expect(export.programme_types).to eq([programme.type])
+      expect(export.vaccination_records).to include(@vaccination_record)
+      expect(export.programme_types).to eq([@programme.type])
+      and_the_output_file_is_written
+      and_the_success_message_is_displayed
     end
   end
 
   context "when inserting vaccination record links fails" do
     it "rolls back the export record too" do
       given_an_organisation_with_a_single_team
-      programme = Programme.hpv
-      session = create(:session, team: @team, programmes: [programme])
-      create(:vaccination_record, session:, programme:)
+      given_a_vaccination_record_for_the_team
 
       allow(CareplusExportVaccinationRecord).to receive(:insert_all!).and_raise(
         ActiveRecord::ActiveRecordError
@@ -102,6 +95,7 @@ describe "mavis reports export-automated-careplus" do
   context "when a workgroup is specified" do
     it "creates the export for the matching team" do
       given_an_organisation_with_multiple_teams
+      given_a_vaccination_record_for_the_team
 
       when_i_run_the_command_with_options(
         "--ods_code=#{@organisation.ods_code}",
@@ -115,6 +109,14 @@ describe "mavis reports export-automated-careplus" do
   context "when a custom academic year is specified" do
     it "creates the export with the given academic year" do
       given_an_organisation_with_a_single_team
+      programme = Programme.hpv
+      session = create(:session, team: @team, programmes: [programme])
+      create(
+        :vaccination_record,
+        session:,
+        programme:,
+        performed_at: Date.new(2024, 10, 1)
+      )
 
       when_i_run_the_command_with_options(
         "--ods_code=#{@organisation.ods_code}",
@@ -148,6 +150,13 @@ describe "mavis reports export-automated-careplus" do
   def given_an_organisation_with_a_team_without_careplus
     @organisation = create(:organisation)
     create(:team, organisation: @organisation, programmes: Programme.all)
+  end
+
+  def given_a_vaccination_record_for_the_team
+    @programme = Programme.hpv
+    session = create(:session, team: @team, programmes: [@programme])
+    @vaccination_record =
+      create(:vaccination_record, session:, programme: @programme)
   end
 
   def given_an_organisation_with_a_single_team
