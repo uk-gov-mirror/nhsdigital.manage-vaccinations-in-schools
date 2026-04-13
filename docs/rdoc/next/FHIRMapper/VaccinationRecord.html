@@ -576,7 +576,7 @@
 
         <li ><a href="#method-c-new">new</a></li>
 
-        <li ><a href="#method-c-org_performer_ods_code_from_fhir">org_performer_ods_code_from_fhir</a></li>
+        <li ><a href="#method-c-org_performer_actor_from_fhir">org_performer_actor_from_fhir</a></li>
 
         <li ><a href="#method-c-outcome_from_fhir">outcome_from_fhir</a></li>
 
@@ -748,7 +748,7 @@
             </details>
           </div>
           <div class="method-source-code" id="delivery_method_from_fhir-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 245</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 250</span>
                      <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">delivery_method_from_fhir</span>(<span class="ruby-identifier">fhir_record</span>)
   <span class="ruby-identifier">route_code</span> =
     <span class="ruby-identifier">fhir_record</span>
@@ -798,7 +798,7 @@
             </details>
           </div>
           <div class="method-source-code" id="dose_number_string_note_from_fhir-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 367</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 370</span>
                      <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">dose_number_string_note_from_fhir</span>(<span class="ruby-identifier">fhir_record</span>)
   <span class="ruby-identifier">dose_string</span> = <span class="ruby-identifier">fhir_record</span>.<span class="ruby-identifier">protocolApplied</span>&amp;.<span class="ruby-identifier">sole</span>&amp;.<span class="ruby-identifier">doseNumberString</span>
 
@@ -844,7 +844,7 @@
             </details>
           </div>
           <div class="method-source-code" id="dose_sequence_from_fhir-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 357</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 360</span>
                      <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">dose_sequence_from_fhir</span>(<span class="ruby-identifier">fhir_record</span>)
   <span class="ruby-identifier">protocol</span> = <span class="ruby-identifier">fhir_record</span>.<span class="ruby-identifier">protocolApplied</span>&amp;.<span class="ruby-identifier">sole</span>
 
@@ -892,7 +892,7 @@
             </details>
           </div>
           <div class="method-source-code" id="dose_volume_ml_from_fhir-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 266</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 271</span>
                      <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">dose_volume_ml_from_fhir</span>(<span class="ruby-identifier">fhir_record</span>)
   <span class="ruby-identifier">dq</span> = <span class="ruby-identifier">fhir_record</span>.<span class="ruby-identifier">doseQuantity</span>
 
@@ -987,9 +987,14 @@
     )
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">performer_ods_code</span> = <span class="ruby-identifier">org_performer_ods_code_from_fhir</span>(<span class="ruby-identifier">fhir_record</span>)
+  <span class="ruby-identifier">org_actor</span> = <span class="ruby-identifier">org_performer_actor_from_fhir</span>(<span class="ruby-identifier">fhir_record</span>)
+  <span class="ruby-identifier">performer_ods_code</span> = <span class="ruby-identifier">org_actor</span>&amp;.<span class="ruby-identifier">identifier</span>&amp;.<span class="ruby-identifier">value</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">performer_ods_code</span> <span class="ruby-operator">==</span> <span class="ruby-constant">FHIRMapper</span><span class="ruby-operator">::</span><span class="ruby-constant">Location</span><span class="ruby-operator">::</span><span class="ruby-constant">UNKNOWN_IDENTIFIER</span>
     <span class="ruby-identifier">attrs</span>[<span class="ruby-value">:performed_ods_code</span>] = <span class="ruby-identifier">performer_ods_code</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">org_actor</span>&amp;.<span class="ruby-identifier">display</span>.<span class="ruby-identifier">present?</span>
+    <span class="ruby-identifier">notes</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;Performing organisation display name: #{org_actor.display}&quot;</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">user_performer_name</span> = <span class="ruby-identifier">user_performer_name_from_fhir</span>(<span class="ruby-identifier">fhir_record</span>)
@@ -1073,7 +1078,7 @@
             </details>
           </div>
           <div class="method-source-code" id="full_dose_from_fhir-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 276</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 281</span>
                      <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">full_dose_from_fhir</span>(<span class="ruby-identifier">fhir_record</span>, <span class="ruby-value">vaccine:</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">vaccine</span>.<span class="ruby-identifier">programme</span>.<span class="ruby-identifier">flu?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">vaccine</span>.<span class="ruby-identifier">nasal?</span>
     <span class="ruby-identifier">dose_volume_ml</span> = <span class="ruby-identifier">dose_volume_ml_from_fhir</span>(<span class="ruby-identifier">fhir_record</span>)
@@ -1151,12 +1156,12 @@
       </div>
 
 
-      <div id="method-c-org_performer_ods_code_from_fhir" class="method-detail anchor-link ">
+      <div id="method-c-org_performer_actor_from_fhir" class="method-detail anchor-link ">
         <div class="method-header">
 
             <div class="method-heading">
-              <a href="#method-c-org_performer_ods_code_from_fhir" title="Link to this method">
-                <span class="method-name">org_performer_ods_code_from_fhir</span>
+              <a href="#method-c-org_performer_actor_from_fhir" title="Link to this method">
+                <span class="method-name">org_performer_actor_from_fhir</span>
                 <span class="method-args">(fhir_record)</span>
               </a>
             </div>
@@ -1169,12 +1174,10 @@
               <summary>Source</summary>
             </details>
           </div>
-          <div class="method-source-code" id="org_performer_ods_code_from_fhir-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 335</span>
-                     <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">org_performer_ods_code_from_fhir</span>(<span class="ruby-identifier">fhir_record</span>)
-  <span class="ruby-identifier">org_actor</span> =
-    <span class="ruby-identifier">fhir_record</span>.<span class="ruby-identifier">performer</span>.<span class="ruby-identifier">find</span> { <span class="ruby-identifier">it</span>.<span class="ruby-identifier">actor</span>&amp;.<span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;Organization&quot;</span> }&amp;.<span class="ruby-identifier">actor</span>
-  <span class="ruby-identifier">org_actor</span>&amp;.<span class="ruby-identifier">identifier</span>&amp;.<span class="ruby-identifier">value</span>
+          <div class="method-source-code" id="org_performer_actor_from_fhir-source">
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 340</span>
+                     <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">org_performer_actor_from_fhir</span>(<span class="ruby-identifier">fhir_record</span>)
+  <span class="ruby-identifier">fhir_record</span>.<span class="ruby-identifier">performer</span>.<span class="ruby-identifier">find</span> { <span class="ruby-identifier">it</span>.<span class="ruby-identifier">actor</span>&amp;.<span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;Organization&quot;</span> }&amp;.<span class="ruby-identifier">actor</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
 
@@ -1214,7 +1217,7 @@
             </details>
           </div>
           <div class="method-source-code" id="outcome_from_fhir-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 195</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 200</span>
                      <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">outcome_from_fhir</span>(<span class="ruby-identifier">fhir_record</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">fhir_record</span>.<span class="ruby-identifier">status</span>
   <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;completed&quot;</span>
@@ -1263,7 +1266,7 @@
             </details>
           </div>
           <div class="method-source-code" id="site_from_fhir-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 221</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 226</span>
                      <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">site_from_fhir</span>(<span class="ruby-identifier">fhir_record</span>)
   <span class="ruby-identifier">site_code</span> =
     <span class="ruby-identifier">fhir_record</span>
@@ -1313,7 +1316,7 @@
             </details>
           </div>
           <div class="method-source-code" id="user_performer_name_from_fhir-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 314</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 319</span>
                      <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">user_performer_name_from_fhir</span>(<span class="ruby-identifier">fhir_record</span>)
   <span class="ruby-identifier">performer_references</span> =
     <span class="ruby-identifier">fhir_record</span>
@@ -1366,7 +1369,7 @@
             </details>
           </div>
           <div class="method-source-code" id="vaccine_batch_notes_from_fhir-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 293</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/fhir_mapper/vaccination_record.rb, line 298</span>
                      <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">vaccine_batch_notes_from_fhir</span>(<span class="ruby-identifier">fhir_record</span>)
   <span class="ruby-identifier">fhir_vaccine</span> =
     <span class="ruby-identifier">fhir_record</span>.<span class="ruby-identifier">vaccineCode</span>&amp;.<span class="ruby-identifier">coding</span>&amp;.<span class="ruby-identifier">find</span> <span class="ruby-keyword">do</span>
