@@ -9,14 +9,22 @@
 #  contact_method_type          :string
 #  email                        :string
 #  full_name                    :string
+#  other_name                   :string
 #  phone                        :string
 #  phone_receive_updates        :boolean          default(FALSE), not null
+#  type                         :enum
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
+#  patient_id                   :bigint
 #
 # Indexes
 #
-#  index_parents_on_email  (email)
+#  index_parents_on_email       (email)
+#  index_parents_on_patient_id  (patient_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (patient_id => patients.id)
 #
 FactoryBot.define do
   factory :parent do
