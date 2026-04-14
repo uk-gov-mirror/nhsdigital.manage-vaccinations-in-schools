@@ -158,6 +158,12 @@ module FHIRMapper
       attrs[:nhs_immunisations_api_snomed_reason_code] = reason_coding&.code
       attrs[:nhs_immunisations_api_snomed_reason_term] = reason_coding&.display
 
+      product_coding = vaccine_product_coding_from_fhir(fhir_record)
+      attrs[:nhs_immunisations_api_snomed_product_code] = product_coding&.code
+      attrs[
+        :nhs_immunisations_api_snomed_product_term
+      ] = product_coding&.display
+
       attrs[:vaccine] = Vaccine.from_fhir_record(fhir_record)
       attrs[:batch_number] = fhir_record.lotNumber&.to_s
 
@@ -174,7 +180,6 @@ module FHIRMapper
         )
       else
         attrs[:disease_types] = attrs[:programme].disease_types
-        notes << vaccine_batch_notes_from_fhir(fhir_record)
         attrs[:full_dose] = true
       end
 
@@ -313,21 +318,6 @@ module FHIRMapper
       end
     end
 
-    private_class_method def self.vaccine_batch_notes_from_fhir(fhir_record)
-      fhir_vaccine =
-        fhir_record.vaccineCode&.coding&.find do
-          it.system == "http://snomed.info/sct"
-        end
-
-      vaccine_snomed_code = fhir_vaccine&.code
-      vaccine_description = fhir_vaccine&.display.presence
-
-      [
-        ("SNOMED product code: #{vaccine_snomed_code}" if vaccine_snomed_code),
-        ("SNOMED description: #{vaccine_description}" if vaccine_description)
-      ].compact.join("\n").presence
-    end
-
     def fhir_user_performer(reference_id:)
       FHIR::Immunization::Performer.new(
         actor: FHIR::Reference.new(reference: "##{reference_id}")
@@ -372,6 +362,12 @@ module FHIRMapper
 
     private_class_method def self.reason_coding_from_fhir(fhir_record)
       fhir_record.reasonCode&.first&.coding&.find do
+        it.system == "http://snomed.info/sct"
+      end
+    end
+
+    private_class_method def self.vaccine_product_coding_from_fhir(fhir_record)
+      fhir_record.vaccineCode&.coding&.find do
         it.system == "http://snomed.info/sct"
       end
     end
