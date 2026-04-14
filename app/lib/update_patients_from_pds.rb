@@ -26,7 +26,5 @@ class UpdatePatientsFromPDS
 
   attr_reader :patients, :queue
 
-  def enqueue?
-    @enqueue ||= Settings.pds.enqueue_bulk_updates
-  end
+  def enqueue? = Flipper.enabled?(:pds_enqueue_bulk_updates)
 end
