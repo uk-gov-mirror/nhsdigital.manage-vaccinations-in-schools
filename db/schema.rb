@@ -18,6 +18,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_101139) do
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "disease_type", ["diphtheria", "human_papillomavirus", "influenza", "measles", "meningitis_a", "meningitis_c", "meningitis_w", "meningitis_y", "mumps", "polio", "rubella", "tetanus", "varicella"]
+  create_enum "parent_relationship_type", ["father", "guardian", "mother", "other", "unknown"]
   create_enum "programme_type", ["flu", "hpv", "menacwy", "mmr", "td_ipv"]
 
   create_table "access_log_entries", force: :cascade do |t|
@@ -612,10 +613,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_101139) do
     t.datetime "created_at", null: false
     t.string "email"
     t.string "full_name"
+    t.string "other_name"
+    t.bigint "patient_id"
     t.string "phone"
     t.boolean "phone_receive_updates", default: false, null: false
+    t.enum "type", enum_type: "parent_relationship_type"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_parents_on_email"
+    t.index ["patient_id"], name: "index_parents_on_patient_id"
   end
 
   create_table "patient_changesets", force: :cascade do |t|
@@ -1155,6 +1160,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_101139) do
   add_foreign_key "notify_log_entry_programmes", "notify_log_entries", on_delete: :cascade
   add_foreign_key "parent_relationships", "parents"
   add_foreign_key "parent_relationships", "patients"
+  add_foreign_key "parents", "patients"
   add_foreign_key "patient_changesets", "locations", column: "school_id"
   add_foreign_key "patient_changesets", "patients"
   add_foreign_key "patient_locations", "locations"
