@@ -138,7 +138,17 @@ FactoryBot.define do
 
     parent_relationships do
       parents.map do |parent|
-        association(:parent_relationship, patient: instance, parent:)
+        association(
+          :parent_relationship,
+          patient: instance,
+          parent:,
+          email: parent.email,
+          full_name: parent.full_name,
+          phone: parent.phone,
+          phone_receive_updates: parent.phone_receive_updates,
+          contact_method_type: parent.contact_method_type,
+          contact_method_other_details: parent.contact_method_other_details
+        )
       end
     end
 
