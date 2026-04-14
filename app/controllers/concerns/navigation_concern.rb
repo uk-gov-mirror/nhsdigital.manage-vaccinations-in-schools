@@ -6,7 +6,6 @@ module NavigationConcern
   included do
     before_action :set_cached_counts
     before_action :set_navigation_items
-    after_action :set_navigation_items_cookie
   end
 
   def set_cached_counts
@@ -80,11 +79,5 @@ module NavigationConcern
     if current_team&.has_support_access?
       @navigation_items << { title: "Tools", path: inspect_dashboard_path }
     end
-  end
-
-  def set_navigation_items_cookie
-    return unless current_user
-
-    cookies[:mavis_navigation_items] = @navigation_items.to_json
   end
 end
