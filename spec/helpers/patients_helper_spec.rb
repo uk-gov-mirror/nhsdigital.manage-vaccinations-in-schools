@@ -177,4 +177,64 @@ describe PatientsHelper do
       it { should eq("2nd") }
     end
   end
+
+  describe "#patient_previous_dose_label" do
+    subject(:previous_dose_label) do
+      helper.patient_previous_dose_label(
+        patient,
+        programme,
+        session.academic_year
+      )
+    end
+
+    let(:programme) { Programme.mmr }
+    let(:team) { create(:team, programmes: [programme]) }
+    let(:session) do
+      create(
+        :session,
+        team:,
+        programmes: [programme],
+        date: Date.new(2024, 10, 1)
+      )
+    end
+    let(:patient) { create(:patient, session:, year_group: 9) }
+
+    context "with no vaccinations" do
+      before { PatientStatusUpdater.call(patient:) }
+
+      it { should be_nil }
+    end
+
+    context "with one vaccination" do
+      before do
+        create(
+          :vaccination_record,
+          :administered,
+          programme:,
+          patient:,
+          session:,
+          performed_at: Date.new(2024, 10, 1)
+        )
+        PatientStatusUpdater.call(patient:)
+      end
+
+      it { should eq("1st") }
+    end
+  end
+
+  describe "#patient_short_name_possessive" do
+    subject { helper.patient_short_name_possessive(patient) }
+
+    context "when the name does not end in s" do
+      let(:patient) { build(:patient, given_name: "Filip") }
+
+      it { should eq("Filip’s") }
+    end
+
+    context "when the name ends in s" do
+      let(:patient) { build(:patient, given_name: "James") }
+
+      it { should eq("James’") }
+    end
+  end
 end
