@@ -19,6 +19,7 @@ describe "Notify email templates: triage_vaccination_will_happen_mmr_second_dose
       :patient,
       :partially_vaccinated_triage_needed,
       given_name: "Filip",
+      date_of_birth: Date.new(2015, 6, 1),
       session:
     )
   end
