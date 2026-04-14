@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 describe "Verbal consent" do
-  before { Flipper.enable(:one_patient_per_parent) }
-
   scenario "Given HPV" do
     given_an_hpv_programme_is_underway
     and_i_am_signed_in
@@ -125,7 +123,6 @@ describe "Verbal consent" do
         parents: [@parent],
         date_of_birth: Programme::MIN_MMRV_ELIGIBILITY_DATE - 1.year
       )
-    @parent_relationship = @patient.parent_relationships.first
 
     PatientStatusUpdater.call
   end
@@ -204,10 +201,12 @@ describe "Verbal consent" do
       "Choose who you are trying to get consent from"
     )
 
-    parent_relationship =
-      @patient.parent_relationships.find_by(patient: @patient)
-    parent_relationship.strict_loading!(false)
-    parent_label = parent_relationship.label_with_parent
+    parent_label =
+      @patient
+        .parent_relationships
+        .includes(:parent)
+        .find_by(patient: @patient)
+        .label_with_parent
 
     choose parent_label
     click_button "Continue"
@@ -274,27 +273,26 @@ describe "Verbal consent" do
 
   def then_the_parent_details_are_saved_to_the_consent
     consent = @patient.consents.last
+    parent_relationship = @patient.parent_relationships.first
 
     expect(consent).to have_attributes(
-      parent_full_name: @parent_relationship.full_name,
-      parent_email: @parent_relationship.email,
-      parent_phone: @parent_relationship.phone,
-      parent_phone_receive_updates: @parent_relationship.phone_receive_updates,
-      parent_relationship_type: @parent_relationship.type
+      parent_full_name: @parent.full_name,
+      parent_email: @parent.email,
+      parent_phone: @parent.phone,
+      parent_phone_receive_updates: @parent.phone_receive_updates,
+      parent_relationship_type: parent_relationship.type
     )
 
     expect(consent.parent_relationship_other_name.to_s).to eq(
-      @parent_relationship.other_name.to_s
+      parent_relationship.other_name.to_s
     )
   end
 
   def and_i_can_see_the_consent_response_details(number_of_health_questions:)
     click_link @patient.full_name, match: :first
-    click_link @parent_relationship.full_name
+    click_link @parent.full_name
 
-    expect(page).to have_content(
-      "Consent response from #{@parent_relationship.full_name}"
-    )
+    expect(page).to have_content("Consent response from #{@parent.full_name}")
     expect(page).to have_content(["Date", Date.current.to_fs(:long)].join)
     expect(page).to have_content(["Response", "Consent given"].join)
     expect(page).to have_content(["Method", "By phone"].join)
@@ -305,16 +303,12 @@ describe "Verbal consent" do
     )
     expect(page).to have_content(["School", @patient.school.name].join)
 
-    expect(page).to have_content(["Name", @parent_relationship.full_name].join)
+    expect(page).to have_content(["Name", @parent.full_name].join)
     expect(page).to have_content(
       ["Relationship", @patient.parent_relationships.first.label].join
     )
-    expect(page).to have_content(
-      ["Email address", @parent_relationship.email].join("\n")
-    )
-    expect(page).to have_content(
-      ["Phone number", @parent_relationship.phone].join("\n")
-    )
+    expect(page).to have_content(["Email address", @parent.email].join("\n"))
+    expect(page).to have_content(["Phone number", @parent.phone].join("\n"))
 
     expect(page).to have_content("Answers to health questions")
     expect(page).to have_content(
@@ -326,7 +320,7 @@ describe "Verbal consent" do
   def then_an_email_is_sent_to_the_parent_confirming_their_consent
     expect(email_deliveries).to include(
       matching_notify_email(
-        to: @parent_relationship.email,
+        to: @parent.email,
         template: :consent_confirmation_given
       ).with_content_including("You’ve given consent", "withdraw your consent")
     )
@@ -335,7 +329,7 @@ describe "Verbal consent" do
   def and_a_text_is_sent_to_the_parent_confirming_their_consent
     expect(sms_deliveries).to include(
       matching_notify_sms(
-        phone_number: @parent_relationship.phone,
+        phone_number: @parent.phone,
         template: :consent_confirmation_given
       ).with_content_including(
         "You've given consent for Alex",
@@ -352,7 +346,7 @@ describe "Verbal consent" do
     click_on "Back"
     click_on "Session activity and notes"
     expect(page).to have_content("Consent confirmation given", count: 2)
-    expect(page).to have_content(@parent_relationship.email)
-    expect(page).to have_content(@parent_relationship.phone)
+    expect(page).to have_content(@parent.email)
+    expect(page).to have_content(@parent.phone)
   end
 end
