@@ -42,7 +42,7 @@ class Parent < ApplicationRecord
 
   has_many :patients, through: :parent_relationships
 
-  has_one :patient, required: false
+  belongs_to :patient, optional: true
 
   enum :contact_method_type,
        { any: "any", other: "other", text: "text", voice: "voice" },

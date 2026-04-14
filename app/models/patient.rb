@@ -97,8 +97,13 @@ class Patient < ApplicationRecord
   has_many :vaccination_records, -> { kept }
 
   has_many :locations, through: :patient_locations
-  has_many :parents, through: :parent_relationships
   has_many :teams, through: :patient_teams
+
+  if Flipper.enabled?(:one_patient_per_parent)
+    has_many :parents, -> { order(:created_at) }
+  else
+    has_many :parents, through: :parent_relationships
+  end
 
   has_and_belongs_to_many :class_imports
   has_and_belongs_to_many :cohort_imports
