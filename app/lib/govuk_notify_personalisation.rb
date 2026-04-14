@@ -6,6 +6,7 @@ class GovukNotifyPersonalisation
   include PatientsHelper
   include PhoneHelper
   include ProgrammesHelper
+  include SessionsHelper
   include TeamsHelper
   include VaccinationRecordsHelper
   include VaccinesHelper
