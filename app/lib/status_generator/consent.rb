@@ -177,16 +177,23 @@ class StatusGenerator::Consent
 
   def status_should_be_request_scheduled?
     parents_contactable? && consent_notifications.empty? &&
-      sessions.any? do
-        # Not using send_consent_requests_at.future?
-        # because it doesn't work with Timecop.
-        it.send_consent_requests_at &&
-          it.send_consent_requests_at > Time.current
-      end
+      sessions.any? { consent_request_scheduled_in_future?(it) }
   end
 
   def status_should_be_request_not_scheduled?
     parents_contactable? && consent_notifications.empty? &&
-      (sessions.empty? || sessions.any? { it.send_consent_requests_at.nil? })
+      (sessions.empty? || sessions.any? { consent_request_not_scheduled?(it) })
+  end
+
+  def consent_request_scheduled_in_future?(session)
+    send_at = session.send_consent_requests_at
+
+    # Not using future? because it doesn't work with Timecop
+    send_at.present? && send_at > Time.current
+  end
+
+  def consent_request_not_scheduled?(session)
+    send_at = session.send_consent_requests_at
+    send_at.nil? || send_at < Time.current
   end
 end
