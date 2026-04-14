@@ -53,6 +53,40 @@ describe ParentRelationship do
         expect(parent_relationship.other_name).to be_nil
       end
     end
+
+    it { should_not validate_presence_of(:email) }
+    it { should_not validate_presence_of(:full_name) }
+    it { should_not validate_presence_of(:phone) }
+
+    context "when users wants to receive text updates" do
+      subject(:parent) { build(:parent, phone_receive_updates: true) }
+
+      it { should validate_presence_of(:phone) }
+    end
+
+    context "when contact_method_type is other" do
+      subject(:parent_relationship) do
+        build(:parent_relationship, contact_method_type: "other")
+      end
+
+      it { should validate_presence_of(:contact_method_other_details) }
+    end
+
+    context "when contact_method_type is not other" do
+      subject(:parent_relationship) do
+        build(
+          :parent_relationship,
+          type: "mother",
+          contact_method_type: "any",
+          contact_method_other_details: "telegram"
+        )
+      end
+
+      it "sets the other name to nil" do
+        expect(parent_relationship.valid?).to be true
+        expect(parent_relationship.contact_method_other_details).to be_nil
+      end
+    end
   end
 
   describe "#label" do
