@@ -604,10 +604,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_175616) do
   end
 
   create_table "parent_relationships", force: :cascade do |t|
+    t.text "contact_method_other_details"
+    t.string "contact_method_type"
     t.datetime "created_at", null: false
+    t.string "email"
+    t.string "full_name"
     t.string "other_name"
     t.bigint "parent_id", null: false
     t.bigint "patient_id", null: false
+    t.string "phone"
+    t.boolean "phone_receive_updates"
     t.string "type", null: false
     t.datetime "updated_at", null: false
     t.index ["parent_id", "patient_id"], name: "index_parent_relationships_on_parent_id_and_patient_id", unique: true
