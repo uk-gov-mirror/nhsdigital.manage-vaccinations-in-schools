@@ -19,7 +19,6 @@ nhs_api:
 
 pds:
   enabled: false
-  enqueue_bulk_updates: false
   rate_limit_per_second: 5
 
 splunk:

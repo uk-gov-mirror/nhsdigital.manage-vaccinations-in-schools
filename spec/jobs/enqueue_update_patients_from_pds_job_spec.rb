@@ -14,7 +14,9 @@ describe EnqueueUpdatePatientsFromPDSJob do
   end
   let!(:never_updated_patient) { create(:patient, updated_from_pds_at: nil) }
 
-  it "only queues jobs for the approriate patients" do
+  before { Flipper.enable(:pds_enqueue_bulk_updates) }
+
+  it "only queues jobs for the appropriate patients" do
     expect { perform_now }.to have_enqueued_job(
       PatientUpdateFromPDSJob
     ).exactly(4).times
