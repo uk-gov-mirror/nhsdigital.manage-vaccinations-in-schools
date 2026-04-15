@@ -10,4 +10,4 @@ We recently gave <%= patient.short_name %> their <%= previous_dose %> dose of th
 
 We’re coming to <%= session.location.name %> on <%= session_future_dates(session) %> and plan to give <%= patient.short_name %> their <%= next_dose %> dose then. Please let them know about this.
 
-If <%= patient_short_name_possessive(patient) %> health changes, or you arrange for them to get their <%= next_dose %> dose somewhere else, contact us. You can email <%= team_contact_email(session) %> or phone <%= team_contact_phone(session) %>.
+If <%= patient_short_name_possessive(patient) %> health changes, or you arrange for them to get their <%= next_dose %> dose somewhere else, contact us. You can email <%= team_contact_email(session:) %> or phone <%= team_contact_phone(session:) %>.

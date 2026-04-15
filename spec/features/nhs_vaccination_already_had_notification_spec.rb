@@ -21,7 +21,14 @@ describe "NHS vaccination already had notification" do
   private
 
   def given_a_patient_with_consent_exists
-    team = create(:team, programmes: [Programme.flu])
+    team =
+      create(
+        :team,
+        programmes: [Programme.flu],
+        name: "South Hampshire SAIS",
+        email: "southhampshire@example.com",
+        phone: "02380 654321"
+      )
     school = create(:gias_school, team:)
     session =
       create(:session, programmes: [Programme.flu], team:, location: school)
@@ -49,8 +56,7 @@ describe "NHS vaccination already had notification" do
       "https://sandbox.api.service.nhs.uk/immunisation-fhir-api/FHIR/R4/Immunization"
     ).with(
       query: {
-        "patient.identifier" =>
-          "https://fhir.nhs.uk/Id/nhs-number|9449308357",
+        "patient.identifier" => "https://fhir.nhs.uk/Id/nhs-number|9449308357",
         "-immunization.target" => "3IN1,FLU,HPV,MENACWY,MMR,MMRV"
       }
     ).to_return(
@@ -74,6 +80,10 @@ describe "NHS vaccination already had notification" do
       matching_notify_email(
         to: "parent@example.com",
         template: :vaccination_already_had
+      ).with_content_including(
+        "South Hampshire SAIS",
+        "southhampshire@example.com",
+        "023 8065 4321"
       )
     )
   end
