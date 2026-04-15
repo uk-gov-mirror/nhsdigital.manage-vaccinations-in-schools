@@ -756,7 +756,7 @@
       .<span class="ruby-identifier">joins</span>(<span class="ruby-value">session:</span> <span class="ruby-value">:team_location</span>)
       .<span class="ruby-identifier">where</span>(<span class="ruby-value">team_location:</span> { <span class="ruby-value">academic_year:</span> <span class="ruby-identifier">academic_years</span> })
       .<span class="ruby-identifier">includes</span>(<span class="ruby-value">:attendance_records</span>, <span class="ruby-value">:patient</span>, <span class="ruby-value">:session</span>, <span class="ruby-value">:vaccination_records</span>)
-      .<span class="ruby-identifier">find_in_batches</span>(<span class="ruby-value">batch_size:</span> <span class="ruby-value">10_000</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">batch</span><span class="ruby-operator">|</span>
+      .<span class="ruby-identifier">find_in_batches</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">batch</span><span class="ruby-operator">|</span>
         <span class="ruby-identifier">batch</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:assign_status</span>)
 
         <span class="ruby-constant">Patient</span><span class="ruby-operator">::</span><span class="ruby-constant">RegistrationStatus</span>.<span class="ruby-identifier">import!</span>(
@@ -1436,7 +1436,7 @@
     .<span class="ruby-identifier">joins</span>(<span class="ruby-value">session:</span> <span class="ruby-value">:team_location</span>)
     .<span class="ruby-identifier">where</span>(<span class="ruby-value">team_location:</span> { <span class="ruby-value">academic_year:</span> <span class="ruby-identifier">academic_years</span> })
     .<span class="ruby-identifier">includes</span>(<span class="ruby-value">:attendance_records</span>, <span class="ruby-value">:patient</span>, <span class="ruby-value">:session</span>, <span class="ruby-value">:vaccination_records</span>)
-    .<span class="ruby-identifier">find_in_batches</span>(<span class="ruby-value">batch_size:</span> <span class="ruby-value">10_000</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">batch</span><span class="ruby-operator">|</span>
+    .<span class="ruby-identifier">find_in_batches</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">batch</span><span class="ruby-operator">|</span>
       <span class="ruby-identifier">batch</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:assign_status</span>)
 
       <span class="ruby-constant">Patient</span><span class="ruby-operator">::</span><span class="ruby-constant">RegistrationStatus</span>.<span class="ruby-identifier">import!</span>(
