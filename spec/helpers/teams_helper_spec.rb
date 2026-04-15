@@ -71,6 +71,24 @@ describe TeamsHelper do
     end
   end
 
+  context "with neither session nor vaccination_record" do
+    it "raises an ArgumentError" do
+      expect { helper.team_contact_name }.to raise_error(ArgumentError)
+    end
+  end
+
+  context "with both session and vaccination_record" do
+    let(:vaccination_record) do
+      create(:vaccination_record, programme: Programme.hpv, session:)
+    end
+
+    it "raises an ArgumentError" do
+      expect {
+        helper.team_contact_name(session:, vaccination_record:)
+      }.to raise_error(ArgumentError)
+    end
+  end
+
   context "with a vaccination_record without a session" do
     let(:school) { create(:gias_school, team:) }
     let(:patient) { create(:patient, school:) }

@@ -20,6 +20,11 @@ module TeamsHelper
   private
 
   def contact_entity(session: nil, vaccination_record: nil)
+    if session.nil? == vaccination_record.nil?
+      raise ArgumentError,
+            "provide either session: or vaccination_record:, not both or neither"
+    end
+
     team_location =
       session&.team_location || vaccination_record&.session&.team_location ||
         vaccination_record
