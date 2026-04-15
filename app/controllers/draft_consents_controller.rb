@@ -230,39 +230,22 @@ class DraftConsentsController < ApplicationController
       )
     end
 
-    @new_or_existing_contact_options +=
-      if Flipper.enabled?(:one_patient_per_parent)
-        parents = (@patient.parents +
+    parent_relationships =
+      (
+        @patient.parent_relationships.includes(:parent) +
           @patient
             .consents
-            .select { it.programme_type == @programme.type }
-            .filter_map(&:parent)
-          ).compact.uniq.sort_by(&:label)
+            .where(programme_type: @programme.type)
+            .filter_map(&:parent_relationship)
+      ).compact.uniq.sort_by(&:label)
 
-        parents.map do |parent|
-          NewOrExistingContactOption.new(
-            value: parent.id,
-            label: parent.label_with_parent,
-            hint: parent.contact_label
-          )
-        end
-      else
-        parent_relationships =
-          (
-            @patient.parent_relationships.includes(:parent) +
-              @patient
-                .consents
-                .where(programme_type: @programme.type)
-                .filter_map(&:parent_relationship)
-          ).compact.uniq.sort_by(&:label)
-
-        parent_relationships.map do |parent_relationship|
-          NewOrExistingContactOption.new(
-            value: parent_relationship.parent.id,
-            label: parent_relationship.label_with_parent,
-            hint: parent_relationship.parent.contact_label
-          )
-        end
+    @new_or_existing_contact_options +=
+      parent_relationships.map do |parent_relationship|
+        NewOrExistingContactOption.new(
+          value: parent_relationship.parent.id,
+          label: parent_relationship.label_with_parent,
+          hint: parent_relationship.parent.contact_label
+        )
       end
 
     @new_or_existing_contact_options << NewOrExistingContactOption.new(

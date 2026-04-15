@@ -247,7 +247,7 @@ class DraftConsent
     parent.email = parent_email
     parent.full_name = parent_full_name
     parent.phone = parent_phone
-    parent.phone_receive_updates = parent_phone_receive_updates
+    parent.phone_receive_updates = parent_phone_receive_updates.presence
 
     # We can't use find_or_initialize_by here because we need the object to
     # remain attached to the parent so we can save the parent with its
@@ -260,7 +260,11 @@ class DraftConsent
     parent_relationship.assign_attributes(
       patient:, # acts as preload
       type: parent_relationship_type,
-      other_name: parent_relationship_other_name
+      other_name: parent_relationship_other_name,
+      phone: parent_phone,
+      full_name: parent_full_name,
+      email: parent_email,
+      phone_receive_updates: parent_phone_receive_updates
     )
 
     if parent_relationship.new_record?
@@ -275,13 +279,15 @@ class DraftConsent
 
     parent_relationship = value&.parent_relationships&.find_by(patient_id:)
 
-    self.parent_email = patient.restricted? ? "" : value&.email
-    self.parent_full_name = value&.full_name
-    self.parent_phone = patient.restricted? ? "" : value&.phone
-    self.parent_phone_receive_updates = value&.phone_receive_updates
-    self.parent_relationship_type = parent_relationship&.type || value&.type
-    self.parent_relationship_other_name =
-      parent_relationship&.other_name || value&.other_name
+    self.parent_email =
+      patient.restricted? ? "" : parent_relationship&.email || value&.email
+    self.parent_full_name = parent_relationship&.full_name || value&.full_name
+    self.parent_phone =
+      patient.restricted? ? "" : parent_relationship&.phone || value&.phone
+    self.parent_phone_receive_updates =
+      parent_relationship&.phone_receive_updates || value&.phone_receive_updates
+    self.parent_relationship_type = parent_relationship&.type
+    self.parent_relationship_other_name = parent_relationship&.other_name
     self.parent_responsibility = value ? true : nil
   end
 
@@ -376,6 +382,10 @@ class DraftConsent
         it.patient = patient # acts as preload
         it.type = parent_relationship_type
         it.other_name = parent_relationship_other_name
+        it.full_name = parent_full_name
+        it.email = parent_email
+        it.phone = parent_phone
+        it.phone_receive_updates = parent_phone_receive_updates
       end
   end
 
