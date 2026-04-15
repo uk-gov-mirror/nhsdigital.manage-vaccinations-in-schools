@@ -7,6 +7,6 @@ subject: "Your child did not have their <%= programme_name_for_parents(vaccinati
 
 <% if show_additional_instructions? %>If you’d still like your child to be vaccinated, you can book an appointment at a catch-up clinic by contacting our team.<% end %>
 
-<%= team_contact_name(vaccination_record.session) %>
-<%= team_contact_email(vaccination_record.session) %>
-<%= team_contact_phone(vaccination_record.session) %>
+<%= team_contact_name(vaccination_record:) %>
+<%= team_contact_email(vaccination_record:) %>
+<%= team_contact_phone(vaccination_record:) %>
