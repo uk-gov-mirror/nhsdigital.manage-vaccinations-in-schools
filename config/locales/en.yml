@@ -1136,7 +1136,6 @@ en:
     index:
       title: Imports
       title_short: Imports
-      description: Import child, cohort and vaccination records and see important notices
       description_national_reporting:
         Upload flu and HPV vaccination records and share them with NHS England
     notices:
@@ -1183,6 +1182,10 @@ en:
         contraindicated: they had contraindications
         unwell: the nurse decided %{short_patient_name} was not well
         refused: they refused when the nurse offered the vaccination
+  manage_data:
+    index:
+      title: Manage data
+      description: Upload records to Mavis and keep track of requested downloads
   notification_banner:
     info: Information
     success: Success
