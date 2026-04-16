@@ -352,9 +352,7 @@ class DraftVaccinationRecord
         patient:,
         consents: patient.consents,
         vaccination_records: [],
-        parents: [],
-        sessions: [],
-        consent_notifications: []
+        parents: []
       )
 
     triage_generator =
@@ -365,9 +363,7 @@ class DraftVaccinationRecord
         consents: patient.consents,
         triages: patient.triages,
         vaccination_records: [],
-        parents: [],
-        sessions: [],
-        consent_notifications: []
+        parents: []
       )
 
     approved_vaccine_methods =

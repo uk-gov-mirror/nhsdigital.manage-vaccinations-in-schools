@@ -130,9 +130,7 @@ class TriageForm
         patient:,
         consents: patient.consents,
         vaccination_records: [],
-        parents: [],
-        sessions: [],
-        consent_notifications: []
+        parents: []
       )
   end
 

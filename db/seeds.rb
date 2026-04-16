@@ -66,14 +66,7 @@ def create_community_clinics(team)
   FactoryBot.create_list(:community_clinic, 5, team:)
 end
 
-def create_session(
-  user,
-  team,
-  programmes:,
-  completed: false,
-  in_the_future: false,
-  year_groups: nil
-)
+def create_session(user, team, programmes:, completed: false, year_groups: nil)
   year_groups ||= programmes.flat_map(&:default_year_groups).uniq
 
   Batch.import!(
@@ -86,14 +79,7 @@ def create_session(
 
   location =
     FactoryBot.create(:gias_school, team:, gias_year_groups: year_groups)
-  date =
-    if completed
-      1.week.ago.to_date
-    elsif in_the_future
-      1.month.from_now.to_date
-    else
-      Date.current
-    end
+  date = completed ? 1.week.ago.to_date : Date.current
 
   academic_year = AcademicYear.current
 
@@ -160,26 +146,13 @@ def create_session(
       traits << :partially_vaccinated_triage_needed if programme.td_ipv?
 
       traits.each do |trait|
-        patient =
-          FactoryBot.create(
-            :patient,
-            trait,
-            programmes: [programme],
-            session:,
-            performed_by: user,
-            year_group:,
-            parents: [FactoryBot.create(:parent)]
-          )
-
-        next if in_the_future
-
         FactoryBot.create(
-          :consent_notification,
-          :request,
-          patient:,
-          session:,
+          :patient,
+          trait,
           programmes: [programme],
-          sent_at: session.send_consent_requests_at
+          session:,
+          performed_by: user,
+          year_group:
         )
       end
     end
@@ -259,14 +232,12 @@ def create_team_sessions(user, team)
   td_ipv = Programme.td_ipv
 
   # Flu-only sessions
-  create_session(user, team, programmes: [flu])
-  create_session(user, team, programmes: [flu], completed: true)
-  create_session(user, team, programmes: [flu], in_the_future: true)
+  create_session(user, team, programmes: [flu], completed: false)
+  create_session(user, team, programmes: [hpv], completed: true)
 
   # HPV-only sessions
-  create_session(user, team, programmes: [hpv])
+  create_session(user, team, programmes: [hpv], completed: false)
   create_session(user, team, programmes: [hpv], completed: true)
-  create_session(user, team, programmes: [hpv], in_the_future: true)
 
   # MenACWY and Td/IPV combined sessions
   create_session(
