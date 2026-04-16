@@ -1091,6 +1091,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_080729) do
     t.index ["vaccine_id"], name: "index_vaccination_records_on_vaccine_id"
   end
 
+  create_table "vaccination_records_exports", force: :cascade do |t|
+    t.integer "academic_year", null: false
+    t.datetime "created_at", null: false
+    t.date "date_from"
+    t.date "date_to"
+    t.string "file_format", null: false
+    t.string "programme_type", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "vaccines", force: :cascade do |t|
     t.text "brand", null: false
     t.boolean "contains_gelatine", null: false
