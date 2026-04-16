@@ -378,7 +378,10 @@ Rails.application.routes.draw do
     get "destroy", action: :confirm_destroy, on: :member, as: "destroy"
   end
 
-  resource :vaccination_report, path: "vaccination-report", only: %i[new create]
+  resources :vaccination_records_exports,
+            path: "vaccination-records/exports",
+            controller: "vaccination_records/exports",
+            only: %i[new create]
 
   get "consent-form/:type",
       to: "consent_form_downloads#show",
