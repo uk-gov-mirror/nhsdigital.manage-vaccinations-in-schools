@@ -247,7 +247,8 @@ class DraftConsent
     parent.email = parent_email
     parent.full_name = parent_full_name
     parent.phone = parent_phone
-    parent.phone_receive_updates = parent_phone_receive_updates.presence
+    parent.phone_receive_updates =
+      parent_phone_receive_updates.presence || false
 
     # We can't use find_or_initialize_by here because we need the object to
     # remain attached to the parent so we can save the parent with its
