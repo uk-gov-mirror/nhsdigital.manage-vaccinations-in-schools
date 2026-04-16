@@ -405,14 +405,6 @@ describe StatusGenerator::Programme do
     its(:vaccine_methods) { should be_nil }
     its(:without_gelatine) { should be_nil }
 
-    context "when the only session is completed" do
-      let(:session) { create(:session, :completed, programmes: [programme]) }
-
-      before { ConsentNotification.delete_all }
-
-      its(:status) { should be(:needs_consent_request_not_scheduled) }
-    end
-
     context "when the patient only has a generic clinic location" do
       let(:team) { create(:team, programmes: [programme]) }
       let(:location) { create(:generic_clinic, team:) }

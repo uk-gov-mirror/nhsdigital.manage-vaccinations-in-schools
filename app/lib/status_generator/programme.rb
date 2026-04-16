@@ -339,7 +339,6 @@ class StatusGenerator::Programme
             .select { it.academic_year == academic_year }
             .flat_map(&:sessions)
             .select { it.programme_types.include?(programme_type) }
-            .reject(&:completed?)
         end
   end
 end
