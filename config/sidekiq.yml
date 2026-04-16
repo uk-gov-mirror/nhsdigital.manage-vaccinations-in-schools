@@ -43,7 +43,7 @@
       cron: "0 0 * * *"
       description:
         Enqueue jobs to fetch latitude and longitude for locations with addresses but no position
-    RemoveImportCSVJob:
+    RemoveImportCSVDataJob:
       cron: "0 1 * * *"
       description: Remove CSV data from old cohort and immunisation imports
     GIASImportJob:
