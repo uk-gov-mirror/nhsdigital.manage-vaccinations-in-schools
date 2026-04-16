@@ -30,7 +30,11 @@
 #
 class Export < ApplicationRecord
   delegated_type :exportable,
-                 types: %w[LocationPatientsExport SessionPatientsExport],
+                 types: %w[
+                   LocationPatientsExport
+                   SessionPatientsExport
+                   VaccinationRecordsExport
+                 ],
                  dependent: :destroy
 
   belongs_to :team
