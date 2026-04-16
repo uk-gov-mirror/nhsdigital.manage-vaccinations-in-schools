@@ -664,7 +664,8 @@
           <div class="method-source-code" id="get_patient-source">
             <pre class="ruby"><span class="ruby-comment"># File app/lib/nhs/pds.rb, line 36</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_patient</span>(<span class="ruby-identifier">nhs_number</span>)
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">Settings</span>.<span class="ruby-identifier">pds</span>.<span class="ruby-identifier">enabled</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">Flipper</span>.<span class="ruby-identifier">enabled?</span>(<span class="ruby-value">:pds</span>)
+
   <span class="ruby-constant">NHS</span><span class="ruby-operator">::</span><span class="ruby-constant">API</span>.<span class="ruby-identifier">connection</span>.<span class="ruby-identifier">get</span>(
     <span class="ruby-node">&quot;personal-demographics/FHIR/R4/Patient/#{nhs_number}&quot;</span>
   )
@@ -721,9 +722,10 @@
             </details>
           </div>
           <div class="method-source-code" id="search_patients-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/nhs/pds.rb, line 57</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/nhs/pds.rb, line 58</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">search_patients</span>(<span class="ruby-identifier">attributes</span>)
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">Settings</span>.<span class="ruby-identifier">pds</span>.<span class="ruby-identifier">enabled</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">Flipper</span>.<span class="ruby-identifier">enabled?</span>(<span class="ruby-value">:pds</span>)
+
   <span class="ruby-keyword">if</span> (<span class="ruby-identifier">missing_attrs</span> = (<span class="ruby-identifier">attributes</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:to_s</span>) <span class="ruby-operator">-</span> <span class="ruby-constant">SEARCH_FIELDS</span>)).<span class="ruby-identifier">any?</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Unrecognised attributes: #{missing_attrs.join(&quot;, &quot;)}&quot;</span>
   <span class="ruby-keyword">end</span>

@@ -914,7 +914,7 @@
       <span class="ruby-constant">PatientChangeset</span>.<span class="ruby-identifier">from_import_row</span>(<span class="ruby-value">row:</span>, <span class="ruby-value">import:</span> <span class="ruby-keyword">self</span>, <span class="ruby-value">row_number:</span>)
     <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">if</span> <span class="ruby-constant">Flipper</span>.<span class="ruby-identifier">enabled?</span>(<span class="ruby-value">:import_search_pds</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">Flipper</span>.<span class="ruby-identifier">enabled?</span>(<span class="ruby-value">:pds</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">Flipper</span>.<span class="ruby-identifier">enabled?</span>(<span class="ruby-value">:pds_search_during_import</span>)
     <span class="ruby-identifier">process_no_postcode_changesets</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">changesets</span>.<span class="ruby-identifier">without_postcode</span>)
     <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">changesets</span>.<span class="ruby-identifier">with_postcode</span>.<span class="ruby-identifier">any?</span>
       <span class="ruby-identifier">enqueue_pds_cascading_searches</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">changesets</span>.<span class="ruby-identifier">with_postcode</span>)

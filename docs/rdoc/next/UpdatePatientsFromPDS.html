@@ -675,7 +675,7 @@
   <span class="ruby-identifier">attr_reader</span> <span class="ruby-value">:patients</span>, <span class="ruby-value">:queue</span>
 
   <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">enqueue?</span>
-    <span class="ruby-ivar">@enqueue</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Settings</span>.<span class="ruby-identifier">pds</span>.<span class="ruby-identifier">enqueue_bulk_updates</span>
+    <span class="ruby-constant">Flipper</span>.<span class="ruby-identifier">enabled?</span>(<span class="ruby-value">:pds</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">Flipper</span>.<span class="ruby-identifier">enabled?</span>(<span class="ruby-value">:pds_enqueue_bulk_updates</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -825,7 +825,7 @@
           <div class="method-source-code" id="enqueue-3F-source">
             <pre class="ruby"><span class="ruby-comment"># File app/lib/update_patients_from_pds.rb, line 29</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">enqueue?</span>
-  <span class="ruby-ivar">@enqueue</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Settings</span>.<span class="ruby-identifier">pds</span>.<span class="ruby-identifier">enqueue_bulk_updates</span>
+  <span class="ruby-constant">Flipper</span>.<span class="ruby-identifier">enabled?</span>(<span class="ruby-value">:pds</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">Flipper</span>.<span class="ruby-identifier">enabled?</span>(<span class="ruby-value">:pds_enqueue_bulk_updates</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
 

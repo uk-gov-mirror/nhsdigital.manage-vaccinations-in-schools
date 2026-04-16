@@ -665,7 +665,7 @@
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient_changeset</span>.<span class="ruby-identifier">import</span>.<span class="ruby-identifier">changesets</span>.<span class="ruby-identifier">pending</span>.<span class="ruby-identifier">none?</span>
     <span class="ruby-identifier">import</span> = <span class="ruby-identifier">patient_changeset</span>.<span class="ruby-identifier">import</span>
 
-    <span class="ruby-keyword">if</span> <span class="ruby-constant">Flipper</span>.<span class="ruby-identifier">enabled?</span>(<span class="ruby-value">:import_search_pds</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-constant">Flipper</span>.<span class="ruby-identifier">enabled?</span>(<span class="ruby-value">:pds</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">Flipper</span>.<span class="ruby-identifier">enabled?</span>(<span class="ruby-value">:pds_search_during_import</span>)
       <span class="ruby-identifier">import</span>.<span class="ruby-identifier">validate_pds_match_rate!</span>
       <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">import</span>.<span class="ruby-identifier">low_pds_match_rate?</span>
     <span class="ruby-keyword">end</span>
