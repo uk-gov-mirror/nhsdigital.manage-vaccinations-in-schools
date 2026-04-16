@@ -1366,3 +1366,7 @@ en:
     absent: "%{name} is absent from today’s session."
     not_registered: "%{name} is not registered yet."
     present: "%{name} is attending today’s session."
+  exports_flash:
+    heading: >
+      "It will take some time to prepare the records. You’ll be able to download them soon in"
+    heading_link_text: "Downloads"
