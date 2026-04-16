@@ -873,6 +873,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_080729) do
     t.index ["school_id"], name: "index_school_moves_on_school_id"
   end
 
+  create_table "school_moves_exports", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "date_from"
+    t.date "date_to"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "session_notifications", force: :cascade do |t|
     t.bigint "patient_id", null: false
     t.datetime "sent_at", default: -> { "CURRENT_TIMESTAMP" }, null: false

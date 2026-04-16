@@ -34,6 +34,7 @@ class Export < ApplicationRecord
                    LocationPatientsExport
                    SessionPatientsExport
                    VaccinationRecordsExport
+                   SchoolMovesExport
                  ],
                  dependent: :destroy
 
