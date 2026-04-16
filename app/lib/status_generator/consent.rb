@@ -138,6 +138,8 @@ class StatusGenerator::Consent
   def status_should_be_no_response? = !vaccinated?
 
   def status_should_be_no_contact_details?
+    return false if vaccinated?
+
     parents.none?(&:contactable?)
   end
 
@@ -176,11 +178,15 @@ class StatusGenerator::Consent
   def parents_contactable? = parents.any?(&:contactable?)
 
   def status_should_be_request_scheduled?
+    return false if vaccinated?
+
     parents_contactable? && consent_notifications.empty? &&
       sessions.any? { consent_request_scheduled_in_future?(it) }
   end
 
   def status_should_be_request_not_scheduled?
+    return false if vaccinated?
+
     parents_contactable? && consent_notifications.empty? &&
       (sessions.empty? || sessions.any? { consent_request_not_scheduled?(it) })
   end

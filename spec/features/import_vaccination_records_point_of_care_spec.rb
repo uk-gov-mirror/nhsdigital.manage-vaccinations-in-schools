@@ -35,6 +35,9 @@ describe "Immunisation imports" do
     then_i_should_see_the_vaccination_record
     and_the_patient_should_be_archived
 
+    when_i_go_to_the_existing_patient
+    then_i_should_see_that_consent_is_not_required
+
     when_i_go_to_the_children_page
     and_i_search_for_existing_patient
     then_i_should_see_the_existing_patient
@@ -199,6 +202,14 @@ describe "Immunisation imports" do
 
   def and_the_patient_should_be_archived
     expect(page).to have_content("Archive reasonImmunisation import")
+  end
+
+  def when_i_go_to_the_existing_patient
+    visit session_patient_programme_path(@session, @existing_patient, "hpv")
+  end
+
+  def then_i_should_see_that_consent_is_not_required
+    expect(page).to have_content("No consent needed")
   end
 
   def when_i_go_to_the_children_page

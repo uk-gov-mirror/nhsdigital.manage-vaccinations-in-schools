@@ -55,6 +55,7 @@ describe "HPV vaccination" do
     when_i_go_back
     and_i_save_changes
     then_i_see_that_the_status_is_vaccinated
+    and_i_see_that_consent_is_not_required
     and_i_see_the_vaccination_details
 
     when_i_go_to_the_children_tab
@@ -271,6 +272,10 @@ describe "HPV vaccination" do
 
   def then_i_see_that_the_status_is_vaccinated
     expect(page).to have_content("Vaccinated")
+  end
+
+  def and_i_see_that_consent_is_not_required
+    expect(page).to have_content("No consent needed")
   end
 
   def and_i_see_the_vaccination_details

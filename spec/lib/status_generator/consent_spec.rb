@@ -56,6 +56,42 @@ describe StatusGenerator::Consent do
       end
     end
 
+    context "when the patient has been vaccinated" do
+      let(:programme) { Programme.hpv }
+
+      before do
+        create(
+          :vaccination_record,
+          patient:,
+          programme:,
+          session:,
+          outcome: "administered"
+        )
+      end
+
+      it { should be(:not_required) }
+
+      context "when a request has not yet been sent" do
+        before { ConsentNotification.delete_all }
+
+        context "with consent requests scheduled in the future" do
+          let(:send_consent_requests_at) { 1.day.from_now }
+
+          it { should be(:not_required) }
+        end
+
+        context "with consent requests in the past" do
+          let(:send_consent_requests_at) { 1.day.ago }
+
+          it { should be(:not_required) }
+        end
+
+        context "with consent requests not scheduled" do
+          it { should be(:not_required) }
+        end
+      end
+    end
+
     context "with no contactable parents" do
       let(:parents) { [] }
 
