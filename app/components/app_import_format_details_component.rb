@@ -45,7 +45,7 @@ class AppImportFormatDetailsComponent < ViewComponent::Base
           notes:
             "#{tag.strong("Required")}, must be 6 digits and numeric. " \
               "Use #{tag.i("888888")} for school unknown and #{tag.i("999999")} " \
-              "for homeschooled."
+              "for home-educated."
         }
       ] + parent_columns
   end
@@ -179,7 +179,7 @@ class AppImportFormatDetailsComponent < ViewComponent::Base
         notes:
           "#{tag.strong(optionality)}, must be 6 digits and numeric. " \
             "Use #{tag.i("888888")} for school unknown and #{tag.i("999999")} " \
-            "for homeschooled."
+            "for home-educated."
       }
     ]
   end
