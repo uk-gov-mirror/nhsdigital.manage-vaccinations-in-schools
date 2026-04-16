@@ -17,8 +17,7 @@ class StatusGenerator::Programme
     triages:,
     attendance_record:,
     vaccination_records:,
-    parents:,
-    consent_notifications:
+    parents:
   )
     @programme_type = programme_type
     @academic_year = academic_year
@@ -29,8 +28,6 @@ class StatusGenerator::Programme
     @attendance_record = attendance_record
     @vaccination_records = vaccination_records
     @parents = parents
-    @consent_notifications =
-      find_matching_consent_notifications(consent_notifications)
 
     @vaccination_criteria =
       VaccinationCriteria.new(
@@ -175,8 +172,7 @@ class StatusGenerator::Programme
               :triages,
               :attendance_record,
               :vaccination_criteria,
-              :parents,
-              :consent_notifications
+              :parents
 
   delegate :vaccinated?,
            :vaccinated_vaccination_record,
@@ -241,11 +237,11 @@ class StatusGenerator::Programme
   end
 
   def should_be_needs_consent_request_scheduled?
-    is_eligible? && consent_status == :request_scheduled
+    false # TODO: Implement this status.
   end
 
   def should_be_needs_consent_request_not_scheduled?
-    is_eligible? && consent_status == :request_not_scheduled
+    false # TODO: Implement this status.
   end
 
   def should_be_needs_consent_no_contact_details?
@@ -292,13 +288,6 @@ class StatusGenerator::Programme
     Programme.find(programme_type).default_year_groups
   end
 
-  def find_matching_consent_notifications(notifications)
-    notifications.select do |notification|
-      notification.programme_types.include?(programme_type) &&
-        notification.session&.team_location&.academic_year == academic_year
-    end
-  end
-
   def consent_generator
     @consent_generator ||=
       StatusGenerator::Consent.new(
@@ -307,9 +296,7 @@ class StatusGenerator::Programme
         patient:,
         consents:,
         vaccination_records:,
-        parents:,
-        sessions:,
-        consent_notifications:
+        parents:
       )
   end
 
@@ -322,34 +309,7 @@ class StatusGenerator::Programme
         consents:,
         triages:,
         vaccination_records:,
-        parents:,
-        sessions:,
-        consent_notifications:
+        parents:
       )
-  end
-
-  def sessions
-    @sessions ||=
-      patient_locations
-        .reject { it.location.generic_clinic? }
-        .flat_map { sessions_for(it) }
-        .uniq
-  end
-
-  def sessions_for(patient_location)
-    patient_location
-      .location
-      .team_locations
-      .select { it.academic_year == academic_year }
-      .flat_map(&:sessions)
-      .select { it.programme_types.include?(programme_type) }
-      .select { session_in_patient_location_date_range?(it, patient_location) }
-      .reject(&:completed?)
-  end
-
-  def session_in_patient_location_date_range?(session, patient_location)
-    return true if session.dates.empty?
-
-    session.dates.any? { |date| date.in?(patient_location.date_range) }
   end
 end

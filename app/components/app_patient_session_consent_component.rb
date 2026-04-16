@@ -63,9 +63,7 @@ class AppPatientSessionConsentComponent < ViewComponent::Base
         patient:,
         consents:,
         vaccination_records:,
-        parents:,
-        sessions: [session],
-        consent_notifications:
+        parents:
       )
   end
 
@@ -78,14 +76,19 @@ class AppPatientSessionConsentComponent < ViewComponent::Base
         consents:,
         triages:,
         vaccination_records:,
-        parents:,
-        sessions: [session],
-        consent_notifications:
+        parents:
       )
   end
 
   def latest_consent_request
-    @latest_consent_request ||= consent_notifications.first
+    @latest_consent_request ||=
+      patient
+        .consent_notifications
+        .request
+        .has_all_programmes_of([programme])
+        .for_academic_year(academic_year)
+        .order(sent_at: :desc)
+        .first
   end
 
   def consents
@@ -113,14 +116,8 @@ class AppPatientSessionConsentComponent < ViewComponent::Base
       patient.vaccination_records.for_programme(programme).order_by_performed_at
   end
 
-  SEND_CONSENT_REQUEST_STATUSES = %i[
-    no_response
-    request_scheduled
-    request_not_scheduled
-  ].freeze
-
   def can_send_consent_request?
-    consent_status_value.in?(SEND_CONSENT_REQUEST_STATUSES) &&
+    consent_status_value == :no_response &&
       patient.send_notifications?(team: @session.team) &&
       session.can_receive_consent? && patient.parents.any?(&:contactable?)
   end
@@ -136,14 +133,5 @@ class AppPatientSessionConsentComponent < ViewComponent::Base
 
   def show_health_answers?
     grouped_consents.any?(&:response_given?)
-  end
-
-  def consent_notifications
-    patient
-      .consent_notifications
-      .request
-      .has_all_programmes_of([programme])
-      .for_academic_year(academic_year)
-      .order(sent_at: :desc)
   end
 end
