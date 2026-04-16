@@ -55,8 +55,8 @@ module NavigationConcern
       }
 
       @navigation_items << {
-        title: t("imports.index.title_short"),
-        path: imports_path,
+        title: t("manage_data.index.title"),
+        path: manage_data_path,
         count: (@cached_counts.import_issues if policy(%i[import issue]).index?)
       }
     end

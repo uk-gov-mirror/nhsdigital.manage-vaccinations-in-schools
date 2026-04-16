@@ -266,7 +266,7 @@ describe "Offline vaccination" do
 
   def and_i_upload_a_file_with_duplicate_nhs_api_records
     visit "/"
-    click_on "Import", match: :first
+    click_on "Manage data", match: :first
     click_on "Upload records"
     choose "Vaccination records"
     click_on "Continue"
@@ -510,7 +510,7 @@ describe "Offline vaccination" do
 
     visit "/"
 
-    click_on "Import", match: :first
+    click_on "Manage data", match: :first
     click_on "Upload records"
     choose "Vaccination records"
     click_on "Continue"
