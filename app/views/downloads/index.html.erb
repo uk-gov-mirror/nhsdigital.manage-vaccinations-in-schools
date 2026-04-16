@@ -42,7 +42,7 @@
           no_results_text: "No downloads found",
         ) do %>
       <% @exports.each do |export| %>
-      <%= render AppCardComponent.new(compact: true) do |card| %>
+      <%= render AppCardComponent.new(compact: true, link_to: export_download_path(export)) do |card| %>
         <% card.with_heading(level: 4) { export.name } %>
         <%= govuk_summary_list do |sl| %>
           <%= sl.with_row do |r|

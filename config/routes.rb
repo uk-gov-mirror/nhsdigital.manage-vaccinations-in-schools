@@ -182,6 +182,10 @@ Rails.application.routes.draw do
   get "/manage-data", to: "imports#index", as: :manage_data
   get "/downloads", to: "downloads#index", as: :downloads
 
+  resources :exports, only: [] do
+    get :download, on: :member
+  end
+
   resources :imports, only: %i[index create] do
     collection { get :records }
   end
