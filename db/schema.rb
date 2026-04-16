@@ -525,6 +525,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_080729) do
     t.index ["value"], name: "index_local_authority_postcodes_on_value", unique: true
   end
 
+  create_table "location_patients_exports", force: :cascade do |t|
+    t.integer "academic_year", null: false
+    t.datetime "created_at", null: false
+    t.jsonb "filter_params", default: {}, null: false
+    t.bigint "location_id", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "location_programme_year_groups", force: :cascade do |t|
     t.bigint "location_year_group_id", null: false
     t.enum "programme_type", null: false, enum_type: "programme_type"
@@ -1167,6 +1175,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_080729) do
   add_foreign_key "important_notices", "teams"
   add_foreign_key "important_notices", "users", column: "dismissed_by_user_id"
   add_foreign_key "important_notices", "vaccination_records"
+  add_foreign_key "location_patients_exports", "locations"
   add_foreign_key "location_programme_year_groups", "location_year_groups", on_delete: :cascade
   add_foreign_key "location_year_groups", "locations", on_delete: :cascade
   add_foreign_key "notes", "patients"
