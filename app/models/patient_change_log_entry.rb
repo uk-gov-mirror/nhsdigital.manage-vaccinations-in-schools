@@ -24,13 +24,13 @@
 #
 class PatientChangeLogEntry < ApplicationRecord
   TRACKED_ATTRIBUTES = %w[
+    nhs_number
     given_name
     family_name
     preferred_given_name
     preferred_family_name
     date_of_birth
     gender_code
-    nhs_number
     address_line_1
     address_line_2
     address_town
@@ -56,7 +56,13 @@ class PatientChangeLogEntry < ApplicationRecord
     patients.each do |patient|
       next if patient.id.blank?
 
-      recorded_changes = patient.changes.slice(*TRACKED_ATTRIBUTES)
+      recorded_changes =
+        patient
+          .changes
+          .slice(*TRACKED_ATTRIBUTES)
+          .reject do |_attr, (old_val, new_val)|
+            old_val.presence == new_val.presence
+          end
       next if recorded_changes.empty?
 
       create!(patient:, user:, source:, recorded_changes:)

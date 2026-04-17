@@ -519,12 +519,13 @@ describe "Manage children" do
   end
 
   def then_a_change_log_entry_is_created_for_the_nhs_number_change
-    entry = PatientChangeLogEntry.last
-    expect(entry).to be_present
-    expect(entry.patient).to eq(@patient)
-    expect(entry.user).to eq(@team.users.first)
-    expect(entry.source).to eq("manual_edit")
-    expect(entry.recorded_changes).to have_key("nhs_number")
+    visit patient_path(@patient)
+    within(".nhsuk-card", text: "Activity log") do
+      expect(page).to have_content("Record updated manually")
+      expect(page).to have_css(".nhsuk-summary-list__key", text: "NHS number")
+      expect(page).to have_css("mark.app-highlight", text: "975 862 3168")
+    end
+    visit edit_patient_path(@patient)
   end
 
   def when_i_click_on_add_new_parent

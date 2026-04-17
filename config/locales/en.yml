@@ -404,6 +404,24 @@ en:
         types:
           father: dad
           mother: mum
+      patient_change_log_entry:
+        nhs_number: NHS number
+        given_name: First name
+        family_name: Last name
+        preferred_given_name: Preferred first name
+        preferred_family_name: Preferred last name
+        date_of_birth: Date of birth
+        gender_code: Gender
+        address_line_1: Address line 1
+        address_line_2: Address line 2
+        address_town: Town
+        address_postcode: Postcode
+        sources:
+          manual_edit: Record updated manually
+          cohort_import: >-
+            Record updated after new details were imported in a cohort upload
+          class_import: >-
+            Record updated after new details were imported in a class upload
       pds_search_result:
         steps:
           no_fuzzy_with_history: Non-fuzzy search (with history)
