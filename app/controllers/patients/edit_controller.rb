@@ -22,6 +22,11 @@ class Patients::EditController < Patients::BaseController
     @patient.invalidated_at = nil
 
     if @patient.save
+      PatientChangeLogEntry.log_saved_changes!(
+        patient: @patient,
+        user: current_user,
+        source: :manual_edit
+      )
       if @patient.nhs_number.present?
         PatientUpdateFromPDSSidekiqJob.perform_async(@patient.id, nil)
       end
