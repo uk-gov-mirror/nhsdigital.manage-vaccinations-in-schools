@@ -707,6 +707,14 @@ ix_rapi_totals_year_group             (patient_year_group)</pre>
         </dd>
 
 
+        <dt id="CONSENT_GIVEN_STATUSES">CONSENT_GIVEN_STATUSES</dt>
+
+        <dd>
+
+          
+        </dd>
+
+
         <dt id="CONSENT_NOT_REQUIRED">CONSENT_NOT_REQUIRED</dt>
 
         <dd>
@@ -724,6 +732,38 @@ ix_rapi_totals_year_group             (patient_year_group)</pre>
 
 
         <dt id="CONSENT_REFUSED">CONSENT_REFUSED</dt>
+
+        <dd>
+
+          
+        </dd>
+
+
+        <dt id="NO_CONSENT_STATUSES">NO_CONSENT_STATUSES</dt>
+
+        <dd>
+
+          
+        </dd>
+
+
+        <dt id="NO_CONTACT_DETAILS">NO_CONTACT_DETAILS</dt>
+
+        <dd>
+
+          
+        </dd>
+
+
+        <dt id="REQUEST_NOT_SCHEDULED">REQUEST_NOT_SCHEDULED</dt>
+
+        <dd>
+
+          
+        </dd>
+
+
+        <dt id="REQUEST_SCHEDULED">REQUEST_SCHEDULED</dt>
 
         <dd>
 
@@ -774,7 +814,7 @@ ix_rapi_totals_year_group             (patient_year_group)</pre>
             </details>
           </div>
           <div class="method-source-code" id="cohort_count-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 64</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 78</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">cohort_count</span>
   <span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">count</span>(<span class="ruby-value">:patient_id</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -816,7 +856,7 @@ ix_rapi_totals_year_group             (patient_year_group)</pre>
             </details>
           </div>
           <div class="method-source-code" id="consent_conflicts_count-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 92</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 102</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">consent_conflicts_count</span>
   <span class="ruby-identifier">where</span>(<span class="ruby-value">consent_status:</span> <span class="ruby-constant">CONSENT_CONFLICTS</span>).<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">count</span>(<span class="ruby-value">:patient_id</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -858,11 +898,9 @@ ix_rapi_totals_year_group             (patient_year_group)</pre>
             </details>
           </div>
           <div class="method-source-code" id="consent_given_count-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 72</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 86</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">consent_given_count</span>
-  <span class="ruby-identifier">where</span>(<span class="ruby-value">consent_status:</span> [<span class="ruby-constant">CONSENT_GIVEN</span>, <span class="ruby-constant">CONSENT_NOT_REQUIRED</span>]).<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">count</span>(
-    <span class="ruby-value">:patient_id</span>
-  )
+  <span class="ruby-identifier">where</span>(<span class="ruby-value">consent_status:</span> <span class="ruby-constant">CONSENT_GIVEN_STATUSES</span>).<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">count</span>(<span class="ruby-value">:patient_id</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
 
@@ -902,7 +940,7 @@ ix_rapi_totals_year_group             (patient_year_group)</pre>
             </details>
           </div>
           <div class="method-source-code" id="consent_no_response_count-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 84</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 94</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">consent_no_response_count</span>
   <span class="ruby-identifier">where</span>(<span class="ruby-value">consent_status:</span> <span class="ruby-constant">CONSENT_NO_RESPONSE</span>).<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">count</span>(<span class="ruby-value">:patient_id</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -944,7 +982,7 @@ ix_rapi_totals_year_group             (patient_year_group)</pre>
             </details>
           </div>
           <div class="method-source-code" id="consent_refused_count-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 88</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 98</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">consent_refused_count</span>
   <span class="ruby-identifier">where</span>(<span class="ruby-value">consent_status:</span> <span class="ruby-constant">CONSENT_REFUSED</span>).<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">count</span>(<span class="ruby-value">:patient_id</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -986,11 +1024,9 @@ ix_rapi_totals_year_group             (patient_year_group)</pre>
             </details>
           </div>
           <div class="method-source-code" id="no_consent_count-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 78</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 90</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">no_consent_count</span>
-  <span class="ruby-identifier">where</span>(
-    <span class="ruby-value">consent_status:</span> [<span class="ruby-constant">CONSENT_NO_RESPONSE</span>, <span class="ruby-constant">CONSENT_REFUSED</span>, <span class="ruby-constant">CONSENT_CONFLICTS</span>]
-  ).<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">count</span>(<span class="ruby-value">:patient_id</span>)
+  <span class="ruby-identifier">where</span>(<span class="ruby-value">consent_status:</span> <span class="ruby-constant">NO_CONSENT_STATUSES</span>).<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">count</span>(<span class="ruby-value">:patient_id</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
 
@@ -1030,7 +1066,7 @@ ix_rapi_totals_year_group             (patient_year_group)</pre>
             </details>
           </div>
           <div class="method-source-code" id="refresh-21-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 56</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 70</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">refresh!</span>(<span class="ruby-value">concurrently:</span> <span class="ruby-keyword">true</span>)
   <span class="ruby-constant">Scenic</span>.<span class="ruby-identifier">database</span>.<span class="ruby-identifier">refresh_materialized_view</span>(
     <span class="ruby-identifier">table_name</span>,
@@ -1076,7 +1112,7 @@ ix_rapi_totals_year_group             (patient_year_group)</pre>
             </details>
           </div>
           <div class="method-source-code" id="vaccinated_count-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 68</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 82</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">vaccinated_count</span>
   <span class="ruby-identifier">vaccinated</span>.<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">count</span>(<span class="ruby-value">:patient_id</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -1118,14 +1154,14 @@ ix_rapi_totals_year_group             (patient_year_group)</pre>
             </details>
           </div>
           <div class="method-source-code" id="with_aggregate_metrics-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 96</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 106</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">with_aggregate_metrics</span>
   <span class="ruby-identifier">vaccinated_condition</span> =
     <span class="ruby-node">&quot;status IN (#{VACCINATED_STATUSES.join(&quot;,&quot;)}) OR has_already_vaccinated_consent = true&quot;</span>
-  <span class="ruby-identifier">no_consent_condition</span> =
-    <span class="ruby-node">&quot;consent_status IN (#{CONSENT_NO_RESPONSE}, #{CONSENT_REFUSED}, #{CONSENT_CONFLICTS})&quot;</span>
   <span class="ruby-identifier">consent_given_condition</span> =
-    <span class="ruby-node">&quot;consent_status IN (#{CONSENT_GIVEN}, #{CONSENT_NOT_REQUIRED})&quot;</span>
+    <span class="ruby-node">&quot;consent_status IN (#{CONSENT_GIVEN_STATUSES.join(&quot;,&quot;)})&quot;</span>
+  <span class="ruby-identifier">no_consent_condition</span> =
+    <span class="ruby-node">&quot;consent_status IN (#{NO_CONSENT_STATUSES.join(&quot;,&quot;)})&quot;</span>
   <span class="ruby-identifier">select</span>(
     <span class="ruby-string">&quot;COUNT(DISTINCT patient_id) AS cohort&quot;</span>,
     <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE #{vaccinated_condition}) AS vaccinated&quot;</span>,
@@ -1189,7 +1225,7 @@ ix_rapi_totals_year_group             (patient_year_group)</pre>
             </details>
           </div>
           <div class="method-source-code" id="readonly-3F-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 54</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/reporting_api/total.rb, line 68</span>
   <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">readonly?</span> = <span class="ruby-keyword">true</span>
 
   <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">refresh!</span>(<span class="ruby-value">concurrently:</span> <span class="ruby-keyword">true</span>)
@@ -1209,15 +1245,11 @@ ix_rapi_totals_year_group             (patient_year_group)</pre>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">consent_given_count</span>
-    <span class="ruby-identifier">where</span>(<span class="ruby-value">consent_status:</span> [<span class="ruby-constant">CONSENT_GIVEN</span>, <span class="ruby-constant">CONSENT_NOT_REQUIRED</span>]).<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">count</span>(
-      <span class="ruby-value">:patient_id</span>
-    )
+    <span class="ruby-identifier">where</span>(<span class="ruby-value">consent_status:</span> <span class="ruby-constant">CONSENT_GIVEN_STATUSES</span>).<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">count</span>(<span class="ruby-value">:patient_id</span>)
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">no_consent_count</span>
-    <span class="ruby-identifier">where</span>(
-      <span class="ruby-value">consent_status:</span> [<span class="ruby-constant">CONSENT_NO_RESPONSE</span>, <span class="ruby-constant">CONSENT_REFUSED</span>, <span class="ruby-constant">CONSENT_CONFLICTS</span>]
-    ).<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">count</span>(<span class="ruby-value">:patient_id</span>)
+    <span class="ruby-identifier">where</span>(<span class="ruby-value">consent_status:</span> <span class="ruby-constant">NO_CONSENT_STATUSES</span>).<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">count</span>(<span class="ruby-value">:patient_id</span>)
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">consent_no_response_count</span>
@@ -1235,10 +1267,10 @@ ix_rapi_totals_year_group             (patient_year_group)</pre>
   <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">with_aggregate_metrics</span>
     <span class="ruby-identifier">vaccinated_condition</span> =
       <span class="ruby-node">&quot;status IN (#{VACCINATED_STATUSES.join(&quot;,&quot;)}) OR has_already_vaccinated_consent = true&quot;</span>
-    <span class="ruby-identifier">no_consent_condition</span> =
-      <span class="ruby-node">&quot;consent_status IN (#{CONSENT_NO_RESPONSE}, #{CONSENT_REFUSED}, #{CONSENT_CONFLICTS})&quot;</span>
     <span class="ruby-identifier">consent_given_condition</span> =
-      <span class="ruby-node">&quot;consent_status IN (#{CONSENT_GIVEN}, #{CONSENT_NOT_REQUIRED})&quot;</span>
+      <span class="ruby-node">&quot;consent_status IN (#{CONSENT_GIVEN_STATUSES.join(&quot;,&quot;)})&quot;</span>
+    <span class="ruby-identifier">no_consent_condition</span> =
+      <span class="ruby-node">&quot;consent_status IN (#{NO_CONSENT_STATUSES.join(&quot;,&quot;)})&quot;</span>
     <span class="ruby-identifier">select</span>(
       <span class="ruby-string">&quot;COUNT(DISTINCT patient_id) AS cohort&quot;</span>,
       <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE #{vaccinated_condition}) AS vaccinated&quot;</span>,
