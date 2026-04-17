@@ -29,7 +29,9 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class Export < ApplicationRecord
-  delegated_type :exportable, types: %w[LocationPatientsExport], dependent: :destroy
+  delegated_type :exportable,
+                 types: %w[LocationPatientsExport SessionPatientsExport],
+                 dependent: :destroy
 
   belongs_to :team
   belongs_to :user

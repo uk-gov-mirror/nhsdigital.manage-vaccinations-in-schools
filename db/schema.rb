@@ -885,6 +885,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_080729) do
     t.index ["session_id"], name: "index_session_notifications_on_session_id"
   end
 
+  create_table "session_patients_exports", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "session_id", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "session_programme_year_groups", primary_key: ["session_id", "programme_type", "year_group"], force: :cascade do |t|
     t.enum "programme_type", null: false, enum_type: "programme_type"
     t.bigint "session_id", null: false
@@ -1220,6 +1226,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_080729) do
   add_foreign_key "session_notifications", "patients"
   add_foreign_key "session_notifications", "sessions"
   add_foreign_key "session_notifications", "users", column: "sent_by_user_id"
+  add_foreign_key "session_patients_exports", "sessions"
   add_foreign_key "session_programme_year_groups", "sessions", on_delete: :cascade
   add_foreign_key "sessions", "team_locations"
   add_foreign_key "subteams", "teams"
