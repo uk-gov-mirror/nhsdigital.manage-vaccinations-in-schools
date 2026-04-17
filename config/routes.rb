@@ -208,7 +208,16 @@ Rails.application.routes.draw do
          to: "bulk_remove_parents#create"
   end
 
+  resources :location_patients_exports,
+            path: "location-exports",
+            controller: "locations/exports",
+            only: []
+
   resources :notifications, only: :create
+
+  post "patients/exports",
+       to: "locations/exports#create",
+       as: :patients_clinic_location_exports
 
   resources :patients, only: %i[index show edit] do
     post "", action: :index, on: :collection
@@ -285,6 +294,9 @@ Rails.application.routes.draw do
 
     resources :import, only: :new, controller: "schools/import"
     resources :patients, only: :index, controller: "schools/patients"
+    post "patients/exports",
+         to: "locations/exports#create",
+         as: :patients_exports
     resources :sessions, only: :index, controller: "schools/sessions"
   end
 
