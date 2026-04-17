@@ -7,7 +7,7 @@
 #  id              :bigint           not null, primary key
 #  body            :text
 #  delivery_status :integer          default("sending"), not null
-#  purpose         :integer
+#  purpose         :integer          not null
 #  recipient       :string           not null
 #  subject         :text
 #  type            :integer          not null
