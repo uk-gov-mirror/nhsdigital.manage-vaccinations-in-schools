@@ -23,19 +23,26 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class PatientChangeLogEntry < ApplicationRecord
-  TRACKED_ATTRIBUTES = %w[
-    given_name
-    family_name
-    preferred_given_name
-    preferred_family_name
-    date_of_birth
-    gender_code
-    nhs_number
-    address_line_1
-    address_line_2
-    address_town
-    address_postcode
-  ].freeze
+  ATTRIBUTE_LABELS = {
+    "nhs_number" => "NHS number",
+    "given_name" => "First name",
+    "family_name" => "Last name",
+    "preferred_given_name" => "Preferred first name",
+    "preferred_family_name" => "Preferred last name",
+    "date_of_birth" => "Date of birth",
+    "gender_code" => "Gender",
+    "address_line_1" => "Address line 1",
+    "address_line_2" => "Address line 2",
+    "address_town" => "Town",
+    "address_postcode" => "Postcode"
+  }.freeze
+  private_constant :ATTRIBUTE_LABELS
+
+  TRACKED_ATTRIBUTES = ATTRIBUTE_LABELS.keys.freeze
+
+  def self.label_for(attribute)
+    ATTRIBUTE_LABELS[attribute]
+  end
 
   belongs_to :patient
   belongs_to :user, optional: true
@@ -56,7 +63,13 @@ class PatientChangeLogEntry < ApplicationRecord
     patients.each do |patient|
       next if patient.id.blank?
 
-      recorded_changes = patient.changes.slice(*TRACKED_ATTRIBUTES)
+      recorded_changes =
+        patient
+          .changes
+          .slice(*TRACKED_ATTRIBUTES)
+          .reject do |_attr, (old_val, new_val)|
+            old_val.presence == new_val.presence
+          end
       next if recorded_changes.empty?
 
       create!(patient:, user:, source:, recorded_changes:)
