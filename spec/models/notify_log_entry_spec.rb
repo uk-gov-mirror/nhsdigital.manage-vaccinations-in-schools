@@ -41,6 +41,8 @@ describe NotifyLogEntry do
     let(:type) { :email }
 
     it { should be_valid }
+    it { should validate_presence_of(:purpose) }
+    it { should allow_value(:consent_request).for(:purpose) }
   end
 
   context "with an SMS type" do

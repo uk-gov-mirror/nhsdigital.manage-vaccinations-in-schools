@@ -128,6 +128,7 @@ class NotifyLogEntry < ApplicationRecord
          vaccination_deleted: 13
        }
 
+  validates :purpose, presence: true
   validates :recipient, presence: true
   validates :template_id, presence: true
 

@@ -56,6 +56,9 @@ FactoryBot.define do
     end
 
     delivery_id { SecureRandom.uuid }
+    purpose do
+      NotifyTemplate.find_by_id(template_id, channel: type.to_sym)&.purpose
+    end
     traits_for_enum :delivery_status
     traits_for_enum :purpose
 

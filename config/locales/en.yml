@@ -803,6 +803,8 @@ en:
               blank: Enter a template ID
             type:
               inclusion: Choose a type
+            purpose:
+              blank: Add a purpose to the template frontmatter
         offline_password:
           attributes:
             password:
