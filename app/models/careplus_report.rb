@@ -2,7 +2,7 @@
 
 # == Schema Information
 #
-# Table name: careplus_exports
+# Table name: careplus_reports
 #
 #  id              :bigint           not null, primary key
 #  academic_year   :integer          not null
@@ -21,24 +21,24 @@
 #
 # Indexes
 #
-#  index_careplus_exports_on_programme_types            (programme_types) USING gin
-#  index_careplus_exports_on_status_and_scheduled_at    (status,scheduled_at)
-#  index_careplus_exports_on_team_id                    (team_id)
-#  index_careplus_exports_on_team_id_and_academic_year  (team_id,academic_year)
+#  index_careplus_reports_on_programme_types            (programme_types) USING gin
+#  index_careplus_reports_on_status_and_scheduled_at    (status,scheduled_at)
+#  index_careplus_reports_on_team_id                    (team_id)
+#  index_careplus_reports_on_team_id_and_academic_year  (team_id,academic_year)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (team_id => teams.id)
 #
-class CareplusExport < ApplicationRecord
+class CareplusReport < ApplicationRecord
   include HasManyProgrammes
 
   audited associated_with: :team
 
   belongs_to :team
 
-  has_many :careplus_export_vaccination_records, dependent: :destroy
-  has_many :vaccination_records, through: :careplus_export_vaccination_records
+  has_many :careplus_report_vaccination_records, dependent: :destroy
+  has_many :vaccination_records, through: :careplus_report_vaccination_records
 
   enum :status, { pending: 0, sending: 1, sent: 2, failed: 3 }, validate: true
 

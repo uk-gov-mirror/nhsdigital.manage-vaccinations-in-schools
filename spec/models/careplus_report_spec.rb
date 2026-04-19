@@ -2,7 +2,7 @@
 
 # == Schema Information
 #
-# Table name: careplus_exports
+# Table name: careplus_reports
 #
 #  id              :bigint           not null, primary key
 #  academic_year   :integer          not null
@@ -21,30 +21,30 @@
 #
 # Indexes
 #
-#  index_careplus_exports_on_programme_types            (programme_types) USING gin
-#  index_careplus_exports_on_status_and_scheduled_at    (status,scheduled_at)
-#  index_careplus_exports_on_team_id                    (team_id)
-#  index_careplus_exports_on_team_id_and_academic_year  (team_id,academic_year)
+#  index_careplus_reports_on_programme_types            (programme_types) USING gin
+#  index_careplus_reports_on_status_and_scheduled_at    (status,scheduled_at)
+#  index_careplus_reports_on_team_id                    (team_id)
+#  index_careplus_reports_on_team_id_and_academic_year  (team_id,academic_year)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (team_id => teams.id)
 #
-describe CareplusExport do
-  subject(:careplus_export) { build(:careplus_export) }
+describe CareplusReport do
+  subject(:careplus_report) { build(:careplus_report) }
 
   describe "associations" do
     it { should belong_to(:team) }
 
     it do
-      expect(careplus_export).to have_many(
-        :careplus_export_vaccination_records
+      expect(careplus_report).to have_many(
+        :careplus_report_vaccination_records
       ).dependent(:destroy)
     end
 
     it do
-      expect(careplus_export).to have_many(:vaccination_records).through(
-        :careplus_export_vaccination_records
+      expect(careplus_report).to have_many(:vaccination_records).through(
+        :careplus_report_vaccination_records
       )
     end
   end
@@ -59,9 +59,9 @@ describe CareplusExport do
 
     describe "date_from_must_precede_date_to" do
       context "when date_to is before date_from" do
-        subject(:careplus_export) do
+        subject(:careplus_report) do
           build(
-            :careplus_export,
+            :careplus_report,
             date_from: Date.current,
             date_to: Date.current - 1.day
           )
@@ -70,15 +70,15 @@ describe CareplusExport do
         it { should be_invalid }
 
         it "adds an error on date_to" do
-          careplus_export.valid?
-          expect(careplus_export.errors[:date_to]).to be_present
+          careplus_report.valid?
+          expect(careplus_report.errors[:date_to]).to be_present
         end
       end
 
       context "when date_to equals date_from" do
-        subject(:careplus_export) do
+        subject(:careplus_report) do
           build(
-            :careplus_export,
+            :careplus_report,
             date_from: Date.current,
             date_to: Date.current
           )
@@ -94,10 +94,10 @@ describe CareplusExport do
       subject { described_class.for_academic_year(AcademicYear.current) }
 
       let!(:matching) do
-        create(:careplus_export, academic_year: AcademicYear.current)
+        create(:careplus_report, academic_year: AcademicYear.current)
       end
       let!(:other) do
-        create(:careplus_export, academic_year: AcademicYear.current - 1)
+        create(:careplus_report, academic_year: AcademicYear.current - 1)
       end
 
       it { should include(matching) }
@@ -108,17 +108,17 @@ describe CareplusExport do
       subject { described_class.pending_send }
 
       let!(:due) do
-        create(:careplus_export, status: :pending, scheduled_at: 1.minute.ago)
+        create(:careplus_report, status: :pending, scheduled_at: 1.minute.ago)
       end
       let!(:future) do
         create(
-          :careplus_export,
+          :careplus_report,
           status: :pending,
           scheduled_at: 1.hour.from_now
         )
       end
       let!(:already_sent) do
-        create(:careplus_export, :sent, scheduled_at: 1.minute.ago)
+        create(:careplus_report, :sent, scheduled_at: 1.minute.ago)
       end
 
       it { should include(due) }

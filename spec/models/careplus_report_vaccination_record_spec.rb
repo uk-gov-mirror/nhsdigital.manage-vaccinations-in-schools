@@ -2,29 +2,29 @@
 
 # == Schema Information
 #
-# Table name: careplus_export_vaccination_records
+# Table name: careplus_report_vaccination_records
 #
 #  change_type           :integer          not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  careplus_export_id    :bigint           not null, primary key
+#  careplus_report_id    :bigint           not null, primary key
 #  vaccination_record_id :bigint           not null, primary key
 #
 # Indexes
 #
-#  idx_on_careplus_export_id_8ce4ed1ff0     (careplus_export_id)
-#  idx_on_vaccination_record_id_d4c93aefb7  (vaccination_record_id)
+#  idx_on_careplus_report_id_98876049c7     (careplus_report_id)
+#  idx_on_vaccination_record_id_e7f05454ab  (vaccination_record_id)
 #
 # Foreign Keys
 #
-#  fk_rails_...  (careplus_export_id => careplus_exports.id) ON DELETE => cascade
+#  fk_rails_...  (careplus_report_id => careplus_reports.id) ON DELETE => cascade
 #  fk_rails_...  (vaccination_record_id => vaccination_records.id)
 #
-describe CareplusExportVaccinationRecord do
-  subject(:record) { build(:careplus_export_vaccination_record) }
+describe CareplusReportVaccinationRecord do
+  subject(:record) { build(:careplus_report_vaccination_record) }
 
   describe "associations" do
-    it { should belong_to(:careplus_export) }
+    it { should belong_to(:careplus_report) }
     it { should belong_to(:vaccination_record) }
   end
 
