@@ -3,7 +3,7 @@
 describe AppChildSummaryComponent do
   subject(:rendered) { render_inline(component) }
 
-  let(:component) { described_class.new(patient) }
+  let(:component) { described_class.new(patient, show_parents:) }
 
   let(:school) { create(:gias_school, name: "Test School") }
   let(:gp_practice) { nil }
@@ -34,10 +34,12 @@ describe AppChildSummaryComponent do
       }
     )
   end
+  let(:show_parents) { false }
 
   before do
     create(:parent_relationship, :father, parent:, patient:)
     patient.strict_loading!(false)
+    patient.reload
   end
 
   it { should have_content("NHS number") }
@@ -182,6 +184,38 @@ describe AppChildSummaryComponent do
       let(:consent_form) { create(:consent_form) }
 
       it { should_not have_link("PDS history") }
+    end
+  end
+
+  context "when NOT showing parents" do
+    context "with the one_patient_per_parent feature flag OFF" do
+      it { expect(rendered).not_to have_content("Mark Doe") }
+    end
+
+    context "with the one_patient_per_parent feature flag ON" do
+      before do
+        Flipper.enable(:one_patient_per_parent)
+        parent.update!(patient:, type: "father")
+      end
+
+      it { expect(rendered).not_to have_content("Mark Doe") }
+    end
+  end
+
+  context "when showing parents" do
+    let(:show_parents) { true }
+
+    context "with the one_patient_per_parent feature flag OFF" do
+      it { expect(rendered).to have_content("Mark Doe") }
+    end
+
+    context "with the one_patient_per_parent feature flag ON" do
+      before do
+        Flipper.enable(:one_patient_per_parent)
+        parent.update!(patient:, type: "father")
+      end
+
+      it { expect(rendered).to have_content("Mark Doe") }
     end
   end
 end

@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-describe "Import child records", :pds do
+describe "Import child records" do
   around { |example| travel_to(Date.new(2023, 5, 20)) { example.run } }
-
-  before { Flipper.enable(:one_patient_per_parent) }
 
   scenario "User uploads a file" do
     given_the_app_is_setup
@@ -28,7 +26,7 @@ describe "Import child records", :pds do
     and_i_refresh_the_page
     then_i_should_the_errors_page_with_invalid_fields
 
-    when_it_is_a_little_bit_later
+    when_it_is_a_litte_bit_later
     and_i_go_back_to_the_upload_page
     and_i_upload_a_valid_file
     then_i_should_see_the_upload
@@ -76,7 +74,7 @@ describe "Import child records", :pds do
       and_i_refresh_the_page
       then_i_should_the_errors_page_with_invalid_fields
 
-      when_it_is_a_little_bit_later
+      when_it_is_a_litte_bit_later
       and_i_go_back_to_the_upload_page
       and_i_upload_a_valid_file
       then_i_should_see_the_upload
@@ -130,7 +128,7 @@ describe "Import child records", :pds do
   end
 
   def and_pds_lookup_during_import_is_enabled
-    Flipper.enable(:pds_search_during_import)
+    Flipper.enable(:import_search_pds)
 
     stub_pds_search_to_return_a_patient(
       "9990000026",
@@ -241,11 +239,13 @@ describe "Import child records", :pds do
   end
 
   def then_i_should_the_errors_page_with_invalid_fields
-    expect(page).to have_content("What your CSV file must include")
+    expect(page).to have_content(
+      "How to format your Mavis CSV file for child records"
+    )
     expect(page).to have_content("Row 2")
   end
 
-  def when_it_is_a_little_bit_later
+  def when_it_is_a_litte_bit_later
     travel_to(1.minute.from_now) # so the imports are in a deterministic order
   end
 
