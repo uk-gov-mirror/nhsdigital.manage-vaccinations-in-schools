@@ -82,6 +82,14 @@ module CSVImportable
              unless: -> { csv_removed? || csv_data_object.empty? }
     validate :rows_are_valid, if: -> { !csv_removed? && rows }
 
+    validates_with Import::RowsUniqueAcrossAllImmunisationAttributesValidator,
+                   if: -> { is_a?(ImmunisationImport) && !csv_removed? && rows }
+    validates_with Import::RowsUniqueByNHSNumber,
+                   if: -> { is_a?(PatientImport) && !csv_removed? && rows }
+
+    after_validation :aggregate_row_level_errors,
+                     if: -> { !csv_removed? && rows }
+
     before_save :ensure_processed_with_count_statistics
   end
 
@@ -177,9 +185,23 @@ module CSVImportable
 
   def rows_are_valid
     rows.each(&:validate)
+  end
 
-    check_rows_are_unique
+  def count_columns
+    %i[
+      new_record_count
+      changed_record_count
+      exact_duplicate_record_count
+    ].freeze
+  end
 
+  def ensure_processed_with_count_statistics
+    if processed_at? && count_columns.any? { |column| send(column).nil? }
+      raise "Count statistics must be set for a processed import."
+    end
+  end
+
+  def aggregate_row_level_errors
     row_offset = csv_data_object.has_instruction_row? ? 3 : 2
 
     rows.each.with_index do |row, index|
@@ -198,20 +220,6 @@ module CSVImportable
         end
 
       errors.add("row_#{index + row_offset}".to_sym, formatted_errors)
-    end
-  end
-
-  def count_columns
-    %i[
-      new_record_count
-      changed_record_count
-      exact_duplicate_record_count
-    ].freeze
-  end
-
-  def ensure_processed_with_count_statistics
-    if processed_at? && count_columns.any? { |column| send(column).nil? }
-      raise "Count statistics must be set for a processed import."
     end
   end
 end
