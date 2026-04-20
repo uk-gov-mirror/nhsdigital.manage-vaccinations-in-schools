@@ -130,6 +130,18 @@ class Parent < ApplicationRecord
     [email, phone].compact_blank.join(" / ")
   end
 
+  def ordinal_label
+    index = patient.parents.find_index(self)
+
+    if index.nil?
+      "parent or guardian"
+    elsif index <= 10
+      "#{I18n.t(index + 1, scope: :ordinal_number)} parent or guardian"
+    else
+      "#{index.ordinalize} parent or guardian"
+    end
+  end
+
   def contact_method_description
     if contact_method_other?
       "Other – #{contact_method_other_details}"

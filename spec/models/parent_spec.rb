@@ -136,6 +136,40 @@ describe Parent do
     end
   end
 
+  describe "#ordinal_label" do
+    subject(:ordinal_label) { parent.ordinal_label }
+
+    before { Flipper.enable(:one_patient_per_parent) }
+
+    let(:patient) { create(:patient) }
+    let!(:mum) do
+      create(
+        :parent,
+        email: "mum@example.com",
+        phone: "07700900123",
+        type: "mother",
+        patient:
+      )
+    end
+    let!(:dad) do
+      create(
+        :parent,
+        email: "dad@example.com",
+        phone: "07700900456",
+        type: "father",
+        patient:
+      )
+    end
+
+    it "returns the correct ordinal for the first parent" do
+      expect(mum.ordinal_label).to eq("first parent or guardian")
+    end
+
+    it "returns the correct ordinal for the second parent" do
+      expect(dad.ordinal_label).to eq("second parent or guardian")
+    end
+  end
+
   describe "#contact_method_description" do
     subject(:contact_method_description) { parent.contact_method_description }
 
