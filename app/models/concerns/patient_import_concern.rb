@@ -4,6 +4,7 @@ module PatientImportConcern
   extend ActiveSupport::Concern
 
   def import_patients_and_parents(changesets, import)
+    # TODO: Logic depends on `one_patient_per_parent` feature flag
     patients = changesets.map(&:patient)
     parents = changesets.flat_map(&:parents).uniq
     relationships =
@@ -26,9 +27,12 @@ module PatientImportConcern
     changesets.each(&:assign_patient_id)
     PatientChangeset.import(changesets, on_duplicate_key_update: :all)
 
+    # TODO: Allow duplicate parents for different patients
     Parent.import(parents.to_a, on_duplicate_key_update: :all)
     link_records_to_import(import, Parent, parents)
 
+    # TODO: When `one_patient_per_parent` is enabled, we need to set
+    # the `Parent#patient` association instead
     ParentRelationship.import(
       relationships.to_a,
       on_duplicate_key_update: {

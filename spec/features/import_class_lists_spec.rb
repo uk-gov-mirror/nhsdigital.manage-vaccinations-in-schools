@@ -3,6 +3,8 @@
 describe "Import class lists" do
   around { |example| travel_to(Date.new(2023, 5, 20)) { example.run } }
 
+  before { Flipper.enable(:one_patient_per_parent) }
+
   scenario "User uploads a file" do
     given_an_hpv_programme_is_underway
 
@@ -35,6 +37,12 @@ describe "Import class lists" do
 
     when_i_go_to_the_session
     then_i_should_see_the_children_added_to_the_session
+
+    click_on "Needs consent"
+    click_on "DOE, Mark"
+    # save_and_open_page
+    click_on "View full child record"
+    click_on "Edit child record"
   end
 
   context "when PDS lookup during import is enabled" do
