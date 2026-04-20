@@ -11,12 +11,20 @@ module ParentsHelper
     end
   end
 
-  def format_parent_with_relationship(parent_relationship, include_phone: true)
-    parent = parent_relationship.parent
+  def format_parent_with_relationship(
+    parent_or_parent_relationship,
+    include_phone: true
+  )
+    parent =
+      if parent_or_parent_relationship.is_a?(Parent)
+        parent_or_parent_relationship
+      else
+        parent_or_parent_relationship.parent
+      end
 
     safe_join(
       [
-        parent_relationship.label_with_parent,
+        parent_or_parent_relationship.label_with_parent,
         if (email = parent.email).present?
           tag.span(email, class: "nhsuk-u-secondary-text-colour")
         end,

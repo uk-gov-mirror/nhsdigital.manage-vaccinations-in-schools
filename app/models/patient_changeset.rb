@@ -231,9 +231,7 @@ class PatientChangeset < ApplicationRecord
     relationships =
       [parent_1_attributes, parent_2_attributes].filter_map do |attrs|
         next if attrs.blank?
-        parent_relationship_attributes(
-          attrs["relationship"].presence || "unknown"
-        )
+        parent_relationship_attributes(attrs)
       end
 
     @parent_relationships ||=
@@ -250,19 +248,28 @@ class PatientChangeset < ApplicationRecord
     self.patient_id = patient.id if patient.persisted?
   end
 
-  def parent_relationship_attributes(relationship)
-    case relationship&.downcase
-    when nil, "unknown"
-      { type: "unknown" }
-    when "mother", "mum"
-      { type: "mother" }
-    when "father", "dad"
-      { type: "father" }
-    when "guardian"
-      { type: "guardian" }
-    else
-      { type: "other", other_name: relationship }
-    end
+  def parent_relationship_attributes(attrs)
+    relationship = attrs["relationship"].presence || "unknown"
+
+    type_attributes =
+      case relationship&.downcase
+      when nil, "unknown"
+        { type: "unknown" }
+      when "mother", "mum"
+        { type: "mother" }
+      when "father", "dad"
+        { type: "father" }
+      when "guardian"
+        { type: "guardian" }
+      else
+        { type: "other", other_name: relationship }
+      end
+    type_attributes.merge(
+      email: attrs["email"].presence,
+      full_name: attrs["full_name"].presence,
+      phone: attrs["phone"].presence,
+      phone_receive_updates: attrs["phone"].blank? ? false : nil
+    )
   end
 
   def school_move

@@ -411,6 +411,16 @@ describe "Child record imports duplicates" do
     expect(patient.nhs_number).to be_nil
     expect(patient.sessions.count).to eq(1)
 
+    mum = patient.parent_relationships.find_by(type: "mother")
+    expect(mum.full_name).to eq("Jane Doe")
+    expect(mum.phone).to eq("07412 345679")
+    expect(mum.email).to eq("jane@example.com")
+
+    dad = patient.parent_relationships.find_by(type: "father")
+    expect(dad.full_name).to eq("Richard Doe")
+    expect(dad.phone).to be_nil
+    expect(dad.email).to eq("richard@example.com")
+
     session = patient.sessions.first
     expect(session).to eq(@session)
   end

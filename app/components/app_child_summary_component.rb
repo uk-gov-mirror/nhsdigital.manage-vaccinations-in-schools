@@ -119,46 +119,7 @@ class AppChildSummaryComponent < ViewComponent::Base
                 row.with_value { gp_practice.name }
               end
             end
-            if @show_parents && !@child.restricted?
-              @child.parent_relationships.each do |parent_relationship|
-                summary_list.with_row do |row|
-                  row.with_key do
-                    parent_relationship.ordinal_label.upcase_first
-                  end
-                  row.with_value do
-                    format_parent_with_relationship(parent_relationship)
-                  end
-
-                  if (
-                       href =
-                         @change_links.dig(
-                           :parent,
-                           parent_relationship.parent_id
-                         )
-                     )
-                    row.with_action(
-                      text: "Edit",
-                      href:,
-                      visually_hidden_text: parent_relationship.ordinal_label
-                    )
-                  end
-
-                  if (
-                       href =
-                         @remove_links.dig(
-                           :parent,
-                           parent_relationship.parent_id
-                         )
-                     )
-                    row.with_action(
-                      text: "Remove",
-                      href:,
-                      visually_hidden_text: parent_relationship.ordinal_label
-                    )
-                  end
-                end
-              end
-            end
+            render_parents(summary_list) if @show_parents && !@child.restricted?
           end,
           @show_add_parent ? add_parent_button : nil
         ].compact
@@ -167,6 +128,31 @@ class AppChildSummaryComponent < ViewComponent::Base
   end
 
   private
+
+  def render_parents(summary_list)
+    @child.parent_relationships.each do |parent_relationship|
+      summary_list.with_row do |row|
+        row.with_key { parent_relationship.ordinal_label.upcase_first }
+        row.with_value { format_parent_with_relationship(parent_relationship) }
+
+        if (href = @change_links.dig(:parent, parent_relationship.parent_id))
+          row.with_action(
+            text: "Edit",
+            href:,
+            visually_hidden_text: parent_relationship.ordinal_label
+          )
+        end
+
+        if (href = @remove_links.dig(:parent, parent_relationship.parent_id))
+          row.with_action(
+            text: "Remove",
+            href:,
+            visually_hidden_text: parent_relationship.ordinal_label
+          )
+        end
+      end
+    end
+  end
 
   delegate :format_address_multi_line,
            :format_ethnic_group_and_background,
