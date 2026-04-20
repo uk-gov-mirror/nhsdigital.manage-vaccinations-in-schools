@@ -223,6 +223,15 @@ class PatientChangeset < ApplicationRecord
         parent.phone = attrs["phone"] if attrs["phone"]
         parent.phone_receive_updates = false if parent.phone.blank?
 
+        if Flipper.enabled?(:one_patient_per_parent)
+          parent.patient = patient
+          parent.assign_attributes(
+            parent_relationship_attributes(
+              attrs["relationship"].presence || "unknown"
+            )
+          )
+        end
+
         parent
       end
   end
