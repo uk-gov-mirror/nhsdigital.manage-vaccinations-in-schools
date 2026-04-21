@@ -85,6 +85,23 @@ class Team < ApplicationRecord
 
   encrypts :careplus_username, :careplus_password
 
+  scope :careplus_enabled,
+        -> do
+          where
+            .not(careplus_staff_code: [nil, ""])
+            .where.not(careplus_staff_type: [nil, ""])
+            .where.not(careplus_venue_code: [nil, ""])
+        end
+  scope :has_careplus_credentials,
+        -> do
+          where
+            .not(careplus_namespace: [nil, ""])
+            .where.not(careplus_username: nil)
+            .where.not(careplus_password: nil)
+        end
+  scope :eligible_for_automated_careplus_reports,
+        -> { careplus_enabled.has_careplus_credentials }
+
   enum :type,
        { point_of_care: 0, national_reporting: 1, support: 2 },
        validate: true,
@@ -153,5 +170,10 @@ class Team < ApplicationRecord
   def careplus_enabled?
     careplus_staff_code.present? && careplus_staff_type.present? &&
       careplus_venue_code.present?
+  end
+
+  def eligible_for_automated_careplus_reports?
+    careplus_enabled? && careplus_username.present? &&
+      careplus_password.present? && careplus_namespace.present?
   end
 end
