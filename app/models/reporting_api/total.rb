@@ -92,7 +92,14 @@ class ReportingAPI::Total < ApplicationRecord
   end
 
   def self.consent_no_response_count
-    where(consent_status: CONSENT_NO_RESPONSE).distinct.count(:patient_id)
+    where(
+      consent_status: [
+        CONSENT_NO_RESPONSE,
+        NO_CONTACT_DETAILS,
+        REQUEST_SCHEDULED,
+        REQUEST_NOT_SCHEDULED
+      ]
+    ).distinct.count(:patient_id)
   end
 
   def self.consent_refused_count
