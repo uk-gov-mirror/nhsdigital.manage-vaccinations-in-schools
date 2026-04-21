@@ -539,6 +539,14 @@ describe ImmunisationImport do
         SyncVaccinationRecordToNHSJob
       ).with(vaccination_record.id).once.on("immunisations_api_sync")
     end
+
+    it "calls the AlreadyHadNotificationSender for the vaccination record" do
+      expect(AlreadyHadNotificationSender).to receive(:call).with(
+        vaccination_record:
+      )
+
+      immunisation_import.send :post_commit!
+    end
   end
 
   describe "#postprocess_rows!" do
@@ -575,14 +583,6 @@ describe ImmunisationImport do
           :count
         ).by(1)
       end
-    end
-
-    it "calls the AlreadyHadNotificationSender for the vaccination record" do
-      expect(AlreadyHadNotificationSender).to receive(:call).with(
-        vaccination_record:
-      )
-
-      immunisation_import.send :postprocess_rows!
     end
   end
 end
