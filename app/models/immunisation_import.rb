@@ -89,9 +89,6 @@ class ImmunisationImport < ApplicationRecord
     end
 
     post_commit!
-    UpdatePatientsFromPDS.call(patients, queue: :imports)
-
-    TeamCachedCounts.new(team).reset_import_issues!
   end
 
   private
@@ -227,5 +224,9 @@ class ImmunisationImport < ApplicationRecord
       .find_each do |vaccination_record|
         AlreadyHadNotificationSender.call(vaccination_record:)
       end
+
+    UpdatePatientsFromPDS.call(patients, queue: :imports)
+
+    TeamCachedCounts.new(team).reset_import_issues!
   end
 end
