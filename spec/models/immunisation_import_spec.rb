@@ -524,12 +524,29 @@ describe ImmunisationImport do
       create(
         :immunisation_import,
         team:,
-        vaccination_records: [vaccination_record]
+        vaccination_records: [vaccination_record],
+        patients: [create(:patient)]
       )
     end
     let(:session) { create(:session, location: school, programmes:) }
     let(:vaccination_record) do
       create(:vaccination_record, programme: programmes.first, session:)
+    end
+
+    it "calls the PatientTeamUpdater with imported patients" do
+      expect(PatientTeamUpdater).to receive(:call).with(
+        patient_scope: immunisation_import.patients
+      )
+
+      immunisation_import.send :post_commit!
+    end
+
+    it "calls the PatientStatusUpdater with imported patients" do
+      expect(PatientStatusUpdater).to receive(:call).with(
+        patient_scope: Patient.where(id: immunisation_import.patients.ids)
+      )
+
+      immunisation_import.send :post_commit!
     end
 
     it "syncs the flu vaccination record to the NHS Immunisations API" do
