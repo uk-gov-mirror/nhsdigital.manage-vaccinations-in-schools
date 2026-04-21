@@ -209,6 +209,8 @@ class Notifier::Patient
         sent_by:
       )
 
+    PatientStatusUpdater.call(patient:)
+
     location = team_location.location
     outbreak = session&.outbreak || false
 
