@@ -553,6 +553,8 @@ class ImmunisationImportRow
   def new_patient_attributes
     {
       address_postcode: patient_postcode&.to_postcode,
+      local_authority_mhclg_code:
+        LocalAuthority.for_postcode(patient_postcode&.to_postcode)&.mhclg_code,
       date_of_birth: patient_date_of_birth&.to_date,
       birth_academic_year: patient_date_of_birth&.to_date&.academic_year,
       family_name: patient_last_name.to_s,
