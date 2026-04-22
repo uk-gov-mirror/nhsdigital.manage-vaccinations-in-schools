@@ -232,11 +232,13 @@ class DraftConsentsController < ApplicationController
 
     @new_or_existing_contact_options +=
       if Flipper.enabled?(:one_patient_per_parent)
-        parents = (@patient.parents +
-          @patient
-            .consents
-            .select { it.programme_type == @programme.type }
-            .filter_map(&:parent)
+        parents =
+          (
+            @patient.parents +
+              @patient
+                .consents
+                .select { it.programme_type == @programme.type }
+                .filter_map(&:parent)
           ).compact.uniq.sort_by(&:label)
 
         parents.map do |parent|
