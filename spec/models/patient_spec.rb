@@ -22,6 +22,7 @@
 #  invalidated_at             :datetime
 #  local_authority_mhclg_code :string
 #  nhs_number                 :string
+#  nhs_number_first_added_at  :datetime
 #  pending_changes            :jsonb            not null
 #  preferred_family_name      :string
 #  preferred_given_name       :string
@@ -47,6 +48,7 @@
 #  index_patients_on_names_family_first                   (family_name,given_name)
 #  index_patients_on_names_given_first                    (given_name,family_name)
 #  index_patients_on_nhs_number                           (nhs_number) UNIQUE
+#  index_patients_on_nhs_number_first_added_at            (nhs_number_first_added_at)
 #  index_patients_on_pending_changes_not_empty            (id) WHERE (pending_changes <> '{}'::jsonb)
 #  index_patients_on_school_id                            (school_id)
 #
@@ -1304,6 +1306,38 @@ describe Patient do
 
         expect(should_sync_vaccinations_to_nhs_immunisations_api?).to be_falsy
       end
+    end
+  end
+
+  describe "NHS number first added timestamp" do
+    it "sets nhs_number_first_added_at when an NHS number is first added" do
+      patient =
+        create(:patient, nhs_number: nil, nhs_number_first_added_at: nil)
+
+      freeze_time do
+        expect { patient.update!(nhs_number: "9449310475") }.to change {
+          patient.reload.nhs_number_first_added_at
+        }.from(nil).to(Time.current)
+      end
+    end
+
+    it "does not clear nhs_number_first_added_at when an NHS number is removed" do
+      patient = create(:patient)
+
+      expect { patient.update!(nhs_number: nil) }.not_to(
+        change { patient.reload.nhs_number_first_added_at }
+      )
+    end
+
+    it "does not overwrite nhs_number_first_added_at when an NHS number is re-added" do
+      patient = create(:patient)
+      first_added_at = patient.nhs_number_first_added_at
+
+      patient.update!(nhs_number: nil)
+
+      expect { patient.update!(nhs_number: "9449310475") }.not_to change {
+        patient.reload.nhs_number_first_added_at
+      }.from(first_added_at)
     end
   end
 
