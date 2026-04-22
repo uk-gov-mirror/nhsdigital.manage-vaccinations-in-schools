@@ -29,7 +29,8 @@ module MavisCLI
         puts "Found #{teams.count} national reporting team(s) to reset:"
         teams.each do |team|
           puts "  - #{team.name} (#{team.workgroup})"
-          puts "    - Immunisation imports: #{ImmunisationImport.where(team:).count}"
+          puts "    - Cut-off date: #{team.national_reporting_cut_off_date}"
+          puts "    - Immunisation imports (before cut-off): #{find_immunisation_imports_for_team(team).count}"
           puts "    - Total patients: #{find_patients_for_team(team).count}"
 
           vaccination_records = find_vaccination_records_for_team(team)
@@ -92,8 +93,9 @@ module MavisCLI
         patient_ids_to_update = Set.new
 
         ActiveRecord::Base.transaction do
-          immunisation_imports = ImmunisationImport.where(team:)
-          puts "  - Found #{immunisation_imports.count} immunisation import(s)"
+          immunisation_imports = find_immunisation_imports_for_team(team)
+          puts "  - Found #{immunisation_imports.count} immunisation import(s) created before team's cut off date: " \
+                 "#{team.national_reporting_cut_off_date}"
 
           patient_ids = find_patients_for_team(team).ids
           puts "  - Found #{patient_ids.count} patient(s) in this team"
@@ -169,6 +171,13 @@ module MavisCLI
         PatientStatusUpdaterJob.perform_bulk(patient_ids_to_update.zip)
       end
 
+      def find_immunisation_imports_for_team(team)
+        ImmunisationImport.where(team:).where(
+          "immunisation_imports.created_at < ?",
+          team.national_reporting_cut_off_date
+        )
+      end
+
       def find_patients_for_team(team)
         Patient.joins(:patient_teams).where(patient_teams: { team: }).distinct
       end
@@ -176,7 +185,7 @@ module MavisCLI
       def find_vaccination_records_for_team(team)
         VaccinationRecord.joins(:immunisation_imports).where(
           immunisation_imports: {
-            team:
+            id: find_immunisation_imports_for_team(team)
           }
         )
       end
