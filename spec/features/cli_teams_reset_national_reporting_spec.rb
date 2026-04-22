@@ -82,6 +82,16 @@ describe "mavis teams reset-national-reporting" do
       }.to raise_error(ArgumentError, /not a national reporting team/)
     end
 
+    it "raises an error when the team has no national reporting cut off date" do
+      given_a_national_reporting_team_exists_without_a_cut_off_date
+      expect {
+        run_command_with_workgroup(@national_reporting_team.workgroup)
+      }.to raise_error(
+        ArgumentError,
+        /does not have a national reporting cut off date set/
+      )
+    end
+
     it "does not delete records that have been sent to the Imms API" do
       given_a_national_reporting_team_exists
       and_the_national_reporting_team_has_immunisation_imports_with_vaccination_records
@@ -141,6 +151,18 @@ describe "mavis teams reset-national-reporting" do
       and_no_vaccination_records_are_deleted
       and_no_patients_are_deleted
     end
+
+    it "skips national_reporting teams that have no cut off date set" do
+      given_a_national_reporting_team_exists_without_a_cut_off_date
+      and_the_national_reporting_team_has_immunisation_imports_with_vaccination_records
+
+      when_i_run_the_command_for_all_teams
+
+      then_the_output_indicates_no_teams_found
+      and_no_immunisation_imports_are_deleted
+      and_no_vaccination_records_are_deleted
+      and_no_patients_are_deleted
+    end
   end
 
   private
@@ -159,6 +181,18 @@ describe "mavis teams reset-national-reporting" do
 
   alias_method :and_a_national_reporting_team_exists,
                :given_a_national_reporting_team_exists
+
+  def given_a_national_reporting_team_exists_without_a_cut_off_date
+    @national_reporting_team =
+      create(
+        :team,
+        :national_reporting,
+        national_reporting_cut_off_date: nil,
+        programmes: [Programme.hpv, Programme.flu],
+        organisation: national_reporting_organisation,
+        workgroup: "national-reporting-team"
+      )
+  end
 
   def and_the_feature_flag_is_enabled
     Flipper.enable(:sync_national_reporting_to_imms_api)
