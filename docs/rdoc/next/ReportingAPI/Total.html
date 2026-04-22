@@ -1172,13 +1172,15 @@ ix_rapi_totals_year_group             (patient_year_group)</pre>
     <span class="ruby-node">&quot;consent_status IN (#{CONSENT_GIVEN_STATUSES.join(&quot;,&quot;)})&quot;</span>
   <span class="ruby-identifier">no_consent_condition</span> =
     <span class="ruby-node">&quot;consent_status IN (#{NO_CONSENT_STATUSES.join(&quot;,&quot;)})&quot;</span>
+  <span class="ruby-identifier">consent_no_response_condition</span> =
+    <span class="ruby-node">&quot;consent_status IN (#{CONSENT_NO_RESPONSE_STATUSES.join(&quot;,&quot;)})&quot;</span>
   <span class="ruby-identifier">select</span>(
     <span class="ruby-string">&quot;COUNT(DISTINCT patient_id) AS cohort&quot;</span>,
     <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE #{vaccinated_condition}) AS vaccinated&quot;</span>,
     <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE NOT (#{vaccinated_condition})) AS not_vaccinated&quot;</span>,
     <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE #{consent_given_condition}) AS consent_given&quot;</span>,
     <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE #{no_consent_condition}) AS no_consent&quot;</span>,
-    <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE consent_status = #{CONSENT_NO_RESPONSE}) AS consent_no_response&quot;</span>,
+    <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE #{consent_no_response_condition}) AS consent_no_response&quot;</span>,
     <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE consent_status = #{CONSENT_REFUSED}) AS consent_refused&quot;</span>,
     <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE consent_status = #{CONSENT_CONFLICTS}) AS consent_conflicts&quot;</span>
   )
@@ -1283,13 +1285,15 @@ ix_rapi_totals_year_group             (patient_year_group)</pre>
       <span class="ruby-node">&quot;consent_status IN (#{CONSENT_GIVEN_STATUSES.join(&quot;,&quot;)})&quot;</span>
     <span class="ruby-identifier">no_consent_condition</span> =
       <span class="ruby-node">&quot;consent_status IN (#{NO_CONSENT_STATUSES.join(&quot;,&quot;)})&quot;</span>
+    <span class="ruby-identifier">consent_no_response_condition</span> =
+      <span class="ruby-node">&quot;consent_status IN (#{CONSENT_NO_RESPONSE_STATUSES.join(&quot;,&quot;)})&quot;</span>
     <span class="ruby-identifier">select</span>(
       <span class="ruby-string">&quot;COUNT(DISTINCT patient_id) AS cohort&quot;</span>,
       <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE #{vaccinated_condition}) AS vaccinated&quot;</span>,
       <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE NOT (#{vaccinated_condition})) AS not_vaccinated&quot;</span>,
       <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE #{consent_given_condition}) AS consent_given&quot;</span>,
       <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE #{no_consent_condition}) AS no_consent&quot;</span>,
-      <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE consent_status = #{CONSENT_NO_RESPONSE}) AS consent_no_response&quot;</span>,
+      <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE #{consent_no_response_condition}) AS consent_no_response&quot;</span>,
       <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE consent_status = #{CONSENT_REFUSED}) AS consent_refused&quot;</span>,
       <span class="ruby-node">&quot;COUNT(DISTINCT patient_id) FILTER (WHERE consent_status = #{CONSENT_CONFLICTS}) AS consent_conflicts&quot;</span>
     )
