@@ -75,10 +75,16 @@ module MavisCLI
             raise ArgumentError,
                   "Team #{workgroup} is not a national reporting team"
           end
+          if team.national_reporting_cut_off_date.nil?
+            raise ArgumentError,
+                  "Team #{workgroup} does not have a national reporting cut off date set; no data to delete"
+          end
 
           [team]
         else
-          Team.where(type: :national_reporting)
+          Team
+            .where(type: :national_reporting)
+            .where.not(national_reporting_cut_off_date: nil)
         end
       end
 
