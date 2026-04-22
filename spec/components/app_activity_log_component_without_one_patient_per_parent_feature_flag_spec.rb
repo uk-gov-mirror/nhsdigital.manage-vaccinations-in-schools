@@ -29,12 +29,10 @@ describe AppActivityLogComponent do
     )
   end
 
-  let(:mum) { create(:parent, :mother, full_name: "Jane Doe", patient:) }
-  let(:dad) { create(:parent, :father, full_name: "John Doe", patient:) }
+  let(:mum) { create(:parent, full_name: "Jane Doe") }
+  let(:dad) { create(:parent, full_name: "John Doe") }
 
   before do
-    Flipper.enable(:one_patient_per_parent)
-
     travel_to Date.new(2026, 1, 1)
 
     create(:parent_relationship, :mother, parent: mum, patient:)

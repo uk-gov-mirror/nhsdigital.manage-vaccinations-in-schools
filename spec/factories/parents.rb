@@ -30,6 +30,8 @@ FactoryBot.define do
     phone { "07700 900#{rand(0..999).to_s.rjust(3, "0")}" }
     phone_receive_updates { phone.present? }
 
+    traits_for_enum :type
+
     trait :non_contactable do
       phone { nil }
       email { nil }
