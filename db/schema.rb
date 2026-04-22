@@ -162,7 +162,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_175616) do
     t.bigint "class_import_id", null: false
     t.bigint "parent_relationship_id", null: false
     t.index ["class_import_id", "parent_relationship_id"], name: "idx_on_class_import_id_parent_relationship_id_8225058195", unique: true
-    t.index ["parent_relationship_id", "class_import_id"], name: "idx_on_parent_relationship_id_class_import_id_d7c05d6c2c", unique: true
   end
 
   create_table "class_imports_parents", id: false, force: :cascade do |t|
@@ -221,7 +220,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_175616) do
     t.bigint "cohort_import_id", null: false
     t.bigint "parent_relationship_id", null: false
     t.index ["cohort_import_id", "parent_relationship_id"], name: "idx_on_cohort_import_id_parent_relationship_id_c65e20d1f8", unique: true
-    t.index ["parent_relationship_id", "cohort_import_id"], name: "idx_on_parent_relationship_id_cohort_import_id_40fb9846d6", unique: true
   end
 
   create_table "cohort_imports_parents", id: false, force: :cascade do |t|
@@ -460,7 +458,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_175616) do
     t.bigint "immunisation_import_id", null: false
     t.bigint "vaccination_record_id", null: false
     t.index ["immunisation_import_id", "vaccination_record_id"], name: "idx_on_immunisation_import_id_vaccination_record_id_588e859772", unique: true
-    t.index ["vaccination_record_id", "immunisation_import_id"], name: "idx_on_vaccination_record_id_immunisation_import_id_813c516ad7", unique: true
   end
 
   create_table "important_notices", force: :cascade do |t|
@@ -763,6 +760,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_175616) do
     t.datetime "invalidated_at"
     t.string "local_authority_mhclg_code"
     t.string "nhs_number"
+    t.datetime "nhs_number_first_added_at"
     t.jsonb "pending_changes", default: {}, null: false
     t.string "preferred_family_name"
     t.string "preferred_given_name"
@@ -784,6 +782,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_175616) do
     t.index ["id"], name: "index_patients_on_pending_changes_not_empty", where: "(pending_changes <> '{}'::jsonb)"
     t.index ["local_authority_mhclg_code"], name: "index_patients_on_local_authority_mhclg_code"
     t.index ["nhs_number"], name: "index_patients_on_nhs_number", unique: true
+    t.index ["nhs_number_first_added_at"], name: "index_patients_on_nhs_number_first_added_at"
     t.index ["school_id"], name: "index_patients_on_school_id"
   end
 
