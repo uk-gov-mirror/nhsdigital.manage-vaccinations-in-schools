@@ -23,6 +23,7 @@ describe AppPatientSearchResultCardComponent do
   let(:show_nhs_number) { false }
   let(:show_postcode) { false }
   let(:show_school) { false }
+  let(:show_parents) { false }
 
   let(:component) do
     described_class.new(
@@ -34,7 +35,8 @@ describe AppPatientSearchResultCardComponent do
       show_clinic_invitations:,
       show_nhs_number:,
       show_postcode:,
-      show_school:
+      show_school:,
+      show_parents:
     )
   end
 
@@ -205,6 +207,45 @@ describe AppPatientSearchResultCardComponent do
       end
 
       it { should_not have_text("Clinic invitations") }
+    end
+
+    context "when showing parents" do
+      let(:show_parents) { true }
+
+      context "with the one_patient_per_parent feature flag ON" do
+        before { Flipper.enable(:one_patient_per_parent) }
+
+        context "when there are no associated parent records" do
+          it { should_not have_text("Parents or guardians") }
+        end
+
+        context "when there are associated parent records" do
+          before do
+            @parent = create(:parent, :father, patient:)
+            patient.strict_loading!(false)
+            patient.reload
+          end
+
+          it { should have_text("Parents or guardians") }
+        end
+      end
+
+      context "with the one_patient_per_parent feature flag OFF" do
+        context "when there are no associated parent records" do
+          it { should_not have_text("Parents or guardians") }
+        end
+
+        context "when there are associated parent records" do
+          before do
+            @parent_relationship =
+              create(:parent_relationship, :father, patient:)
+            patient.strict_loading!(false)
+            patient.reload
+          end
+
+          it { should have_text("Parents or guardians") }
+        end
+      end
     end
   end
 end
