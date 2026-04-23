@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AppChildSummaryComponent do
+describe AppChildSummaryComponent, :one_patient_per_parent do
   subject(:rendered) { render_inline(component) }
 
   let(:component) { described_class.new(patient, show_parents:) }
@@ -8,7 +8,7 @@ describe AppChildSummaryComponent do
   let(:school) { create(:gias_school, name: "Test School") }
   let(:gp_practice) { nil }
   let(:other_school) { create(:gias_school, name: "Other School") }
-  let(:parent) { create(:parent, full_name: "Mark Doe") }
+  let(:parent) { create(:parent, :father, full_name: "Mark Doe", patient:) }
   let(:restricted) { false }
   let(:patient) do
     create(
@@ -35,12 +35,6 @@ describe AppChildSummaryComponent do
     )
   end
   let(:show_parents) { false }
-
-  before do
-    create(:parent_relationship, :father, parent:, patient:)
-    patient.strict_loading!(false)
-    patient.reload
-  end
 
   it { should have_content("NHS number") }
   it { should have_content("999 000 0018") }
@@ -206,6 +200,12 @@ describe AppChildSummaryComponent do
     let(:show_parents) { true }
 
     context "with the one_patient_per_parent feature flag OFF" do
+      before do
+        create(:parent_relationship, :father, parent:, patient:)
+        patient.strict_loading!(false)
+        patient.reload
+      end
+
       it { expect(rendered).to have_content("Mark Doe") }
     end
 
