@@ -74,3 +74,8 @@
     EnqueueAutomatedCareplusReportsJob:
       cron: "30 2 * * *"
       description: Enqueue automated CarePlus reports for teams with CarePlus configured
+    update_location_positions:
+      cron: "0 0 * * *"
+      class: EnqueueLocationPositionUpdaterJob
+      description:
+        Enqueue jobs to fetch latitude and longitude for locations with addresses but no position
