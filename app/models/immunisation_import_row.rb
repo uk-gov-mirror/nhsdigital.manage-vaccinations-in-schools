@@ -845,12 +845,18 @@ class ImmunisationImportRow
 
     field = dose_sequence || combined_vaccination_and_dose_sequence
 
+    dose_sequence_examples =
+      (1..maximum_dose_sequence).to_a.to_sentence(
+        last_word_connector: " or ",
+        two_words_connector: " or "
+      )
+
     if dose_sequence.present? ||
          parsed_vaccination_description_string&.dig(:dose_sequence).present?
       if dose_sequence_value.nil?
         errors.add(
           field.header,
-          "Enter a dose sequence number, for example, 1, 2 or 3."
+          "Enter a dose sequence number, for example, #{dose_sequence_examples}."
         )
       elsif maximum_dose_sequence
         if dose_sequence_value < 1
@@ -875,7 +881,7 @@ class ImmunisationImportRow
       else
         errors.add(
           field.header,
-          "Enter a dose sequence number, for example, 1, 2 or 3. The dose sequence number cannot be greater than 6."
+          "Enter a dose sequence number, for example, #{dose_sequence_examples}."
         )
       end
     end
