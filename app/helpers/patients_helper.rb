@@ -75,7 +75,11 @@ module PatientsHelper
   end
 
   def patient_parents(patient)
-    format_parents_with_relationships(patient.parent_relationships)
+    if Flipper.enabled?(:one_patient_per_parent)
+      format_parents_with_relationships(patient.parents)
+    else
+      format_parents_with_relationships(patient.parent_relationships)
+    end
   end
 
   def patient_needs_more_doses?(patient, programme, academic_year)
