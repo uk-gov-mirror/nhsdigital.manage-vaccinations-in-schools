@@ -19,6 +19,18 @@ describe FHIRMapper::Location do
         its(:value) { should eq "654321" }
       end
 
+      context "location is a generic school" do
+        let(:location) do
+          create(:generic_school, urn: "888888", name: "Unknown school")
+        end
+
+        its(:system) do
+          should eq "https://fhir.hl7.org.uk/Id/urn-school-number"
+        end
+
+        its(:value) { should eq "888888" }
+      end
+
       context "location is a community clinic" do
         let(:location) { create(:community_clinic, ods_code: "918273") }
 
