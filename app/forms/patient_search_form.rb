@@ -19,8 +19,8 @@ class PatientSearchForm < SearchForm
   attribute :vaccine_criteria, array: true
   attribute :year_groups, array: true
 
-  def initialize(current_user:, session: nil, **attributes)
-    @current_user = current_user
+  def initialize(current_team:, session: nil, **attributes)
+    @current_team = current_team
     @session = session
     super(**attributes)
   end
@@ -73,13 +73,13 @@ class PatientSearchForm < SearchForm
 
   private
 
-  attr_reader :current_user, :session
+  attr_reader :current_team, :session
 
   def academic_year
     session&.academic_year || @academic_year || AcademicYear.pending
   end
 
-  def team = session&.team || current_user.selected_team
+  def team = session&.team || current_team
 
   def filter_aged_out_of_programmes(scope)
     return scope if team.has_national_reporting_access?
