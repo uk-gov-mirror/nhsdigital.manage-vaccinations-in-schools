@@ -155,7 +155,7 @@ class AppPatientSearchResultCardComponent < ViewComponent::Base
   end
 
   def parents_row
-    return unless show_parents && patient.parent_relationships.any?
+    return unless show_parents && has_parents?
 
     {
       key: {
@@ -195,5 +195,13 @@ class AppPatientSearchResultCardComponent < ViewComponent::Base
         text: render(AppAttachedTagsComponent.new(status_by_programme))
       }
     }
+  end
+
+  def has_parents?
+    if Flipper.enabled?(:one_patient_per_parent)
+      patient.parents.any?
+    else
+      patient.parent_relationships.any?
+    end
   end
 end
