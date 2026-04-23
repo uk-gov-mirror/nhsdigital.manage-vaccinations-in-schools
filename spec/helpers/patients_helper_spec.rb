@@ -237,4 +237,35 @@ describe PatientsHelper do
       it { should eq("James’") }
     end
   end
+
+  describe "#patient_parents" do
+    context "with the one_patient_per_parent feature flag disabled" do
+      it "outputs the correct parent details" do
+        patient = create(:patient)
+        parent_relationship = create(:parent_relationship, :mother, patient:)
+        parent = parent_relationship.parent
+        patient.strict_loading!(false)
+        patient.reload
+
+        expect(helper.patient_parents(patient)).to include(
+          "#{parent.full_name} (mum)"
+        )
+      end
+    end
+
+    context "with the one_patient_per_parent feature flag enabled" do
+      before { Flipper.enable(:one_patient_per_parent) }
+
+      it "outputs the correct parent details" do
+        patient = create(:patient)
+        parent = create(:parent, :mother, patient:)
+        patient.strict_loading!(false)
+        patient.reload
+
+        expect(helper.patient_parents(patient)).to include(
+          "#{parent.full_name} (mum)"
+        )
+      end
+    end
+  end
 end
