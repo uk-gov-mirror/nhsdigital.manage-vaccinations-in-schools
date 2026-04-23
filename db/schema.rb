@@ -570,7 +570,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_101139) do
     t.integer "delivery_status", default: 0, null: false
     t.bigint "parent_id"
     t.bigint "patient_id"
-    t.integer "purpose"
+    t.integer "purpose", null: false
     t.string "recipient", null: false
     t.bigint "sent_by_user_id"
     t.text "subject"
