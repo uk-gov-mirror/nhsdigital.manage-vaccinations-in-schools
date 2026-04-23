@@ -3,7 +3,7 @@
 describe PatientSearchForm do
   subject(:form) do
     described_class.new(
-      current_user:,
+      current_team:,
       request_session:,
       request_path:,
       session:,
@@ -13,7 +13,7 @@ describe PatientSearchForm do
 
   around { |example| travel_to(Date.new(2025, 7, 31)) { example.run } }
 
-  let(:current_user) { create(:user, teams: [team]) }
+  let(:current_team) { team }
   let(:request_session) { {} }
   let(:request_path) { "/patients" }
   let(:session) { nil }
@@ -70,7 +70,9 @@ describe PatientSearchForm do
       let(:location) do
         create(:gias_school, programmes:, gias_year_groups: [11, 12])
       end
-      let(:session_for_patients) { create(:session, location:, programmes:) }
+      let(:session_for_patients) do
+        create(:session, location:, programmes:, team:)
+      end
 
       let!(:aged_out_patient) do
         create(:patient, session: session_for_patients, year_group: 12)
@@ -397,33 +399,33 @@ describe PatientSearchForm do
     context "when _clear param is present" do
       it "only clears filters for the current path" do
         described_class.new(
-          current_user:,
+          current_team:,
           request_path:,
           request_session:,
           "q" => "John"
         )
 
         described_class.new(
-          current_user:,
+          current_team:,
           request_path: another_path,
           request_session:,
           q: "Jane"
         )
 
         described_class.new(
-          current_user:,
+          current_team:,
           request_path:,
           request_session:,
           "_clear" => "true"
         )
 
         form1 =
-          described_class.new(current_user:, request_session:, request_path:)
+          described_class.new(current_team:, request_session:, request_path:)
         expect(form1.q).to be_nil
 
         form2 =
           described_class.new(
-            current_user:,
+            current_team:,
             request_session:,
             request_path: another_path
           )
@@ -434,20 +436,20 @@ describe PatientSearchForm do
     context "when filters are present in params" do
       it "persists filters to be loaded in subsequent requests" do
         described_class.new(
-          current_user:,
+          current_team:,
           q: "John",
           request_session:,
           request_path:
         )
 
         form =
-          described_class.new(current_user:, request_session:, request_path:)
+          described_class.new(current_team:, request_session:, request_path:)
         expect(form.q).to eq("John")
       end
 
       it "overwrites previously stored filters" do
         described_class.new(
-          current_user:,
+          current_team:,
           q: "John",
           request_session:,
           request_path:
@@ -455,7 +457,7 @@ describe PatientSearchForm do
 
         form1 =
           described_class.new(
-            current_user:,
+            current_team:,
             q: "Jane",
             request_session:,
             request_path:
@@ -463,25 +465,25 @@ describe PatientSearchForm do
         expect(form1.q).to eq("Jane")
 
         form2 =
-          described_class.new(current_user:, request_session:, request_path:)
+          described_class.new(current_team:, request_session:, request_path:)
         expect(form2.q).to eq("Jane")
       end
 
       it "overrides session filters when 'Any' option is selected (empty string)" do
         described_class.new(
-          current_user:,
+          current_team:,
           programme_statuses: %w[needs_triage],
           request_session:,
           request_path:
         )
 
         form1 =
-          described_class.new(current_user:, request_session:, request_path:)
+          described_class.new(current_team:, request_session:, request_path:)
         expect(form1.programme_statuses).to eq(%w[needs_triage])
 
         form2 =
           described_class.new(
-            current_user:,
+            current_team:,
             programme_statuses: nil,
             request_session:,
             request_path:
@@ -489,7 +491,7 @@ describe PatientSearchForm do
         expect(form2.programme_statuses).to eq([])
 
         form3 =
-          described_class.new(current_user:, request_session:, request_path:)
+          described_class.new(current_team:, request_session:, request_path:)
         expect(form3.programme_statuses).to eq([])
       end
     end
@@ -497,7 +499,7 @@ describe PatientSearchForm do
     context "when no filters are present in params but exist in session" do
       before do
         described_class.new(
-          current_user:,
+          current_team:,
           q: "John",
           year_groups: %w[8 11],
           programme_statuses: %w[needs_triage],
@@ -508,7 +510,7 @@ describe PatientSearchForm do
 
       it "loads filters from the session" do
         form =
-          described_class.new(current_user:, request_session:, request_path:)
+          described_class.new(current_team:, request_session:, request_path:)
 
         expect(form.q).to eq("John")
         expect(form.year_groups).to eq([8, 11])
@@ -519,25 +521,25 @@ describe PatientSearchForm do
     context "with path-specific filters" do
       it "maintains separate filters for different paths" do
         described_class.new(
-          current_user:,
+          current_team:,
           q: "John",
           request_session:,
           request_path:
         )
         described_class.new(
-          current_user:,
+          current_team:,
           q: "Jane",
           request_session:,
           request_path: another_path
         )
 
         form1 =
-          described_class.new(current_user:, request_session:, request_path:)
+          described_class.new(current_team:, request_session:, request_path:)
         expect(form1.q).to eq("John")
 
         form2 =
           described_class.new(
-            current_user:,
+            current_team:,
             request_session:,
             request_path: another_path
           )
