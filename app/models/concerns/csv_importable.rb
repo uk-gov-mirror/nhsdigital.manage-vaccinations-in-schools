@@ -82,7 +82,7 @@ module CSVImportable
     end
 
     with_options on: :parse_rows do
-      validate :rows_are_valid
+      validate { rows.each(&:validate) }
       validates_with Import::RowsUniqueAcrossAllImmunisationAttributesValidator,
                      if: -> { is_a?(ImmunisationImport) }
       validates_with Import::RowsUniqueByNHSNumber,
@@ -185,10 +185,6 @@ module CSVImportable
       csv_data_object.empty? ||
         (csv_data_object.count == 1 && csv_data_object.has_instruction_row?)
     errors.add(:csv, :empty) if csv_has_no_records
-  end
-
-  def rows_are_valid
-    rows.each(&:validate)
   end
 
   def count_columns
