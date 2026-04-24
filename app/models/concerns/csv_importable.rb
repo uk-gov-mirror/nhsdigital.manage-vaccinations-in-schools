@@ -166,6 +166,22 @@ module CSVImportable
       end
   end
 
+  def count_columns
+    %i[
+      new_record_count
+      changed_record_count
+      exact_duplicate_record_count
+    ].freeze
+  end
+
+  def ensure_processed_with_count_statistics
+    if processed_at? && count_columns.any? { |column| send(column).nil? }
+      raise "Count statistics must be set for a processed import."
+    end
+  end
+
+  private
+
   def csv_is_valid
     errors.add(:csv, :invalid) unless csv_data_object.well_formed?
   end
@@ -181,20 +197,6 @@ module CSVImportable
       csv_data_object.empty? ||
         (csv_data_object.count == 1 && csv_data_object.has_instruction_row?)
     errors.add(:csv, :empty) if csv_has_no_records
-  end
-
-  def count_columns
-    %i[
-      new_record_count
-      changed_record_count
-      exact_duplicate_record_count
-    ].freeze
-  end
-
-  def ensure_processed_with_count_statistics
-    if processed_at? && count_columns.any? { |column| send(column).nil? }
-      raise "Count statistics must be set for a processed import."
-    end
   end
 
   def aggregate_row_level_errors
