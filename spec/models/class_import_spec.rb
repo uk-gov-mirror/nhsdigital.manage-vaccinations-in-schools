@@ -65,7 +65,7 @@ describe ClassImport do
       let(:file) { "invalid_fields.csv" }
 
       it "populates rows" do
-        expect(class_import).to be_invalid
+        expect(class_import).to be_invalid(:parse_rows)
         expect(class_import.rows).not_to be_empty
       end
     end
@@ -74,7 +74,7 @@ describe ClassImport do
       let(:file) { "valid_extra_fields.csv" }
 
       it "populates rows" do
-        expect(class_import).to be_valid
+        expect(class_import).to be_valid(:parse_rows)
       end
     end
 
@@ -82,7 +82,7 @@ describe ClassImport do
       let(:file) { "valid_instruction_row.csv" }
 
       it "populates rows" do
-        expect(class_import).to be_valid
+        expect(class_import).to be_valid(:parse_rows)
         expect(class_import.rows.count).to eq(1)
       end
     end
@@ -91,7 +91,7 @@ describe ClassImport do
       let(:file) { "invalid_instruction_row.csv" }
 
       it "populates rows" do
-        expect(class_import).not_to be_valid
+        expect(class_import).not_to be_valid(:parse_rows)
         expect(class_import.rows.count).to eq(1)
       end
 
@@ -105,7 +105,7 @@ describe ClassImport do
       let(:file) { "valid.csv" }
 
       it "is valid" do
-        expect(class_import).to be_valid
+        expect(class_import).to be_valid(:parse_rows)
       end
     end
 
@@ -113,7 +113,7 @@ describe ClassImport do
       let(:file) { "valid_minimal.csv" }
 
       it "is valid" do
-        expect(class_import).to be_valid
+        expect(class_import).to be_valid(:parse_rows)
         expect(class_import.rows.count).to eq(1)
       end
     end
@@ -122,7 +122,7 @@ describe ClassImport do
       let(:file) { "invalid_minimal.csv" }
 
       it "populates rows" do
-        expect(class_import).not_to be_valid
+        expect(class_import).not_to be_valid(:parse_rows)
         expect(class_import.rows.count).to eq(1)
       end
 
@@ -140,7 +140,7 @@ describe ClassImport do
       end
 
       it "is not valid" do
-        expect(class_import).not_to be_valid
+        expect(class_import).not_to be_valid(:parse_rows)
       end
 
       it "includes the duplicate nhs error number on both rows" do
@@ -157,7 +157,7 @@ describe ClassImport do
       let(:file) { "invalid_with_multiple_errors_per_row.csv" }
 
       it "aggregates the errors against the row" do
-        expect(class_import).not_to be_valid
+        expect(class_import).not_to be_valid(:parse_rows)
         expect(class_import.errors[:row_2][0].length).to eq(2)
         expect(class_import.errors[:row_2][0]).to include(
           "<code>CHILD_DATE_OF_BIRTH</code>: Enter a date of birth."

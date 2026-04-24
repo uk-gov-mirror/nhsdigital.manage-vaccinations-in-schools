@@ -81,13 +81,14 @@ module CSVImportable
       validate :csv_is_not_too_large, unless: -> { csv_data_object.empty? }
     end
 
-    validate :rows_are_valid, if: -> { !csv_removed? && rows }
-    validates_with Import::RowsUniqueAcrossAllImmunisationAttributesValidator,
-                   if: -> { is_a?(ImmunisationImport) && !csv_removed? && rows }
-    validates_with Import::RowsUniqueByNHSNumber,
-                   if: -> { is_a?(PatientImport) && !csv_removed? && rows }
-    after_validation :aggregate_row_level_errors,
-                     if: -> { !csv_removed? && rows }
+    with_options on: :parse_rows do
+      validate :rows_are_valid
+      validates_with Import::RowsUniqueAcrossAllImmunisationAttributesValidator,
+                     if: -> { is_a?(ImmunisationImport) }
+      validates_with Import::RowsUniqueByNHSNumber,
+                     if: -> { is_a?(PatientImport) }
+      after_validation :aggregate_row_level_errors
+    end
 
     before_save :ensure_processed_with_count_statistics
   end
@@ -143,7 +144,7 @@ module CSVImportable
 
     self.rows = csv_data_object.records.map { |row_data| parse_row(row_data) }
 
-    if invalid?
+    if invalid?(:parse_rows)
       self.serialized_errors = errors.to_hash
       self.status = :rows_are_invalid
       save!(validate: false)
