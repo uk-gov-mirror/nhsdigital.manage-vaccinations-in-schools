@@ -690,7 +690,7 @@
       <span class="ruby-identifier">digits</span>
         .<span class="ruby-identifier">slice</span>(<span class="ruby-value">0</span>, <span class="ruby-value">9</span>)
         .<span class="ruby-identifier">each_with_index</span>
-        .<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">digit</span>, <span class="ruby-identifier">index</span><span class="ruby-operator">|</span> ((<span class="ruby-value">11</span> <span class="ruby-operator">-</span> (<span class="ruby-identifier">index</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>)) <span class="ruby-operator">*</span> <span class="ruby-identifier">digit</span>) }
+        .<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">digit</span>, <span class="ruby-identifier">index</span><span class="ruby-operator">|</span> (<span class="ruby-value">11</span> <span class="ruby-operator">-</span> (<span class="ruby-identifier">index</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>)) <span class="ruby-operator">*</span> <span class="ruby-identifier">digit</span> }
 
     <span class="ruby-identifier">digits_sum_remainder</span> = <span class="ruby-identifier">digits_multiplied_by_weighting_factor</span>.<span class="ruby-identifier">sum</span> <span class="ruby-operator">%</span> <span class="ruby-value">11</span>
 
