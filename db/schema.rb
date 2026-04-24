@@ -1233,7 +1233,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_101139) do
       (ar.patient_id IS NOT NULL) AS is_archived,
       (EXISTS ( SELECT 1
              FROM consents con
-            WHERE ((con.patient_id = pps.patient_id) AND (con.programme_type = pps.programme_type) AND (con.academic_year = pps.academic_year) AND (con.invalidated_at IS NULL) AND (con.withdrawn_at IS NULL) AND (con.response = 1) AND (con.reason_for_refusal = 1)))) AS has_already_vaccinated_consent
+            WHERE ((con.patient_id = pps.patient_id) AND (con.programme_type = pps.programme_type) AND (con.academic_year = pps.academic_year) AND (con.invalidated_at IS NULL) AND (con.withdrawn_at IS NULL) AND (con.response = 1) AND (con.reason_for_refusal = 1)))) AS has_already_vaccinated_consent,
+      ( SELECT con.reason_for_refusal
+             FROM consents con
+            WHERE ((con.patient_id = pps.patient_id) AND (con.programme_type = pps.programme_type) AND (con.academic_year = pps.academic_year) AND (con.invalidated_at IS NULL) AND (con.withdrawn_at IS NULL) AND (con.response = 1))
+            ORDER BY con.created_at DESC
+           LIMIT 1) AS consent_refusal_reason,
+      ( SELECT con.route
+             FROM consents con
+            WHERE ((con.patient_id = pps.patient_id) AND (con.programme_type = pps.programme_type) AND (con.academic_year = pps.academic_year) AND (con.invalidated_at IS NULL) AND (con.withdrawn_at IS NULL))
+            ORDER BY con.created_at DESC
+           LIMIT 1) AS consent_route
      FROM (((((((patient_programme_statuses pps
        JOIN patients pat ON ((pat.id = pps.patient_id)))
        JOIN patient_locations pl ON (((pl.patient_id = pps.patient_id) AND (pl.academic_year = pps.academic_year))))
@@ -1248,5 +1258,4 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_101139) do
   add_index "reporting_api_totals", ["patient_year_group"], name: "ix_rapi_totals_year_group"
   add_index "reporting_api_totals", ["session_location_id"], name: "ix_rapi_totals_session_loc"
   add_index "reporting_api_totals", ["team_id", "academic_year", "programme_type", "status"], name: "ix_rapi_totals_team_year_prog_status"
-
 end
