@@ -170,23 +170,6 @@ module CSVImportable
       end
   end
 
-  def csv_is_valid
-    errors.add(:csv, :invalid) unless csv_data_object.well_formed?
-  end
-
-  def csv_is_not_too_large
-    if rows_count > MAX_CSV_ROWS
-      errors.add(:csv, :too_many_rows, count: MAX_CSV_ROWS)
-    end
-  end
-
-  def csv_has_records
-    csv_has_no_records =
-      csv_data_object.empty? ||
-        (csv_data_object.count == 1 && csv_data_object.has_instruction_row?)
-    errors.add(:csv, :empty) if csv_has_no_records
-  end
-
   def count_columns
     %i[
       new_record_count
@@ -227,6 +210,25 @@ module CSVImportable
       records.map(&:id).product([id]).uniq,
       on_duplicate_key_ignore: true
     )
+  end
+
+  private
+
+  def csv_is_valid
+    errors.add(:csv, :invalid) unless csv_data_object.well_formed?
+  end
+
+  def csv_is_not_too_large
+    if rows_count > MAX_CSV_ROWS
+      errors.add(:csv, :too_many_rows, count: MAX_CSV_ROWS)
+    end
+  end
+
+  def csv_has_records
+    csv_has_no_records =
+      csv_data_object.empty? ||
+        (csv_data_object.count == 1 && csv_data_object.has_instruction_row?)
+    errors.add(:csv, :empty) if csv_has_no_records
   end
 
   def aggregate_row_level_errors
