@@ -148,6 +148,8 @@ class API::Reporting::TotalsController < API::Reporting::BaseController
              consent_no_response: metrics.consent_no_response,
              consent_refused: metrics.consent_refused,
              consent_conflicts: metrics.consent_conflicts,
+             consent_refusal_reasons: team_consent_refusal_reasons,
+             consent_routes: team_consent_routes,
              vaccinations_given: team_vaccinations_given_count,
              monthly_vaccinations_given: team_monthly_vaccinations_given
            }
@@ -181,6 +183,31 @@ class API::Reporting::TotalsController < API::Reporting::BaseController
         .where(lpyg_table[:programme_type].eq(params[:programme]))
     @totals_base_scope =
       @totals_base_scope.where(Arel::Nodes::Exists.new(totals_subquery))
+  end
+
+  def team_consent_refusal_reasons
+    counts =
+      @totals_scope
+        .where(consent_status: ReportingAPI::Total::CONSENT_REFUSED)
+        .where.not(consent_refusal_reason: nil)
+        .group(:consent_refusal_reason)
+        .distinct
+        .count(:patient_id)
+
+    Consent.reason_for_refusals.transform_values do |int_val|
+      counts[int_val] || 0
+    end
+  end
+
+  def team_consent_routes
+    counts =
+      @totals_scope
+        .where.not(consent_route: nil)
+        .group(:consent_route)
+        .distinct
+        .count(:patient_id)
+
+    Consent.routes.transform_values { |int_val| counts[int_val] || 0 }
   end
 
   def team_vaccination_records_scope

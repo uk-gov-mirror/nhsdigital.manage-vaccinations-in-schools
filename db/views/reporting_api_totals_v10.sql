@@ -51,7 +51,30 @@ SELECT
       AND con.withdrawn_at       IS NULL
       AND con.response           = 1  -- refused
       AND con.reason_for_refusal = 1  -- already_vaccinated
-  )                                       AS has_already_vaccinated_consent
+  )                                       AS has_already_vaccinated_consent,
+
+  (
+    SELECT con.reason_for_refusal FROM consents con
+    WHERE con.patient_id     = pps.patient_id
+      AND con.programme_type = pps.programme_type
+      AND con.academic_year  = pps.academic_year
+      AND con.invalidated_at IS NULL
+      AND con.withdrawn_at   IS NULL
+      AND con.response       = 1
+    ORDER BY con.created_at DESC
+    LIMIT 1
+  )                                       AS consent_refusal_reason,
+
+  (
+    SELECT con.route FROM consents con
+    WHERE con.patient_id     = pps.patient_id
+      AND con.programme_type = pps.programme_type
+      AND con.academic_year  = pps.academic_year
+      AND con.invalidated_at IS NULL
+      AND con.withdrawn_at   IS NULL
+    ORDER BY con.created_at DESC
+    LIMIT 1
+  )                                       AS consent_route
 
 -- Source: pre-computed patient status per programme/year
 FROM patient_programme_statuses pps

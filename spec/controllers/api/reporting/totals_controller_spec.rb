@@ -19,6 +19,8 @@ describe API::Reporting::TotalsController do
       expect(parsed_response).to have_key("not_vaccinated")
       expect(parsed_response).to have_key("vaccinations_given")
       expect(parsed_response).to have_key("monthly_vaccinations_given")
+      expect(parsed_response).to have_key("consent_refusal_reasons")
+      expect(parsed_response).to have_key("consent_routes")
     end
 
     it "calculates statistics correctly" do
@@ -69,6 +71,27 @@ describe API::Reporting::TotalsController do
         { "school_count" => 2, "community_count" => 0 }
       )
       expect(parsed_response["monthly_vaccinations_given"]).to be_an(Array)
+
+      expect(parsed_response["consent_refusal_reasons"]).to eq(
+        {
+          "contains_gelatine" => 0,
+          "already_vaccinated" => 0,
+          "do_not_want_vaccination_at_school" => 0,
+          "will_be_vaccinated_elsewhere" => 0,
+          "medical_reasons" => 0,
+          "personal_choice" => 0,
+          "other" => 0
+        }
+      )
+      expect(parsed_response["consent_routes"]).to eq(
+        {
+          "website" => 0,
+          "phone" => 0,
+          "paper" => 0,
+          "in_person" => 0,
+          "self_consent" => 0
+        }
+      )
     end
 
     it "filters by multiple year groups" do
@@ -287,75 +310,123 @@ describe API::Reporting::TotalsController do
       )
     end
 
-    it "counts all no response consent statuses consistently in aggregate totals" do
+    it "returns consent refusal reasons breakdown" do
       team = Team.last
       programme = Programme.hpv
       team.programmes << programme
-
       session = create(:session, team:, programmes: [programme])
 
-      no_response_patient =
-        create(:patient, session:, parents: [create(:parent)])
-      create(
-        :consent_notification,
-        :request,
-        patient: no_response_patient,
-        session:,
-        programmes: [programme]
-      )
-
-      create(:patient, session:, parents: [create(:parent, :non_contactable)])
-
-      request_scheduled_session =
-        create(
-          :session,
-          team:,
-          programmes: [programme],
-          send_consent_requests_at: Date.tomorrow
-        )
-      create(
-        :patient,
-        session: request_scheduled_session,
-        parents: [create(:parent)]
-      )
-
-      create(:patient, session:, parents: [create(:parent)])
-
-      refused_patient = create(:patient, session:, parents: [create(:parent)])
-      create(:consent, :refused, patient: refused_patient, programme:, team:)
-
-      conflict_patient = create(:patient, session:)
-      parent1 = create(:parent)
-      parent2 = create(:parent)
-      create(:parent_relationship, patient: conflict_patient, parent: parent1)
-      create(:parent_relationship, patient: conflict_patient, parent: parent2)
-      create(
-        :consent,
-        :given,
-        patient: conflict_patient,
-        programme:,
-        team:,
-        parent: parent1
-      )
+      patient1 = create(:patient, session:)
       create(
         :consent,
         :refused,
-        patient: conflict_patient,
+        patient: patient1,
         programme:,
         team:,
-        parent: parent2
+        reason_for_refusal: "personal_choice"
       )
+      PatientStatusUpdater.call(patient: patient1)
 
-      PatientStatusUpdater.call
+      patient2 = create(:patient, session:)
+      create(
+        :consent,
+        :refused,
+        patient: patient2,
+        programme:,
+        team:,
+        reason_for_refusal: "personal_choice"
+      )
+      PatientStatusUpdater.call(patient: patient2)
+
+      patient3 = create(:patient, session:)
+      create(
+        :consent,
+        :refused,
+        patient: patient3,
+        programme:,
+        team:,
+        reason_for_refusal: "medical_reasons"
+      )
+      PatientStatusUpdater.call(patient: patient3)
 
       refresh_reporting_views!
 
       get :index, params: { programme: "hpv" }
 
-      expect(parsed_response["no_consent"]).to eq(6)
-      expect(parsed_response["consent_refused"]).to eq(1)
-      expect(parsed_response["consent_conflicts"]).to eq(1)
-      expect(parsed_response["consent_no_response"]).to eq(4)
+      expect(response).to have_http_status(:ok)
+      reasons = parsed_response["consent_refusal_reasons"]
+      expect(reasons["personal_choice"]).to eq(2)
+      expect(reasons["medical_reasons"]).to eq(1)
+      expect(reasons["contains_gelatine"]).to eq(0)
+      expect(reasons["already_vaccinated"]).to eq(0)
+      expect(reasons["will_be_vaccinated_elsewhere"]).to eq(0)
+      expect(reasons["other"]).to eq(0)
+    end
+
+    it "returns consent routes breakdown" do
+      team = Team.last
+      programme = Programme.hpv
+      team.programmes << programme
+      session = create(:session, team:, programmes: [programme])
+      recorded_by = create(:user)
+
+      patient1 = create(:patient, session:)
+      create(
+        :consent,
+        :given,
+        patient: patient1,
+        programme:,
+        team:,
+        route: "website"
+      )
+      PatientStatusUpdater.call(patient: patient1)
+
+      patient2 = create(:patient, session:)
+      create(
+        :consent,
+        :given,
+        patient: patient2,
+        programme:,
+        team:,
+        route: "website"
+      )
+      PatientStatusUpdater.call(patient: patient2)
+
+      patient3 = create(:patient, session:)
+      create(
+        :consent,
+        :refused,
+        patient: patient3,
+        programme:,
+        team:,
+        route: "phone",
+        recorded_by: recorded_by
+      )
+      PatientStatusUpdater.call(patient: patient3)
+
+      patient4 = create(:patient, session:)
+      create(
+        :consent,
+        :given,
+        patient: patient4,
+        programme:,
+        team:,
+        route: "paper",
+        recorded_by: recorded_by
+      )
+      PatientStatusUpdater.call(patient: patient4)
+
+      refresh_reporting_views!
+
+      get :index, params: { programme: "hpv" }
+
+      expect(response).to have_http_status(:ok)
+      routes = parsed_response["consent_routes"]
+      expect(routes["website"]).to eq(2)
+      expect(routes["phone"]).to eq(1)
+      expect(routes["paper"]).to eq(1)
+      expect(routes["in_person"]).to eq(0)
+      expect(routes["self_consent"]).to eq(0)
     end
   end
 

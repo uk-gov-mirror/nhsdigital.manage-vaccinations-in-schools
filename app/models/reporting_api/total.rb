@@ -6,6 +6,8 @@
 #
 #  id                                    :text             primary key
 #  academic_year                         :integer
+#  consent_refusal_reason                :integer
+#  consent_route                         :integer
 #  consent_status                        :integer
 #  has_already_vaccinated_consent        :boolean
 #  is_archived                           :boolean
