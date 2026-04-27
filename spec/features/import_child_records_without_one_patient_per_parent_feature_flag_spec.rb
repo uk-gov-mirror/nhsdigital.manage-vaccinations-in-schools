@@ -3,8 +3,6 @@
 describe "Import child records", :pds do
   around { |example| travel_to(Date.new(2023, 5, 20)) { example.run } }
 
-  before { Flipper.enable(:only_one_patient_per_parent) }
-
   scenario "User uploads a file" do
     given_the_app_is_setup
 
@@ -39,9 +37,6 @@ describe "Import child records", :pds do
 
     when_i_search_for_a_child
     then_i_should_see_only_the_child
-
-    when_i_click_on_patient_details
-    then_i_should_see_the_parent_details
 
     when_i_visit_the_import_page
     and_i_choose_to_import_child_records
@@ -363,14 +358,5 @@ describe "Import child records", :pds do
       .where(given_name: "Taylor", family_name: "Reed")
       .where.not(id: @existing_patient.id)
       .sole
-  end
-
-  def when_i_click_on_patient_details
-    click_on "DOE, Mark"
-  end
-
-  def then_i_should_see_the_parent_details
-    expect(page).to have_content("Jane Doe (mum)")
-    expect(page).to have_content("Richard Doe (dad)")
   end
 end
