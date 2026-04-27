@@ -155,7 +155,7 @@ class SchoolMove < ApplicationRecord
     PatientLocation.import!(
       patient_locations,
       on_duplicate_key_update: {
-        conflict_target: %i[patient_id location_id academic_year],
+        conflict_target: %i[patient_id school_id academic_year],
         columns: %i[date_range]
       }
     )
