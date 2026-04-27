@@ -45,7 +45,7 @@ class TimelineRecords
     ],
     gillick_assessments: %i[],
     notify_log_entries: %i[purpose],
-    patient_locations: %i[academic_year date_range location_id],
+    patient_locations: %i[academic_year date_range school_id],
     pds_search_results: %i[step],
     school_move_log_entries: %i[school_id user_id],
     school_moves: %i[school_id source],

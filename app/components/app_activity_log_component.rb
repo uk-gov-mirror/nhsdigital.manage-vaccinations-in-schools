@@ -334,7 +334,7 @@ class AppActivityLogComponent < ViewComponent::Base
 
   def session_events
     patient_locations.filter_map do |patient_location|
-      location = patient_location.location
+      location = patient_location.school
       next if location.generic_school?
 
       {
@@ -564,9 +564,9 @@ class AppActivityLogComponent < ViewComponent::Base
     @patient_locations ||=
       @patient
         .patient_locations
-        .includes(:location)
+        .includes(:school)
         .then do |scope|
-          @session ? scope.where(location: @session.location) : scope
+          @session ? scope.where(school: @session.location) : scope
         end
   end
 
