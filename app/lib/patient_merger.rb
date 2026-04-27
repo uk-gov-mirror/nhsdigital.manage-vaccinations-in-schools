@@ -181,7 +181,7 @@ class PatientMerger
         user: @user
       )
 
-      patient_to_destroy.reload.destroy!
+      PatientDeleter.call(patients: Patient.where(id: patient_to_destroy.id))
 
       PatientStatusUpdater.call(patient: patient_to_keep)
     end
