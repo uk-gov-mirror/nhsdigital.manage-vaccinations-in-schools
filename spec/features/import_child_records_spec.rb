@@ -3,8 +3,6 @@
 describe "Import child records", :pds do
   around { |example| travel_to(Date.new(2023, 5, 20)) { example.run } }
 
-  before { Flipper.enable(:one_patient_per_parent) }
-
   scenario "User uploads a file" do
     given_the_app_is_setup
 
