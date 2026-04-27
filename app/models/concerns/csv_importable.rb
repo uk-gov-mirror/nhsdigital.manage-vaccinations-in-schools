@@ -127,9 +127,7 @@ module CSVImportable
   end
 
   # Needed so that validations match the form field name.
-  def csv
-    csv_data
-  end
+  def csv = csv_data
 
   def csv_data_object
     @csv_data_object ||= Import::CSVData.new(csv_data)
