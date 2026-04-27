@@ -632,6 +632,31 @@
 
 
 
+    <section class="constants-list">
+      <header>
+        <h3 id="untitled-constants"><a href="#untitled-constants">Constants</a></h3>
+      </header>
+      <dl>
+
+        <dt id="POLL_INTERVAL">POLL_INTERVAL</dt>
+
+        <dd>
+
+          
+        </dd>
+
+
+        <dt id="POLL_TIMEOUT">POLL_TIMEOUT</dt>
+
+        <dd>
+
+          
+        </dd>
+
+
+      </dl>
+    </section>
+
 
 
 
@@ -670,10 +695,11 @@
             </details>
           </div>
           <div class="method-source-code" id="create-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/controllers/api/testing/vaccinations_search_in_nhs_controller.rb, line 4</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/controllers/api/testing/vaccinations_search_in_nhs_controller.rb, line 7</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">create</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:wait</span>].<span class="ruby-identifier">present?</span>
     <span class="ruby-constant">EnqueueVaccinationsSearchInNHSJob</span>.<span class="ruby-identifier">perform_now</span>
+    <span class="ruby-identifier">wait_for_search_jobs_to_complete</span>
     <span class="ruby-identifier">render</span> <span class="ruby-value">status:</span> <span class="ruby-value">:ok</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-constant">EnqueueVaccinationsSearchInNHSJob</span>.<span class="ruby-identifier">perform_later</span>
