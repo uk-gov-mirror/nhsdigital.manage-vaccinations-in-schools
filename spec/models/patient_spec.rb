@@ -1103,6 +1103,20 @@ describe Patient do
       end
     end
 
+    it "sets nhs_number_first_added_at when the NHS number was assigned before save" do
+      patient =
+        create(:patient, nhs_number: nil, nhs_number_first_added_at: nil)
+      patient.nhs_number = "9449310475"
+      pds_patient = PDS::Patient.new(nhs_number: "9449310475")
+
+      freeze_time do
+        expect { patient.update_from_pds!(pds_patient) }.to change(
+          patient,
+          :nhs_number_first_added_at
+        ).from(nil).to(Time.current)
+      end
+    end
+
     context "when the NHS number doesn't match" do
       let(:pds_patient) { PDS::Patient.new(nhs_number: "abc") }
 
@@ -1411,6 +1425,24 @@ describe Patient do
       expect(changed_patient.given_name_changed?).to be(true)
       expect(changed_patient.family_name_changed?).to be(false)
       expect(changed_patient.given_name).to eq("Jane")
+    end
+  end
+
+  describe "#apply_pending_changes!" do
+    let(:patient) do
+      create(:patient, nhs_number: nil, nhs_number_first_added_at: nil)
+    end
+
+    before do
+      patient.update!(pending_changes: { "nhs_number" => "9449310475" })
+    end
+
+    it "sets nhs_number_first_added_at when a pending NHS number is applied" do
+      freeze_time do
+        expect { patient.apply_pending_changes! }.to change {
+          patient.reload.nhs_number_first_added_at
+        }.from(nil).to(Time.current)
+      end
     end
   end
 
