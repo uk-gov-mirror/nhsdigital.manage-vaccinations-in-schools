@@ -4,15 +4,6 @@ module PatientImportConcern
   extend ActiveSupport::Concern
 
   def import_patients_and_parents(changesets, import)
-    unless Flipper.enabled?(:one_patient_per_parent)
-      return(
-        import_patients_and_parents_without_one_patient_per_parent_feature_flag(
-          changesets,
-          import
-        )
-      )
-    end
-
     patients = changesets.map(&:patient)
     parents = changesets.flat_map(&:parents)
     relationships =
@@ -37,6 +28,7 @@ module PatientImportConcern
 
     Parent.import(parents.to_a, on_duplicate_key_update: :all)
     link_records_to_import(import, Parent, parents)
+<<<<<<< HEAD
   end
 
   def import_patients_and_parents_without_one_patient_per_parent_feature_flag(
@@ -67,6 +59,8 @@ module PatientImportConcern
 
     Parent.import(parents.to_a, on_duplicate_key_update: :all)
     Imports::JoinRecords.call(import, parents)
+=======
+>>>>>>> 5d7727adf (Make patient imports persist old and new parent models)
 
     ParentRelationship.import(
       relationships.to_a,
