@@ -14,25 +14,25 @@ class AppCreateNoteComponent < ViewComponent::Base
     <% end %>
   ERB
 
-  def initialize(note, open: false, url: nil, session: false)
+  def initialize(note, open: false)
     @note = note
     @open = open
-    @url = url
-    @session = session
   end
 
   private
 
   attr_reader :note, :open
 
-  delegate :patient, :session, to: :note
-
   def url
-    @url || session_patient_activity_path(session, patient)
+    if (session_id = note.session&.id)
+      patient_note_path(note.patient, session_id:)
+    else
+      patient_note_path(note.patient)
+    end
   end
 
   def summary
-    @session ? "Add a session note" : "Add a note to this record"
+    note.session ? "Add a session note" : "Add a note to this record"
   end
 
   def builder = MavisFormBuilder
