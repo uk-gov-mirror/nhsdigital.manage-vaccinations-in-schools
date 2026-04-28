@@ -303,6 +303,11 @@ Rails.application.routes.draw do
              only: %i[show create],
              controller: "sessions/manage_consent_reminders"
 
+    resource :cancellations,
+             path: "cancel",
+             only: %i[show create],
+             controller: "sessions/cancellations"
+
     member do
       get "import"
 
