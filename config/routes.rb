@@ -115,6 +115,7 @@ Rails.application.routes.draw do
         delete "teams/:workgroup/locations", to: "teams#destroy_locations"
         resources :teams, only: :destroy, param: :workgroup
         post "/onboard", to: "onboard#create"
+        post "/patients", to: "patients#create"
         get "refresh-reporting", to: "reporting_refresh#create"
         post "vaccinations-search-in-nhs",
              to: "vaccinations_search_in_nhs#create"
