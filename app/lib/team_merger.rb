@@ -394,7 +394,7 @@ class TeamMerger
   end
 
   def refresh_materialized_views
-    ReportingAPI::RefreshJob.perform_later
+    ReportingAPI::RefreshJob.set(queue: :near_future).perform_later
   rescue StandardError => e
     Rails.logger.warn "TeamMerge: could not refresh materialized views: #{e.message}"
   end

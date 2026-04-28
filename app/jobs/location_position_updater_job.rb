@@ -3,7 +3,7 @@
 class LocationPositionUpdaterJob
   include Sidekiq::Job
 
-  sidekiq_options queue: :third_party_data_imports, lock: :until_executing
+  sidekiq_options queue: :far_future, lock: :until_executing
 
   def perform(location_id)
     location = Location.find(location_id)

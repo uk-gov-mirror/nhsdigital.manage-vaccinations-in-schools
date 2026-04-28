@@ -10,7 +10,7 @@ class Metrics::BaseJob
 
   # We don't retry jobs that export metrics if they fail as they are often
   #  scheduled to run regularly.
-  sidekiq_options queue: :metrics, retry: false
+  sidekiq_options queue: :far_future, retry: false
 
   ##
   # Returns an +Aws::CloudWatch::Client+ instance.

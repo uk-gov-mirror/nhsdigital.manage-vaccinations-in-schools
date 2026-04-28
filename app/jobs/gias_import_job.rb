@@ -3,7 +3,7 @@
 class GIASImportJob < ApplicationJob
   include SingleConcurrencyConcern
 
-  queue_as :third_party_data_imports
+  queue_as :far_future
 
   def perform(dry_run: false)
     GIAS.download

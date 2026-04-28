@@ -3,7 +3,7 @@
 class EnqueueProcessUnmatchedConsentFormsJob < ApplicationJob
   include SingleConcurrencyConcern
 
-  queue_as :consents
+  queue_as :far_future
 
   def perform
     ConsentForm.unmatched.find_each do |consent_form|

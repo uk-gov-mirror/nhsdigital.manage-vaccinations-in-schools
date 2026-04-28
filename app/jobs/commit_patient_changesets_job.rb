@@ -5,7 +5,7 @@ class CommitPatientChangesetsJob
   include Sidekiq::Throttled::Job
   include PatientImportConcern
 
-  queue_as :imports
+  queue_as :near_future
 
   def perform(patient_changeset_ids)
     changesets =

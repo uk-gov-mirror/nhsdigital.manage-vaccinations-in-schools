@@ -2,6 +2,10 @@
 :concurrency: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
 
 :queues:
+  - immediate
+  - near_future
+  - far_future
+  # TODO: Remove the following queues once they are no longer being used.
   - cache
   - imports
   - consents

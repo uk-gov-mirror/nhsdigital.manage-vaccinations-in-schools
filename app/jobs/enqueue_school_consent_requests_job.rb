@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class EnqueueSchoolConsentRequestsJob < ApplicationJob
-  queue_as :notifications
+  queue_as :far_future
 
   def perform
     sessions =
