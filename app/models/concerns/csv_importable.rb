@@ -218,32 +218,4 @@ module CSVImportable
       raise "Count statistics must be set for a processed import."
     end
   end
-
-  def join_table_class(import_type, record_type)
-    Class.new(ApplicationRecord) do
-      @import_type = import_type.to_s.pluralize
-      @record_type = record_type.to_s
-
-      self.table_name = [@import_type, @record_type.pluralize].sort.join("_")
-
-      def self.model_name
-        ActiveModel::Name.new(
-          self,
-          nil,
-          [@import_type.camelize, @record_type.singularize.camelize].sort.join
-        )
-      end
-    end
-  end
-
-  def link_records_by_type(type, records)
-    import_type = self.class.name.underscore
-    type = type.to_s
-
-    join_table_class(import_type, type).import(
-      ["#{type.singularize}_id", "#{import_type}_id"],
-      records.map(&:id).product([id]).uniq,
-      on_duplicate_key_ignore: true
-    )
-  end
 end
