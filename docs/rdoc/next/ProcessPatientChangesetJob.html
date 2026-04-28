@@ -651,7 +651,7 @@
             <pre class="ruby"><span class="ruby-comment"># File app/jobs/process_patient_changeset_job.rb, line 6</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">perform</span>(<span class="ruby-identifier">patient_changeset_id</span>)
   <span class="ruby-identifier">patient_changeset</span> = <span class="ruby-constant">PatientChangeset</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">patient_changeset_id</span>)
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient_changeset</span>.<span class="ruby-identifier">processed?</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient_changeset</span>.<span class="ruby-identifier">processed_at?</span>
 
   <span class="ruby-identifier">unique_nhs_number</span> = <span class="ruby-identifier">get_unique_nhs_number</span>(<span class="ruby-identifier">patient_changeset</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">unique_nhs_number</span>

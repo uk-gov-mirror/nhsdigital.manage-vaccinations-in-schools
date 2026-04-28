@@ -1022,7 +1022,7 @@
     <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">re_review_class_import_path</span>(<span class="ruby-ivar">@class_import</span>) <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@class_import</span>.<span class="ruby-identifier">processed?</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@class_import</span>.<span class="ruby-identifier">partially_processed?</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@class_import</span>.<span class="ruby-identifier">processed_at?</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@class_import</span>.<span class="ruby-identifier">partially_processed?</span>
     <span class="ruby-ivar">@pagy</span>, <span class="ruby-ivar">@patients</span> = <span class="ruby-identifier">pagy</span>(<span class="ruby-ivar">@class_import</span>.<span class="ruby-identifier">patients</span>.<span class="ruby-identifier">includes</span>(<span class="ruby-value">:school</span>))
 
     <span class="ruby-ivar">@duplicates</span> =
