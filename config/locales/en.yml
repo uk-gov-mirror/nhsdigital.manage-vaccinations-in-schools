@@ -830,6 +830,12 @@ en:
               blank: Enter an email address
             phone:
               blank: Enter a phone number
+            type:
+              blank: Choose a relationship
+              inclusion: Choose a relationship
+            other_name:
+              blank: Enter a relationship
+              too_long: Enter a relationship that is less than 300 characters long
         parent_relationship:
           attributes:
             type:

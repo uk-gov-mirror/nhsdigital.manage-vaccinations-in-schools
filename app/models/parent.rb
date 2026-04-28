@@ -89,6 +89,9 @@ class Parent < ApplicationRecord
             presence: true,
             if: :contact_method_other?
   validates :other_name, presence: true, length: { maximum: 300 }, if: :other?
+  validates :type,
+            presence: true,
+            if: -> { Flipper.enabled?(:one_patient_per_parent) }
 
   before_validation -> { self.other_name = nil unless other? }
 

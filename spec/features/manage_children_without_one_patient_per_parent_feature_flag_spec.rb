@@ -3,10 +3,7 @@
 describe "Manage children" do
   around { |example| travel_to(Date.new(2025, 7, 31)) { example.run } }
 
-  before do
-    Flipper.enable(:one_patient_per_parent)
-    given_my_team_exists
-  end
+  before { given_my_team_exists }
 
   scenario "viewing children" do
     given_patients_exist
@@ -238,13 +235,6 @@ describe "Manage children" do
     when_i_choose_the_parent_relationship
     and_i_save_the_parent
     then_i_see_the_new_parent_is_created
-
-    # and_the_parent_relationship_is_saved_to_the_database
-  end
-
-  def and_the_parent_relationship_is_saved_to_the_database
-    parent_relationship = ParentRelationship.last
-    expect(parent_relationship.type).to eq("mother")
   end
 
   scenario "Edit child ethnicity information" do
@@ -281,15 +271,16 @@ describe "Manage children" do
     @new_session =
       create(:session, location: @new_school, team: @team, programmes: [@hpv])
 
+    parent = create(:parent)
     @patient =
       create(
         :patient,
         session: @session,
         given_name: "John",
         family_name: "Smith",
+        parents: [parent],
         school:
       )
-    create(:parent, patient: @patient)
     create(:vaccination_record, patient: @patient, programme: @hpv)
     create_list(:patient, 9, session: @session)
 
