@@ -6,7 +6,7 @@ class API::Testing::RefreshReportingController < API::Testing::BaseController
       ReportingAPI::RefreshJob.new.perform
       render status: :ok
     else
-      ReportingAPI::RefreshJob.perform_async
+      ReportingAPI::RefreshJob.set(queue: :near_future).perform_async
       render status: :accepted
     end
   end

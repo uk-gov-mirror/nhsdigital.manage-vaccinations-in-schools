@@ -394,7 +394,7 @@ class TeamMerger
   end
 
   def refresh_materialized_views
-    ReportingAPI::RefreshJob.perform_async
+    ReportingAPI::RefreshJob.set(queue: :near_future).perform_async
   end
 
   def append_migration_counts

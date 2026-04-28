@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class EnqueueLocationPositionUpdaterJob < ApplicationJob
-  sidekiq_options queue: :third_party_data_imports
+  sidekiq_options queue: :far_future
 
   def perform
     ids = Location.where(position: nil).has_address.ids

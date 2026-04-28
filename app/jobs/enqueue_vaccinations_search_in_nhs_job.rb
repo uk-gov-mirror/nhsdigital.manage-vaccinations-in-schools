@@ -8,7 +8,7 @@
 # out and ending once the last date of the sessions has passed. For all other
 # patients we want to ensure a search is performed every 28 days at most.
 class EnqueueVaccinationsSearchInNHSJob < ApplicationJob
-  sidekiq_options queue: :immunisations_api_search
+  sidekiq_options queue: :far_future
 
   def perform(programme_types = nil)
     programme_types ||= Programme.all.map(&:type)

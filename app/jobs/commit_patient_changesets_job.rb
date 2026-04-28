@@ -3,7 +3,7 @@
 class CommitPatientChangesetsJob < ApplicationJob
   include PatientImportConcern
 
-  sidekiq_options queue: :imports
+  sidekiq_options queue: :near_future
 
   def perform(patient_changeset_ids)
     changesets =

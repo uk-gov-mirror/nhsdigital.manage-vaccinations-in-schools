@@ -189,7 +189,7 @@ class ImmunisationImport < ApplicationRecord
         AlreadyHadNotificationSender.call(vaccination_record:)
       end
 
-    UpdatePatientsFromPDS.call(patients, queue: :imports)
+    UpdatePatientsFromPDS.call(patients, queue: :near_future)
 
     TeamCachedCounts.new(team).reset_import_issues!
   end

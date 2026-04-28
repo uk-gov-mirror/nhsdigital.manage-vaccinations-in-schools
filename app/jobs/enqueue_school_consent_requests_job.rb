@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class EnqueueSchoolConsentRequestsJob < ApplicationJob
-  sidekiq_options queue: :notifications
+  sidekiq_options queue: :far_future
 
   def perform
     session_ids =

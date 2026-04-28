@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ImportantNoticeGeneratorJob < ApplicationJob
-  sidekiq_options queue: :cache
+  sidekiq_options queue: :near_future
 
   BATCH_SIZE = 1000
 

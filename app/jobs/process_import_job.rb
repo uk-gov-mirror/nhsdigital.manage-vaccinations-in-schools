@@ -3,7 +3,7 @@
 class ProcessImportJob < ApplicationJob
   include SingleConcurrencyConcern
 
-  sidekiq_options queue: :imports
+  sidekiq_options queue: :near_future
 
   def perform(import_global_id)
     import = GlobalID::Locator.locate(import_global_id)

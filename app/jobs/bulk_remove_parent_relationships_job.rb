@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BulkRemoveParentRelationshipsJob < ApplicationJob
-  sidekiq_options queue: :imports
+  sidekiq_options queue: :near_future
 
   def perform(
     import_global_id,

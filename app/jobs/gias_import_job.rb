@@ -3,7 +3,7 @@
 class GIASImportJob < ApplicationJob
   include SingleConcurrencyConcern
 
-  sidekiq_options queue: :third_party_data_imports
+  sidekiq_options queue: :far_future
 
   def perform
     GIAS.download

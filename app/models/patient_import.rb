@@ -176,11 +176,11 @@ class PatientImport < ApplicationRecord
 
   def enqueue_pds_cascading_searches(changesets)
     changesets.find_each do |changeset|
-      PDSCascadingSearchJob.set(queue: :imports).perform_async(
+      PDSCascadingSearchJob.set(queue: "near_future").perform_async(
         changeset.to_global_id.to_s,
         nil,
         nil,
-        "imports"
+        "near_future"
       )
     end
   end

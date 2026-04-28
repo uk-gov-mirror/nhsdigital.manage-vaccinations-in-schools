@@ -3,12 +3,12 @@
 class PDSCascadingSearchJob < ApplicationJob
   include PDSThrottlingConcern
 
-  sidekiq_options queue: :pds
+  sidekiq_options queue: :near_future
 
   def perform(searchable_global_id, step, search_results, queue)
     step ||= "no_fuzzy_with_history"
     search_results ||= []
-    queue ||= "pds"
+    queue ||= "near_future"
 
     searchable = GlobalID::Locator.locate(searchable_global_id)
 

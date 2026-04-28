@@ -15,7 +15,7 @@ class UpdatePatientsFromPDS
           patient.to_global_id.to_s,
           nil,
           nil,
-          nil
+          queue.to_s
         )
       else
         PatientUpdateFromPDSJob.set(queue:).perform_async(patient.id, nil)
