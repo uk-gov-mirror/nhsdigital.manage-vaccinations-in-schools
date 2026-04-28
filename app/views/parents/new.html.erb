@@ -2,7 +2,7 @@
   <%= govuk_back_link(href: edit_patient_path(@patient)) %>
 <% end %>
 
-<%= form_with model: [@patient, @parent], url: patient_parent_path(@patient) do |f| %>
+<%= form_with model: [@patient, @parent], url: patient_parents_path(patient_id: @patient.id) do |f| %>
   <%= f.mavis_error_summary %>
 
   <% page_title = "Add parent or guardian" %>

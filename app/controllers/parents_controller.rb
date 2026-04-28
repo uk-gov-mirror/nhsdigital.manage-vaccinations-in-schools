@@ -18,7 +18,7 @@ class ParentsController < ApplicationController
   end
 
   def create
-    authorize @parent_ = @patient.parents.build(parent_params)
+    authorize @parent = @patient.parents.build(parent_params)
 
     if @parent.save
       redirect_to edit_patient_path(@patient)

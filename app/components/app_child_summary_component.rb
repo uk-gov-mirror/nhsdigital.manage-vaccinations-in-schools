@@ -201,9 +201,17 @@ class AppChildSummaryComponent < ViewComponent::Base
   def add_parent_button
     helpers.link_to(
       "Add parent or guardian",
-      new_patient_parent_relationship_path(@child),
+      add_parent_path,
       class: "nhsuk-button nhsuk-button--secondary nhsuk-u-margin-bottom-4"
     )
+  end
+
+  def add_parent_path
+    if Flipper.enabled?(:one_patient_per_parent)
+      new_patient_parent_path(@child)
+    else
+      new_patient_parent_relationship_path(@child)
+    end
   end
 
   def academic_year = AcademicYear.pending
