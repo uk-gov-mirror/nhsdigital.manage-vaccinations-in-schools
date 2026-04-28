@@ -689,8 +689,8 @@
     <span class="ruby-ivar">@base_url</span> = <span class="ruby-string">&quot;https://api.os.uk&quot;</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find</span>(<span class="ruby-identifier">query</span>)
-    <span class="ruby-identifier">params</span> = { <span class="ruby-value">query:</span>, <span class="ruby-value">format:</span> <span class="ruby-string">&quot;json&quot;</span> }
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find</span>(<span class="ruby-identifier">query</span>, <span class="ruby-value">max_results:</span> <span class="ruby-value">1</span>, <span class="ruby-value">output_srs:</span> <span class="ruby-string">&quot;EPSG:4326&quot;</span>)
+    <span class="ruby-identifier">params</span> = { <span class="ruby-value">query:</span>, <span class="ruby-value">maxresults:</span> <span class="ruby-identifier">max_results</span>, <span class="ruby-value">output_srs:</span>, <span class="ruby-value">format:</span> <span class="ruby-string">&quot;json&quot;</span> }
     <span class="ruby-identifier">response</span> = <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">get</span>(<span class="ruby-string">&quot;/search/places/v1/find&quot;</span>, <span class="ruby-identifier">params</span>)
     <span class="ruby-identifier">response</span>.<span class="ruby-identifier">body</span>.<span class="ruby-identifier">deep_transform_keys</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:downcase</span>).<span class="ruby-identifier">deep_symbolize_keys</span>
   <span class="ruby-keyword">end</span>
@@ -839,7 +839,7 @@
             <div class="method-heading">
               <a href="#method-i-find" title="Link to this method">
                 <span class="method-name">find</span>
-                <span class="method-args">(query)</span>
+                <span class="method-args">(query, max_results: 1, output_srs: &quot;EPSG:4326&quot;)</span>
               </a>
             </div>
 
@@ -853,8 +853,8 @@
           </div>
           <div class="method-source-code" id="find-source">
             <pre class="ruby"><span class="ruby-comment"># File app/lib/ordnance_survey/places_api.rb, line 12</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find</span>(<span class="ruby-identifier">query</span>)
-  <span class="ruby-identifier">params</span> = { <span class="ruby-value">query:</span>, <span class="ruby-value">format:</span> <span class="ruby-string">&quot;json&quot;</span> }
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">find</span>(<span class="ruby-identifier">query</span>, <span class="ruby-value">max_results:</span> <span class="ruby-value">1</span>, <span class="ruby-value">output_srs:</span> <span class="ruby-string">&quot;EPSG:4326&quot;</span>)
+  <span class="ruby-identifier">params</span> = { <span class="ruby-value">query:</span>, <span class="ruby-value">maxresults:</span> <span class="ruby-identifier">max_results</span>, <span class="ruby-value">output_srs:</span>, <span class="ruby-value">format:</span> <span class="ruby-string">&quot;json&quot;</span> }
   <span class="ruby-identifier">response</span> = <span class="ruby-identifier">connection</span>.<span class="ruby-identifier">get</span>(<span class="ruby-string">&quot;/search/places/v1/find&quot;</span>, <span class="ruby-identifier">params</span>)
   <span class="ruby-identifier">response</span>.<span class="ruby-identifier">body</span>.<span class="ruby-identifier">deep_transform_keys</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:downcase</span>).<span class="ruby-identifier">deep_symbolize_keys</span>
 <span class="ruby-keyword">end</span></pre>
