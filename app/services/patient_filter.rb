@@ -14,7 +14,7 @@ class PatientFilter
               :programme_status_group,
               :programme_statuses,
               :programme_types,
-              :q,
+              :query,
               :registration_status,
               :team,
               :vaccine_criteria,
@@ -35,7 +35,7 @@ class PatientFilter
     programme_status_group: nil,
     programme_statuses: nil,
     programme_types: nil,
-    q: nil,
+    query: nil,
     registration_status: nil,
     vaccine_criteria: nil,
     year_groups: nil
@@ -57,7 +57,7 @@ class PatientFilter
     @programme_status_group = programme_status_group
     @programme_statuses = programme_statuses
     @programme_types = programme_types
-    @q = q
+    @query = query
     @registration_status = registration_status
     @vaccine_criteria = vaccine_criteria
     @year_groups = year_groups
@@ -142,7 +142,7 @@ class PatientFilter
   end
 
   def filter_name(scope)
-    q.present? ? scope.search_by_name_or_nhs_number(q) : scope
+    query.present? ? scope.search_by_name_or_nhs_number(query) : scope
   end
 
   def filter_nhs_number(scope)

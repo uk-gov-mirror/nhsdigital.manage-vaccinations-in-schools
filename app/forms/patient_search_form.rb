@@ -14,7 +14,7 @@ class PatientSearchForm < SearchForm
   attribute :programme_status_group, :string
   attribute :programme_statuses, array: true
   attribute :programme_types, array: true
-  attribute :q, :string
+  attribute :query, :string
   attribute :registration_status, :string
   attribute :vaccine_criteria, array: true
   attribute :year_groups, array: true
@@ -58,6 +58,11 @@ class PatientSearchForm < SearchForm
   def team = session&.team || current_team
 
   def filter
-    PatientFilter.new(team:, session:, academic_year:, **attributes.symbolize_keys)
+    PatientFilter.new(
+      team:,
+      session:,
+      academic_year:,
+      **attributes.symbolize_keys
+    )
   end
 end
