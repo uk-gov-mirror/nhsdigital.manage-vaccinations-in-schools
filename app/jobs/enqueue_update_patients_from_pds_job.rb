@@ -3,7 +3,7 @@
 class EnqueueUpdatePatientsFromPDSJob < ApplicationJob
   include SingleConcurrencyConcern
 
-  queue_as :pds
+  queue_as :far_future
 
   def perform
     scope = Patient.not_deceased
@@ -14,6 +14,6 @@ class EnqueueUpdatePatientsFromPDSJob < ApplicationJob
         .or(scope.where("updated_from_pds_at < ?", 12.hours.ago))
         .order("updated_from_pds_at ASC NULLS FIRST")
 
-    UpdatePatientsFromPDS.call(patients, queue: :pds)
+    UpdatePatientsFromPDS.call(patients, queue: :far_future)
   end
 end

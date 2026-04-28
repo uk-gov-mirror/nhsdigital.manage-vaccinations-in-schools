@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ReportingAPI::RefreshJob < ApplicationJob
-  def perform
-    ReportingAPI::Total.refresh!
-  end
+  queue_as :far_future
+
+  def perform = ReportingAPI::Total.refresh!
 end

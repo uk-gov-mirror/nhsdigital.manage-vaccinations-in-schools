@@ -3,7 +3,7 @@
 class ProcessImportJob < ApplicationJob
   include SingleConcurrencyConcern
 
-  queue_as :imports
+  queue_as :near_future
 
   def perform(import)
     return if import.processed?

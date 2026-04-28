@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class EnqueuePatientsAgedOutOfSchoolsJob < ApplicationJob
-  queue_as :patients
+  queue_as :far_future
 
   def perform
     academic_year = AcademicYear.pending
