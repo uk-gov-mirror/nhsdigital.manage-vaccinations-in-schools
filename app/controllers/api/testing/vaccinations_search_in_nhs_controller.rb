@@ -2,7 +2,7 @@
 
 class API::Testing::VaccinationsSearchInNHSController < API::Testing::BaseController
   def create
-    EnqueueVaccinationsSearchInNHSJob.perform_now
+    EnqueueVaccinationsSearchInNHSJob.perform_async
     render status: :accepted
   end
 
