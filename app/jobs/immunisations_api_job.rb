@@ -5,6 +5,4 @@ class ImmunisationsAPIJob
   include Sidekiq::Throttled::Job
 
   sidekiq_throttle_as :immunisations_api
-
-  def job_id = Sidekiq::Context.current["jid"]
 end
