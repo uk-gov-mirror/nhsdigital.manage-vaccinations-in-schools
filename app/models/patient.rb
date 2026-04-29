@@ -77,7 +77,7 @@ class Patient < ApplicationRecord
   has_many :consent_notifications
   has_many :consents
   has_many :gillick_assessments
-  has_many :important_notices, dependent: :destroy
+  has_many :important_notices
   has_many :notes
   has_many :notify_log_entries
   has_many :parent_relationships, -> { order(:created_at) }
@@ -498,8 +498,6 @@ class Patient < ApplicationRecord
   after_update :sync_vaccinations_to_nhs_immunisations_api
   after_commit :generate_important_notice_if_needed, on: :update
   after_commit :search_vaccinations_from_nhs_immunisations_api, on: :update
-  before_destroy :destroy_childless_parents
-
   delegate :fhir_record, to: :fhir_mapper
 
   def sessions
@@ -821,17 +819,6 @@ class Patient < ApplicationRecord
 
     if school && !school.school?
       errors.add(:school, "must be a school location type")
-    end
-  end
-
-  def destroy_childless_parents
-    parents_to_check = parents.to_a # Store parents before destroying relationships
-
-    # Manually destroy the parent_relationships associated with this Child
-    parent_relationships.each(&:destroy)
-
-    parents_to_check.each do |parent|
-      parent.destroy! if parent.parent_relationships.count.zero?
     end
   end
 
