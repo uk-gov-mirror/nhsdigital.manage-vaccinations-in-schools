@@ -44,7 +44,7 @@ class PatientDeleter
       floating_parents.destroy_all
 
       Rails.logger.info "Deleting #{@patients.count} patient records"
-      @patients.each(&:destroy)
+      @patients.find_each(&:destroy)
 
       Rails.logger.info "PatientDeleter complete"
     end
