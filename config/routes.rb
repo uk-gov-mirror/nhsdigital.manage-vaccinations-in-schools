@@ -113,6 +113,7 @@ Rails.application.routes.draw do
       namespace :testing do
         post "onboard", to: "onboard#create"
         post "patients", to: "patients#create"
+        post "team-locations", to: "team_locations#create"
 
         resources :locations, only: :index
         resources :teams, only: :destroy, param: :workgroup do
