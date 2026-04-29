@@ -4,9 +4,12 @@ module AddressConcern
   extend ActiveSupport::Concern
 
   included do
+    normalizes :address_line_1, with: ->(value) { value.presence }
+    normalizes :address_line_2, with: ->(value) { value.presence }
+    normalizes :address_town, with: ->(value) { value.presence }
     normalizes :address_postcode,
                with: ->(value) do
-                 value.nil? ? nil : UKPostcode.parse(value.to_s).to_s
+                 value.present? ? UKPostcode.parse(value).to_s : nil
                end
 
     belongs_to :local_authority_postcode,
