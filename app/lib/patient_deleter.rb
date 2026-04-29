@@ -44,7 +44,7 @@ class PatientDeleter
         .missing(:parent_relationships)
         .destroy_all
 
-      @patients.each(&:destroy)
+      @patients.find_each(&:destroy)
     end
   end
 
