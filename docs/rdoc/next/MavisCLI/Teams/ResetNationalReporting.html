@@ -657,7 +657,7 @@
             <div class="method-heading">
               <a href="#method-i-call" title="Link to this method">
                 <span class="method-name">call</span>
-                <span class="method-args">(workgroup: nil, force: false, **)</span>
+                <span class="method-args">(workgroup: nil, **)</span>
               </a>
             </div>
 
@@ -670,14 +670,9 @@
             </details>
           </div>
           <div class="method-source-code" id="call-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/lib/mavis_cli/teams/reset_national_reporting.rb, line 14</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">call</span>(<span class="ruby-value">workgroup:</span> <span class="ruby-keyword">nil</span>, <span class="ruby-value">force:</span> <span class="ruby-keyword">false</span>, <span class="ruby-operator">**</span>)
+            <pre class="ruby"><span class="ruby-comment"># File app/lib/mavis_cli/teams/reset_national_reporting.rb, line 11</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">call</span>(<span class="ruby-value">workgroup:</span> <span class="ruby-keyword">nil</span>, <span class="ruby-operator">**</span>)
   <span class="ruby-constant">MavisCLI</span>.<span class="ruby-identifier">load_rails</span>
-
-  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">force</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">Flipper</span>.<span class="ruby-identifier">enabled?</span>(<span class="ruby-value">:sync_national_reporting_to_imms_api</span>)
-    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;Error: This operation is not allowed while sync_national_reporting_to_imms_api is enabled.&quot;</span>
-    <span class="ruby-keyword">return</span>
-  <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">teams</span> = <span class="ruby-identifier">find_teams</span>(<span class="ruby-identifier">workgroup</span>)
 
