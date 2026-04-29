@@ -668,9 +668,9 @@ describe Patient do
     end
 
     it { should normalize(:nhs_number).from(" 0123456789 ").to("0123456789") }
-
-    it { should normalize(:address_postcode).from(" SW111AA ").to("SW11 1AA") }
   end
+
+  it_behaves_like "a model with an address"
 
   describe "#teams" do
     subject(:teams) { patient.teams }
