@@ -4,12 +4,22 @@
 
 <%= h1 "Edit child record" %>
 
-<%# TODO: Flipper.enabled?(:one_patient_per_parent) %>
-<% remove_links = {
-     parent: @patient.parent_relationships.each_with_object({}) do |parent_relationship, memo|
-       memo[parent_relationship.parent_id] = destroy_patient_parent_relationship_path(@patient, parent_relationship.parent_id)
-     end,
-   } %>
+<%# TODO: extract method... %>
+<% def parent_remove_links_for(patient)
+     if Flipper.enabled?(:one_patient_per_parent)
+       {
+         parent: patient.parents.each_with_object({}) do |parent, memo|
+           memo[parent.id] = destroy_patient_parent_path(patient, parent.id)
+         end,
+       }
+     else
+       {
+         parent: patient.parent_relationships.each_with_object({}) do |parent_relationship, memo|
+           memo[parent_relationship.parent_id] = destroy_patient_parent_relationship_path(patient, parent_relationship.parent_id)
+         end,
+       }
+     end
+   end %>
 
 <%= render AppPatientCardComponent.new(
       @patient,
@@ -17,7 +27,7 @@
       show_parents: !current_team.has_national_reporting_access?,
       show_add_parent: !current_team.has_national_reporting_access?,
       change_links: @change_links,
-      remove_links:,
+      remove_links: parent_remove_links_for(@patient),
       heading_level: 2,
     ) %>
 
