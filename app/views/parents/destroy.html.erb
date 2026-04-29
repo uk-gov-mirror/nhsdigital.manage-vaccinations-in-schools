@@ -2,7 +2,7 @@
   <%= govuk_back_link(href: edit_patient_path(@patient)) %>
 <% end %>
 
-<% page_title = "Are you sure you want to remove the parent #{@parent.label_with_parent} and #{@patient.full_name(context: :parents)}?" %>
+<% page_title = "Are you sure you want to remove the parent #{@parent.label_with_parent}?" %>
 
 <%= h1 page_title do %>
   <span class="nhsuk-caption-l">

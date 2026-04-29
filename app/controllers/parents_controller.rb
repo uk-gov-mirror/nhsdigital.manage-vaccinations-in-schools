@@ -43,6 +43,7 @@ class ParentsController < ApplicationController
   def confirm_destroy = render :destroy
 
   def destroy
+    ParentRelationship.where(parent: @parent, patient: @patient).destroy_all
     @parent.destroy!
 
     redirect_to edit_patient_path(@patient),
