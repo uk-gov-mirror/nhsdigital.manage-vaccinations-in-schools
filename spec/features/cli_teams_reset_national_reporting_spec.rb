@@ -28,6 +28,7 @@ describe "mavis teams reset-national-reporting" do
       given_a_national_reporting_team_exists
       and_i_upload_some_vaccination_records
       and_i_view_a_patient_record
+      and_the_cut_off_date_is_set_to_tomorrow
 
       when_i_run_the_command_for_single_team
 
@@ -82,6 +83,16 @@ describe "mavis teams reset-national-reporting" do
       }.to raise_error(ArgumentError, /not a national reporting team/)
     end
 
+    it "raises an error when the team has no national reporting cut off date" do
+      given_a_national_reporting_team_exists_without_a_cut_off_date
+      expect {
+        run_command_with_workgroup(@national_reporting_team.workgroup)
+      }.to raise_error(
+        ArgumentError,
+        /does not have a national reporting cut off date set/
+      )
+    end
+
     it "does not delete records that have been sent to the Imms API" do
       given_a_national_reporting_team_exists
       and_the_national_reporting_team_has_immunisation_imports_with_vaccination_records
@@ -98,6 +109,18 @@ describe "mavis teams reset-national-reporting" do
       and_the_other_vaccination_records_are_deleted
       and_the_other_archive_reasons_are_deleted
       and_the_other_patients_are_deleted
+    end
+
+    it "only operates on imports created before the cut-off date" do
+      given_a_national_reporting_team_exists
+      and_the_national_reporting_team_has_immunisation_imports_both_before_and_after_the_cut_off_date
+
+      when_i_run_the_command_for_single_team
+
+      then_the_imports_before_the_cut_off_date_are_deleted
+      and_the_vaccination_records_from_imports_before_the_cut_off_date_are_deleted
+      and_the_imports_on_or_after_the_cut_off_date_are_not_deleted
+      and_the_vaccination_records_from_imports_on_or_after_the_cut_off_date_are_not_deleted
     end
   end
 
@@ -141,6 +164,18 @@ describe "mavis teams reset-national-reporting" do
       and_no_vaccination_records_are_deleted
       and_no_patients_are_deleted
     end
+
+    it "skips national_reporting teams that have no cut off date set" do
+      given_a_national_reporting_team_exists_without_a_cut_off_date
+      and_the_national_reporting_team_has_immunisation_imports_with_vaccination_records
+
+      when_i_run_the_command_for_all_teams
+
+      then_the_output_indicates_no_teams_found
+      and_no_immunisation_imports_are_deleted
+      and_no_vaccination_records_are_deleted
+      and_no_patients_are_deleted
+    end
   end
 
   private
@@ -159,6 +194,18 @@ describe "mavis teams reset-national-reporting" do
 
   alias_method :and_a_national_reporting_team_exists,
                :given_a_national_reporting_team_exists
+
+  def given_a_national_reporting_team_exists_without_a_cut_off_date
+    @national_reporting_team =
+      create(
+        :team,
+        :national_reporting,
+        national_reporting_cut_off_date: nil,
+        programmes: [Programme.hpv, Programme.flu],
+        organisation: national_reporting_organisation,
+        workgroup: "national-reporting-team"
+      )
+  end
 
   def and_the_feature_flag_is_enabled
     Flipper.enable(:sync_national_reporting_to_imms_api)
@@ -216,8 +263,22 @@ describe "mavis teams reset-national-reporting" do
   end
 
   def and_the_national_reporting_team_has_immunisation_imports_with_vaccination_records
-    @import1 = create(:immunisation_import, team: @national_reporting_team)
-    @import2 = create(:immunisation_import, team: @national_reporting_team)
+    cut_off_date =
+      @national_reporting_team.national_reporting_cut_off_date ||
+        Time.zone.today
+
+    @import1 =
+      create(
+        :immunisation_import,
+        team: @national_reporting_team,
+        created_at: cut_off_date - 2.days
+      )
+    @import2 =
+      create(
+        :immunisation_import,
+        team: @national_reporting_team,
+        created_at: cut_off_date - 1.day
+      )
 
     @vaccination_record1 =
       create(
@@ -245,7 +306,13 @@ describe "mavis teams reset-national-reporting" do
   end
 
   def and_a_patient_is_associated_with_both_teams
-    @import = create(:immunisation_import, team: @national_reporting_team)
+    cut_off_date = @national_reporting_team.national_reporting_cut_off_date
+    @import =
+      create(
+        :immunisation_import,
+        team: @national_reporting_team,
+        created_at: cut_off_date - 1.day
+      )
     @shared_patient = create(:patient)
     @national_reporting_vaccination_record =
       create(
@@ -285,8 +352,19 @@ describe "mavis teams reset-national-reporting" do
   end
 
   def and_each_team_has_immunisation_imports
-    @import1 = create(:immunisation_import, team: @national_reporting_team1)
-    @import2 = create(:immunisation_import, team: @national_reporting_team2)
+    cut_off_date = @national_reporting_team1.national_reporting_cut_off_date
+    @import1 =
+      create(
+        :immunisation_import,
+        team: @national_reporting_team1,
+        created_at: cut_off_date - 1.day
+      )
+    @import2 =
+      create(
+        :immunisation_import,
+        team: @national_reporting_team2,
+        created_at: cut_off_date - 1.day
+      )
 
     @vaccination_record1 =
       create(
@@ -502,7 +580,83 @@ describe "mavis teams reset-national-reporting" do
     )
   end
 
+  def and_the_cut_off_date_is_set_to_tomorrow
+    @national_reporting_team.update!(
+      national_reporting_cut_off_date: Time.zone.tomorrow
+    )
+  end
+
   def and_the_access_log_entry_is_not_deleted
     expect(AccessLogEntry.where(patient: @shared_patient)).to exist
+  end
+
+  def and_the_national_reporting_team_has_immunisation_imports_both_before_and_after_the_cut_off_date
+    cut_off_date = @national_reporting_team.national_reporting_cut_off_date
+
+    @import_before =
+      create(
+        :immunisation_import,
+        team: @national_reporting_team,
+        created_at: cut_off_date - 1.day
+      )
+    @import_on_cut_off =
+      create(
+        :immunisation_import,
+        team: @national_reporting_team,
+        created_at: cut_off_date
+      )
+    @import_after =
+      create(
+        :immunisation_import,
+        team: @national_reporting_team,
+        created_at: cut_off_date + 1.day
+      )
+
+    @vaccination_record_before =
+      create(
+        :vaccination_record,
+        :sourced_from_national_reporting,
+        immunisation_import: @import_before,
+        team: @national_reporting_team,
+        performed_at: cut_off_date - 2.days
+      )
+    @vaccination_record_on_cut_off =
+      create(
+        :vaccination_record,
+        :sourced_from_national_reporting,
+        immunisation_import: @import_on_cut_off,
+        team: @national_reporting_team,
+        performed_at: cut_off_date
+      )
+    @vaccination_record_after =
+      create(
+        :vaccination_record,
+        :sourced_from_national_reporting,
+        immunisation_import: @import_after,
+        team: @national_reporting_team,
+        performed_at: cut_off_date + 2.days
+      )
+  end
+
+  def then_the_imports_before_the_cut_off_date_are_deleted
+    expect(ImmunisationImport.where(id: @import_before.id)).to be_empty
+  end
+
+  def and_the_vaccination_records_from_imports_before_the_cut_off_date_are_deleted
+    expect(
+      VaccinationRecord.where(id: @vaccination_record_before.id)
+    ).to be_empty
+  end
+
+  def and_the_imports_on_or_after_the_cut_off_date_are_not_deleted
+    expect(ImmunisationImport.where(id: @import_on_cut_off.id)).to exist
+    expect(ImmunisationImport.where(id: @import_after.id)).to exist
+  end
+
+  def and_the_vaccination_records_from_imports_on_or_after_the_cut_off_date_are_not_deleted
+    expect(
+      VaccinationRecord.where(id: @vaccination_record_on_cut_off.id)
+    ).to exist
+    expect(VaccinationRecord.where(id: @vaccination_record_after.id)).to exist
   end
 end
