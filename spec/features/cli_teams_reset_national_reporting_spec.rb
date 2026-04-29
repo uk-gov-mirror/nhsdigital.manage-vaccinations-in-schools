@@ -8,21 +8,6 @@ describe "mavis teams reset-national-reporting" do
   end
   let(:point_of_care_organisation) { create(:organisation) }
 
-  context "when sync_national_reporting_to_imms_api feature flag is enabled" do
-    it "does not allow resetting national_reporting teams" do
-      given_a_national_reporting_team_exists
-      and_the_feature_flag_is_enabled
-      and_the_national_reporting_team_has_immunisation_imports_with_vaccination_records
-
-      when_i_run_the_command_for_single_team
-
-      then_an_error_is_displayed_in_output
-      and_no_immunisation_imports_are_deleted
-      and_no_vaccination_records_are_deleted
-      and_no_patients_are_deleted
-    end
-  end
-
   context "when resetting a single national_reporting team" do
     it "removes all immunisation imports, associated vaccination records, and associated patients" do
       given_a_national_reporting_team_exists

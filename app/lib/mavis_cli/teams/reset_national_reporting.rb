@@ -7,17 +7,9 @@ module MavisCLI
 
       option :workgroup,
              desc: "The workgroup of a specific team to reset (optional)"
-      option :force,
-             desc:
-               "Ignore check if sync_national_reporting_to_imms_api feature is enabled"
 
-      def call(workgroup: nil, force: false, **)
+      def call(workgroup: nil, **)
         MavisCLI.load_rails
-
-        if !force && Flipper.enabled?(:sync_national_reporting_to_imms_api)
-          puts "Error: This operation is not allowed while sync_national_reporting_to_imms_api is enabled."
-          return
-        end
 
         teams = find_teams(workgroup)
 
@@ -117,7 +109,7 @@ module MavisCLI
                    " record(s) will be deleted"
           end
 
-          puts "Destroying vaccination records..."
+          puts "Destroying #{not_synced_vaccination_records.count} vaccination records..."
           not_synced_vaccination_records.destroy_all
 
           puts "Refreshing immunisations imports..."
@@ -135,7 +127,7 @@ module MavisCLI
                    " be deleted"
           end
 
-          puts "Destroying immunisation imports..."
+          puts "Destroying #{immunisation_imports.count} immunisation imports..."
           immunisation_imports.destroy_all
 
           archive_reasons =
