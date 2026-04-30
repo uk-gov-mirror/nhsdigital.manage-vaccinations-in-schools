@@ -42,9 +42,9 @@ class PatientImport < ApplicationRecord
     end
 
     if Flipper.enabled?(:pds) && Flipper.enabled?(:pds_search_during_import)
-      process_no_postcode_changesets(self.changesets.without_postcode)
-      if self.changesets.with_postcode.any?
-        enqueue_pds_cascading_searches(self.changesets.with_postcode)
+      process_no_postcode_changesets(changesets.without_postcode)
+      if changesets.with_postcode.any?
+        enqueue_pds_cascading_searches(changesets.with_postcode)
         return
       end
     end
@@ -54,7 +54,7 @@ class PatientImport < ApplicationRecord
     validate_changeset_uniqueness!
     return if changesets_are_invalid?
 
-    enqueue_review_jobs(self.changesets)
+    enqueue_review_jobs(changesets)
 
     TeamCachedCounts.new(team).reset_import_issues!
   end
