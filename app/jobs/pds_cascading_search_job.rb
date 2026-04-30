@@ -11,6 +11,10 @@ class PDSCascadingSearchJob < ApplicationJobActiveJob
     search_results ||= []
     queue ||= "pds"
 
+    # FIXME: Remove these once we're not queuing jobs using symbols.
+    step_name = step_name.to_s
+    queue = queue.to_s
+
     SemanticLogger.tagged(
       searchable: "#{searchable.class.name}##{searchable.id}",
       step: step_name
