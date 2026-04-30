@@ -53,7 +53,14 @@ class PatientImport < ApplicationRecord
         ReviewPatientChangesetSidekiqJob.perform_async(cs.id)
       end
       if changesets.with_postcode.any?
-        enqueue_pds_cascading_searches(changesets.with_postcode)
+        changesets.with_postcode.find_each do |changeset|
+          PDSCascadingSearchSidekiqJob.set(queue: :imports).perform_async(
+            changeset.to_global_id.to_s,
+            nil,
+            nil,
+            "imports"
+          )
+        end
         return
       end
     end
@@ -166,17 +173,6 @@ class PatientImport < ApplicationRecord
     review_changesets.each do |cs|
       cs.calculating_review!
       ReviewPatientChangesetSidekiqJob.perform_async(cs.id)
-    end
-  end
-
-  def enqueue_pds_cascading_searches(changesets)
-    changesets.find_each do |changeset|
-      PDSCascadingSearchSidekiqJob.set(queue: :imports).perform_async(
-        changeset.to_global_id.to_s,
-        nil,
-        nil,
-        "imports"
-      )
     end
   end
 
