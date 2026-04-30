@@ -110,7 +110,7 @@ module MavisCLI
           end
 
           puts "Destroying #{not_synced_vaccination_records.count} vaccination records..."
-          not_synced_vaccination_records.destroy_all
+          not_synced_vaccination_records.find_each(&:destroy)
 
           puts "Refreshing immunisations imports..."
           if immunisation_imports.joins(:vaccination_records).any?
@@ -128,7 +128,7 @@ module MavisCLI
           end
 
           puts "Destroying #{immunisation_imports.count} immunisation imports..."
-          immunisation_imports.destroy_all
+          immunisation_imports.find_each(&:destroy)
 
           archive_reasons =
             ArchiveReason.where(
@@ -136,7 +136,7 @@ module MavisCLI
               team:
             )
           puts "Destroying #{archive_reasons.count} archive reasons..."
-          archive_reasons.destroy_all
+          archive_reasons.find_each(&:destroy)
 
           puts "Updating patient-team relationships..."
           PatientTeamUpdater.call(
