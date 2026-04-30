@@ -80,6 +80,12 @@ class PatientImport < ApplicationRecord
 
     review_changesets =
       if Flipper.enabled?(:pds) && Flipper.enabled?(:pds_search_during_import)
+        # TODO: I don't think this makes sense because if we're here and if
+        # there were any `changesets.with_postcode` then we would've
+        # returned early on line 72.
+        # Unless it's a way of avoiding queuing up jobs for
+        # `changesets.without_postcode` because that would've already
+        # happened in the block starting on line 55
         changesets.with_postcode
       else
         changesets
