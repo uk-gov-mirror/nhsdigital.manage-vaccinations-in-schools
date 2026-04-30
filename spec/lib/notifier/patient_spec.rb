@@ -180,15 +180,11 @@ describe Notifier::Patient do
             end
 
             it "does not enqueue an email" do
-              expect { send_consent_request }.not_to have_enqueued_job(
-                EmailDeliveryJob
-              )
+              expect { send_consent_request }.not_to deliver_email
             end
 
             it "does not enqueue an SMS" do
-              expect { send_consent_request }.not_to have_enqueued_job(
-                SMSDeliveryJob
-              )
+              expect { send_consent_request }.not_to deliver_sms
             end
           end
 
@@ -471,15 +467,11 @@ describe Notifier::Patient do
             end
 
             it "does not enqueue an email" do
-              expect { send_consent_request }.not_to have_enqueued_job(
-                EmailDeliveryJob
-              )
+              expect { send_consent_request }.not_to deliver_email
             end
 
             it "does not enqueue an SMS" do
-              expect { send_consent_request }.not_to have_enqueued_job(
-                SMSDeliveryJob
-              )
+              expect { send_consent_request }.not_to deliver_sms
             end
           end
 
@@ -808,15 +800,11 @@ describe Notifier::Patient do
           end
 
           it "does not enqueue an email" do
-            expect { send_consent_reminder }.not_to have_enqueued_job(
-              EmailDeliveryJob
-            )
+            expect { send_consent_reminder }.not_to deliver_email
           end
 
           it "does not enqueue an SMS" do
-            expect { send_consent_reminder }.not_to have_enqueued_job(
-              SMSDeliveryJob
-            )
+            expect { send_consent_reminder }.not_to deliver_sms
           end
         end
       end
@@ -1241,15 +1229,11 @@ describe Notifier::Patient do
         end
 
         it "does not enqueue an email" do
-          expect { send_clinic_invitation }.not_to have_enqueued_job(
-            EmailDeliveryJob
-          )
+          expect { send_clinic_invitation }.not_to deliver_email
         end
 
         it "does not enqueue an SMS" do
-          expect { send_clinic_invitation }.not_to have_enqueued_job(
-            SMSDeliveryJob
-          )
+          expect { send_clinic_invitation }.not_to deliver_sms
         end
       end
 
