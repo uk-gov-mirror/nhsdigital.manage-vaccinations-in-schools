@@ -28,14 +28,12 @@ class ClassImportsController < ApplicationController
                   **class_import_params
                 )
 
-    if @class_import.invalid?
+    if @class_import.save
+      ProcessImportJob.perform_later(@class_import)
+      redirect_to imports_path, flash: { success: "Import processing started" }
+    else
       render :new, status: :unprocessable_content and return
     end
-
-    @class_import.save!
-
-    ProcessImportJob.perform_later(@class_import)
-    redirect_to imports_path, flash: { success: "Import processing started" }
   end
 
   def show
@@ -49,7 +47,7 @@ class ClassImportsController < ApplicationController
       redirect_to re_review_class_import_path(@class_import) and return
     end
 
-    if @class_import.processed? || @class_import.partially_processed?
+    if @class_import.processed_at? || @class_import.partially_processed?
       @pagy, @patients = pagy(@class_import.patients.includes(:school))
 
       @duplicates =

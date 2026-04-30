@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_20_122440) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_29_175616) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -162,6 +162,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_122440) do
     t.bigint "class_import_id", null: false
     t.bigint "parent_relationship_id", null: false
     t.index ["class_import_id", "parent_relationship_id"], name: "idx_on_class_import_id_parent_relationship_id_8225058195", unique: true
+    t.index ["parent_relationship_id", "class_import_id"], name: "idx_on_parent_relationship_id_class_import_id_d7c05d6c2c", unique: true
   end
 
   create_table "class_imports_parents", id: false, force: :cascade do |t|
@@ -174,6 +175,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_122440) do
     t.bigint "class_import_id", null: false
     t.bigint "patient_id", null: false
     t.index ["class_import_id", "patient_id"], name: "index_class_imports_patients_on_class_import_id_and_patient_id", unique: true
+    t.index ["patient_id", "class_import_id"], name: "index_class_imports_patients_on_patient_id_and_class_import_id", unique: true
   end
 
   create_table "clinic_notifications", force: :cascade do |t|
@@ -219,6 +221,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_122440) do
     t.bigint "cohort_import_id", null: false
     t.bigint "parent_relationship_id", null: false
     t.index ["cohort_import_id", "parent_relationship_id"], name: "idx_on_cohort_import_id_parent_relationship_id_c65e20d1f8", unique: true
+    t.index ["parent_relationship_id", "cohort_import_id"], name: "idx_on_parent_relationship_id_cohort_import_id_40fb9846d6", unique: true
   end
 
   create_table "cohort_imports_parents", id: false, force: :cascade do |t|
@@ -231,6 +234,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_122440) do
     t.bigint "cohort_import_id", null: false
     t.bigint "patient_id", null: false
     t.index ["cohort_import_id", "patient_id"], name: "idx_on_cohort_import_id_patient_id_7864d1a8b0", unique: true
+    t.index ["patient_id", "cohort_import_id"], name: "idx_on_patient_id_cohort_import_id_5e41b290b4", unique: true
   end
 
   create_table "consent_form_programmes", force: :cascade do |t|
@@ -443,6 +447,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_122440) do
     t.bigint "immunisation_import_id", null: false
     t.bigint "patient_id", null: false
     t.index ["immunisation_import_id", "patient_id"], name: "idx_on_immunisation_import_id_patient_id_6dc58d875d", unique: true
+    t.index ["patient_id", "immunisation_import_id"], name: "idx_on_patient_id_immunisation_import_id_3f154728df", unique: true
   end
 
   create_table "immunisation_imports_sessions", id: false, force: :cascade do |t|
@@ -455,6 +460,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_122440) do
     t.bigint "immunisation_import_id", null: false
     t.bigint "vaccination_record_id", null: false
     t.index ["immunisation_import_id", "vaccination_record_id"], name: "idx_on_immunisation_import_id_vaccination_record_id_588e859772", unique: true
+    t.index ["vaccination_record_id", "immunisation_import_id"], name: "idx_on_vaccination_record_id_immunisation_import_id_813c516ad7", unique: true
   end
 
   create_table "important_notices", force: :cascade do |t|

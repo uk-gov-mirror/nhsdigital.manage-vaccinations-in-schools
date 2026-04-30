@@ -399,8 +399,8 @@ describe ConsentForm do
 
   it { should normalize(:given_name).from(" Joanna ").to("Joanna") }
   it { should normalize(:family_name).from(" Smith ").to("Smith") }
-  it { should normalize(:address_postcode).from(" SW111AA ").to("SW11 1AA") }
 
+  it_behaves_like "a model with an address"
   it_behaves_like "a model with a normalised email address", :parent_email
   it_behaves_like "a model with a normalised phone number", :parent_phone
 

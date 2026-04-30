@@ -17,7 +17,7 @@ module PatientImportConcern
       patients.select(&:nhs_number_previously_changed?)
 
     Patient.import(patients.to_a, on_duplicate_key_update: :all)
-    link_records_to_import(import, Patient, patients)
+    Imports::JoinRecords.call(import, patients)
 
     SearchVaccinationRecordsInNHSJob.perform_bulk(
       patients_with_nhs_number_changes.pluck(:id).zip
@@ -27,7 +27,7 @@ module PatientImportConcern
     PatientChangeset.import(changesets, on_duplicate_key_update: :all)
 
     Parent.import(parents.to_a, on_duplicate_key_update: :all)
-    link_records_to_import(import, Parent, parents)
+    Imports::JoinRecords.call(import, parents)
 
     ParentRelationship.import(
       relationships.to_a,
@@ -36,7 +36,7 @@ module PatientImportConcern
         columns: %i[type other_name]
       }
     )
-    link_records_to_import(import, ParentRelationship, relationships)
+    Imports::JoinRecords.call(import, relationships)
   end
 
   def deduplicate_patients!(patients, relationships)
@@ -101,18 +101,6 @@ module PatientImportConcern
     end
 
     PDSSearchResult.import(pds_search_records, on_duplicate_key_ignore: true)
-  end
-
-  def link_records_to_import(import_source, record_class, records)
-    source_type = import_source.class.name
-    record_type = record_class.name
-
-    join_table_class = "#{source_type.pluralize}#{record_type}".constantize
-    join_table_class.import(
-      ["#{source_type.underscore}_id", "#{record_type.underscore}_id"],
-      records.map { [import_source.id, it.id] },
-      on_duplicate_key_ignore: true
-    )
   end
 
   def increment_column_counts!(import, counts, changesets)

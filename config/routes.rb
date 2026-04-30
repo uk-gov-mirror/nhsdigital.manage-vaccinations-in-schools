@@ -111,11 +111,14 @@ Rails.application.routes.draw do
   namespace :api do
     unless Rails.env.production?
       namespace :testing do
+        post "onboard", to: "onboard#create"
+
         resources :locations, only: :index
-        delete "teams/:workgroup/locations", to: "teams#destroy_locations"
-        resources :teams, only: :destroy, param: :workgroup
-        post "/onboard", to: "onboard#create"
-        get "refresh-reporting", to: "reporting_refresh#create"
+        resources :teams, only: :destroy, param: :workgroup do
+          delete "locations", action: :destroy_locations, on: :member
+        end
+
+        get "refresh-reporting", to: "refresh_reporting#create"
         post "vaccinations-search-in-nhs",
              to: "vaccinations_search_in_nhs#create"
       end
@@ -136,8 +139,9 @@ Rails.application.routes.draw do
     end
   end
 
+  get "/cohort_imports/:id", to: redirect("/cohort-imports/%{id}")
   resources :cohort_imports,
-            path: "cohort_imports",
+            path: "cohort-imports",
             except: %i[index destroy] do
     member do
       get :re_review, to: "cohort_imports#re_review"
@@ -247,6 +251,13 @@ Rails.application.routes.draw do
       get "edit/school", controller: "patients/edit", action: "edit_school"
       put "edit/school", controller: "patients/edit", action: "update_school"
     end
+  end
+
+  resources :careplus_reports,
+            path: "careplus-reports",
+            controller: "careplus_reports",
+            only: %i[index show] do
+    member { get :download }
   end
 
   resources :reports, only: :index

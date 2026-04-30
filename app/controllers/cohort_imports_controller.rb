@@ -26,14 +26,12 @@ class CohortImportsController < ApplicationController
                   **cohort_import_params
                 )
 
-    if @cohort_import.invalid?
+    if @cohort_import.save
+      ProcessImportJob.perform_later(@cohort_import)
+      redirect_to imports_path, flash: { success: "Import processing started" }
+    else
       render :new, status: :unprocessable_content and return
     end
-
-    @cohort_import.save!
-
-    ProcessImportJob.perform_later(@cohort_import)
-    redirect_to imports_path, flash: { success: "Import processing started" }
   end
 
   def show
@@ -48,7 +46,7 @@ class CohortImportsController < ApplicationController
       redirect_to re_review_cohort_import_path(@cohort_import) and return
     end
 
-    if @cohort_import.processed? || @cohort_import.partially_processed?
+    if @cohort_import.processed_at? || @cohort_import.partially_processed?
       @pagy, @patients = pagy(@cohort_import.patients.includes(:school))
 
       @duplicates =

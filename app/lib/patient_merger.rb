@@ -25,6 +25,8 @@ class PatientMerger
 
       patient_to_destroy.archive_reasons.destroy_all
 
+      patient_to_destroy.important_notices.destroy_all
+
       patient_to_destroy.attendance_records.find_each do |attendance_record|
         if patient_to_keep.attendance_records.exists?(
              location_id: attendance_record.location_id,

@@ -57,6 +57,9 @@ describe PatientMerger do
     let(:gillick_assessment) do
       create(:gillick_assessment, :competent, patient: patient_to_destroy)
     end
+    let(:important_notice) do
+      create(:important_notice, :deceased, patient: patient_to_destroy, team:)
+    end
     let(:note) { create(:note, patient: patient_to_destroy) }
     let(:notify_log_entry) do
       create(:notify_log_entry, :email, patient: patient_to_destroy)
@@ -166,6 +169,11 @@ describe PatientMerger do
       expect { call }.to change { gillick_assessment.reload.patient }.to(
         patient_to_keep
       )
+    end
+
+    it "deletes important notices" do
+      important_notice
+      expect { call }.to change(ImportantNotice, :count).by(-1)
     end
 
     it "moves notes" do
@@ -490,6 +498,54 @@ describe PatientMerger do
         expect { call }.not_to change(PatientChangeset, :count)
         expect(patient_to_keep.changesets).to be_empty
       end
+    end
+  end
+
+  # This test ensures that if a new table is added with a non-cascading FK
+  # to patients, it will prompt the developer to handle it in PatientMerger.
+  describe "non-cascading patient FK coverage" do
+    it "covers all non-cascading FK relationships to the patients table" do
+      non_cascading_fk_tables =
+        ActiveRecord::Base.connection.tables.flat_map do |table|
+          foreign_key =
+            ActiveRecord::Base
+              .connection
+              .foreign_keys(table)
+              .select do |fk|
+                fk.to_table == "patients" && fk.options[:on_delete] != :cascade
+              end
+          foreign_key.map(&:from_table)
+        end
+      non_cascading_fk_tables = non_cascading_fk_tables.to_set
+
+      # Tables explicitly handled by PatientMerger
+      explicitly_handled = %w[
+        archive_reasons
+        attendance_records
+        clinic_notifications
+        consent_notifications
+        consents
+        gillick_assessments
+        important_notices
+        notes
+        parent_relationships
+        patient_changesets
+        patient_locations
+        patient_specific_directions
+        pre_screenings
+        school_moves
+        session_notifications
+        triages
+        vaccination_records
+      ].to_set
+
+      unhandled = non_cascading_fk_tables - explicitly_handled
+
+      expect(unhandled).to(
+        be_empty,
+        "The following tables have non-cascading FKs to patients but are " \
+          "not handled in PatientMerger: #{unhandled.to_a.sort.join(", ")}"
+      )
     end
   end
 end

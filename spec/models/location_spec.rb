@@ -193,8 +193,9 @@ describe Location do
     end
   end
 
+  it_behaves_like "a model with an address"
+
   describe "normalisations" do
-    it { should normalize(:address_postcode).from(" SW111AA ").to("SW11 1AA") }
     it { should normalize(:ods_code).from(" r1a ").to("R1A") }
     it { should normalize(:urn).from(" 123 ").to("123") }
   end

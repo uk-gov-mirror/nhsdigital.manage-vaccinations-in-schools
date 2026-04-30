@@ -668,9 +668,9 @@ describe Patient do
     end
 
     it { should normalize(:nhs_number).from(" 0123456789 ").to("0123456789") }
-
-    it { should normalize(:address_postcode).from(" SW111AA ").to("SW11 1AA") }
   end
+
+  it_behaves_like "a model with an address"
 
   describe "#teams" do
     subject(:teams) { patient.teams }
@@ -1442,36 +1442,6 @@ describe Patient do
         expect(new_patient.patient_teams.first.sources).to contain_exactly(
           "school_move_school"
         )
-      end
-    end
-  end
-
-  describe "#destroy_childless_parents" do
-    context "when parent has only one child" do
-      let(:parent) { create(:parent) }
-      let!(:patient) { create(:patient, parents: [parent]) }
-
-      it "destroys the parent when the patient is destroyed" do
-        expect { patient.destroy }.to change(Parent, :count).by(-1)
-      end
-    end
-
-    context "when parent has multiple children" do
-      let(:parent) { create(:parent) }
-      let!(:patient) { create(:patient, parents: [parent]) }
-
-      before { create(:patient, parents: [parent]) }
-
-      it "does not destroy the parent when one patient is destroyed" do
-        expect { patient.destroy }.not_to change(Parent, :count)
-      end
-    end
-
-    context "when patient has multiple parents" do
-      let!(:patient) { create(:patient, parents: create_list(:parent, 2)) }
-
-      it "destroys only the childless parents" do
-        expect { patient.destroy }.to change(Parent, :count).by(-2)
       end
     end
   end

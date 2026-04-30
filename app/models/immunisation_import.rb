@@ -84,48 +84,14 @@ class ImmunisationImport < ApplicationRecord
       bulk_import(rows: :all)
 
       postprocess_rows!
-
-      update_columns(processed_at: Time.zone.now, status: :processed, **counts)
     end
 
     post_commit!
+
+    update_columns(processed_at: Time.zone.now, status: :processed, **counts)
   end
 
   private
-
-  # TODO: This is called by the `rows_are_valid` validation. Move it to it's own validation.
-  def check_rows_are_unique
-    row_offset = csv_data_object.has_instruction_row? ? 3 : 2
-
-    rows
-      .map(&:full_row_deduplication_attributes)
-      .tally
-      .each do |full_row_deduplication_attributes, count|
-        next if count <= 1
-
-        matching_rows =
-          rows.each_with_index.select do |row, _index|
-            row.full_row_deduplication_attributes ==
-              full_row_deduplication_attributes
-          end
-        matching_rows = matching_rows.to_h
-
-        matching_rows.each_key do |row|
-          other_row_numbers =
-            matching_rows
-              .reject { |other_row, _| other_row.equal?(row) }
-              .map { |_, other_index| other_index + row_offset }
-
-          other_rows_text =
-            "#{"row".pluralize(other_row_numbers.size)} #{other_row_numbers.to_sentence(last_word_connector: " and ")}"
-
-          row.errors.add(
-            :base,
-            "The record on this row appears to be a duplicate of #{other_rows_text}."
-          )
-        end
-      end
-  end
 
   def parse_row(data)
     ImmunisationImportRow.new(data:, team:, type:)
@@ -173,14 +139,9 @@ class ImmunisationImport < ApplicationRecord
 
     ArchiveReason.import(archive_reasons, on_duplicate_key_ignore: :all)
 
-    [
-      [:vaccination_records, vaccination_records],
-      [:patients, @patients_batch],
-      [:patient_locations, patient_locations.select { it.id.present? }]
-    ].each do |association, collection|
-      link_records_by_type(association, collection)
-      collection.clear
-    end
+    Imports::JoinRecords.call(self, vaccination_records)
+    Imports::JoinRecords.call(self, patients)
+    Imports::JoinRecords.call(self, patient_locations.select { it.id.present? })
 
     @patients_batch.clear
     @vaccination_records_batch.clear

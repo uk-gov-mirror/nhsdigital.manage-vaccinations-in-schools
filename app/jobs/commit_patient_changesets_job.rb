@@ -1,22 +1,9 @@
 # frozen_string_literal: true
 
-class CommitPatientChangesetsJob
-  include Sidekiq::Job
-  include Sidekiq::Throttled::Job
+class CommitPatientChangesetsJob < ApplicationJobSidekiq
   include PatientImportConcern
 
-  # sidekiq_throttle concurrency: {
-  #                    limit: 1,
-  #                    key_suffix: ->(_) do
-  #                      if Flipper.enabled?(:import_concurrency_per_server)
-  #                        Socket.gethostname
-  #                      else
-  #                        ""
-  #                      end
-  #                    end
-  #                  }
-
-  queue_as :imports
+  sidekiq_options queue: :imports
 
   def perform(patient_changeset_ids)
     changesets =

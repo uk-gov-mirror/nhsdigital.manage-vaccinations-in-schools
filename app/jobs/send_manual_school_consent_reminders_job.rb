@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-class SendManualSchoolConsentRemindersJob < ApplicationJob
+class SendManualSchoolConsentRemindersJob < ApplicationJobActiveJob
   include SendSchoolConsentNotificationConcern
+
+  queue_as :notifications
 
   def perform(session, current_user:)
     patient_programmes_eligible_for_notification(

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-class ProcessPatientChangesetJob < ApplicationJob
+class ProcessPatientChangesetJob < ApplicationJobActiveJob
   queue_as :imports
 
   def perform(patient_changeset_id)
     patient_changeset = PatientChangeset.find(patient_changeset_id)
-    return if patient_changeset.processed?
+    return if patient_changeset.processed_at?
 
     unique_nhs_number = get_unique_nhs_number(patient_changeset)
     if unique_nhs_number

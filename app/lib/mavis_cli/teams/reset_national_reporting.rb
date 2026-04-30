@@ -7,17 +7,9 @@ module MavisCLI
 
       option :workgroup,
              desc: "The workgroup of a specific team to reset (optional)"
-      option :force,
-             desc:
-               "Ignore check if sync_national_reporting_to_imms_api feature is enabled"
 
-      def call(workgroup: nil, force: false, **)
+      def call(workgroup: nil, **)
         MavisCLI.load_rails
-
-        if !force && Flipper.enabled?(:sync_national_reporting_to_imms_api)
-          puts "Error: This operation is not allowed while sync_national_reporting_to_imms_api is enabled."
-          return
-        end
 
         teams = find_teams(workgroup)
 
@@ -29,7 +21,8 @@ module MavisCLI
         puts "Found #{teams.count} national reporting team(s) to reset:"
         teams.each do |team|
           puts "  - #{team.name} (#{team.workgroup})"
-          puts "    - Immunisation imports: #{ImmunisationImport.where(team:).count}"
+          puts "    - Cut-off date: #{team.national_reporting_cut_off_date}"
+          puts "    - Immunisation imports (before cut-off): #{find_immunisation_imports_for_team(team).count}"
           puts "    - Total patients: #{find_patients_for_team(team).count}"
 
           vaccination_records = find_vaccination_records_for_team(team)
@@ -75,10 +68,16 @@ module MavisCLI
             raise ArgumentError,
                   "Team #{workgroup} is not a national reporting team"
           end
+          if team.national_reporting_cut_off_date.nil?
+            raise ArgumentError,
+                  "Team #{workgroup} does not have a national reporting cut off date set; no data to delete"
+          end
 
           [team]
         else
-          Team.where(type: :national_reporting)
+          Team
+            .where(type: :national_reporting)
+            .where.not(national_reporting_cut_off_date: nil)
         end
       end
 
@@ -86,8 +85,9 @@ module MavisCLI
         patient_ids_to_update = Set.new
 
         ActiveRecord::Base.transaction do
-          immunisation_imports = ImmunisationImport.where(team:)
-          puts "  - Found #{immunisation_imports.count} immunisation import(s)"
+          immunisation_imports = find_immunisation_imports_for_team(team)
+          puts "  - Found #{immunisation_imports.count} immunisation import(s) created before team's cut off date: " \
+                 "#{team.national_reporting_cut_off_date}"
 
           patient_ids = find_patients_for_team(team).ids
           puts "  - Found #{patient_ids.count} patient(s) in this team"
@@ -109,8 +109,8 @@ module MavisCLI
                    " record(s) will be deleted"
           end
 
-          puts "Destroying vaccination records..."
-          not_synced_vaccination_records.destroy_all
+          puts "Destroying #{not_synced_vaccination_records.count} vaccination records..."
+          not_synced_vaccination_records.find_each(&:destroy)
 
           puts "Refreshing immunisations imports..."
           if immunisation_imports.joins(:vaccination_records).any?
@@ -127,8 +127,8 @@ module MavisCLI
                    " be deleted"
           end
 
-          puts "Destroying immunisation imports..."
-          immunisation_imports.destroy_all
+          puts "Destroying #{immunisation_imports.count} immunisation imports..."
+          immunisation_imports.find_each(&:destroy)
 
           archive_reasons =
             ArchiveReason.where(
@@ -136,7 +136,7 @@ module MavisCLI
               team:
             )
           puts "Destroying #{archive_reasons.count} archive reasons..."
-          archive_reasons.destroy_all
+          archive_reasons.find_each(&:destroy)
 
           puts "Updating patient-team relationships..."
           PatientTeamUpdater.call(
@@ -145,29 +145,29 @@ module MavisCLI
 
           patients_to_destroy =
             find_patients_without_team(patient_ids_of_not_synced_records)
-          # We need to ensure we only update statuses for patients who are not
-          # destroyed. This should be the same as the list of patients _with_
-          # a team, but it's fine to use this subtraction to be safe.
+
           patient_ids_to_update +=
             patient_ids_of_not_synced_records - patients_to_destroy.ids
           puts "  - Found #{patients_to_destroy.count}" \
                  " patient(s) who were in the imports, and no longer have teams"
 
-          access_log_entries =
-            AccessLogEntry.where(patient_id: patients_to_destroy.ids)
-          puts "  - Found #{access_log_entries.count} access_log_entries for" \
-                 " patients without teams"
-
-          puts "Destroying access-log-entries..."
-          access_log_entries.destroy_all
-
-          puts "Destroying patients..."
-          patients_to_destroy.destroy_all
+          puts "Destroying #{patients_to_destroy.count} patients..."
+          PatientDeleter.call(
+            patients: patients_to_destroy,
+            confirm_production_delete: true
+          )
         end
 
         puts "Enqueueing jobs to update statuses for" \
                " #{patient_ids_to_update.size} patient(s) left over..."
         PatientStatusUpdaterJob.perform_bulk(patient_ids_to_update.zip)
+      end
+
+      def find_immunisation_imports_for_team(team)
+        ImmunisationImport.where(team:).where(
+          "immunisation_imports.created_at < ?",
+          team.national_reporting_cut_off_date
+        )
       end
 
       def find_patients_for_team(team)
@@ -177,7 +177,7 @@ module MavisCLI
       def find_vaccination_records_for_team(team)
         VaccinationRecord.joins(:immunisation_imports).where(
           immunisation_imports: {
-            team:
+            id: find_immunisation_imports_for_team(team)
           }
         )
       end
