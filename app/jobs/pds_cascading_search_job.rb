@@ -6,8 +6,10 @@ class PDSCascadingSearchJob < ApplicationJobActiveJob
   queue_as :pds
   retry_on Faraday::ServerError, wait: :polynomially_longer
 
-  def perform(searchable, step_name: nil, search_results: [], queue: :pds)
-    step_name ||= :no_fuzzy_with_history
+  def perform(searchable, step_name: nil, search_results: nil, queue: nil)
+    step_name ||= "no_fuzzy_with_history"
+    search_results ||= []
+    queue ||= "pds"
 
     SemanticLogger.tagged(
       searchable: "#{searchable.class.name}##{searchable.id}",
@@ -19,15 +21,15 @@ class PDSCascadingSearchJob < ApplicationJobActiveJob
           given_name: searchable.given_name,
           date_of_birth: searchable.date_of_birth,
           address_postcode: searchable.address_postcode,
-          step_name: step_name
+          step_name:
         )
 
       search_result = {
-        step: step_name,
-        result: result,
-        nhs_number: pds_patient&.nhs_number,
-        created_at: Time.current
-      }.with_indifferent_access
+        "step" => step_name,
+        "result" => result.to_s,
+        "nhs_number" => pds_patient&.nhs_number,
+        "created_at" => Time.current.iso8601
+      }
 
       if searchable.is_a?(PatientChangeset)
         searchable.search_results << search_result
@@ -39,9 +41,9 @@ class PDSCascadingSearchJob < ApplicationJobActiveJob
 
       next_step = STEPS[step_name][result]
 
-      if result == :error || next_step.nil? || next_step == :give_up ||
+      if result == :error || next_step.nil? || next_step == "give_up" ||
            multiple_nhs_numbers_found?(search_results) ||
-           next_step == :save_nhs_number_if_unique
+           next_step == "save_nhs_number_if_unique"
         searchable.save!
         if searchable.is_a?(PatientChangeset)
           ProcessPatientChangesetJob.perform_later(searchable.id)
@@ -60,21 +62,21 @@ class PDSCascadingSearchJob < ApplicationJobActiveJob
   private
 
   STEPS = {
-    no_fuzzy_with_history: {
-      no_matches: :no_fuzzy_with_wildcard_postcode,
-      one_match: :save_nhs_number_if_unique,
-      too_many_matches: :no_fuzzy_without_history
+    "no_fuzzy_with_history" => {
+      no_matches: "no_fuzzy_with_wildcard_postcode",
+      one_match: "save_nhs_number_if_unique",
+      too_many_matches: "no_fuzzy_without_history"
     },
-    no_fuzzy_without_history: {
-      no_matches: :give_up,
-      one_match: :save_nhs_number_if_unique,
-      too_many_matches: :give_up,
+    "no_fuzzy_without_history" => {
+      no_matches: "give_up",
+      one_match: "save_nhs_number_if_unique",
+      too_many_matches: "give_up",
       format_query: ->(query) { query.merge(history: false) }
     },
-    no_fuzzy_with_wildcard_postcode: {
-      no_matches: :no_fuzzy_with_wildcard_given_name,
-      one_match: :no_fuzzy_with_wildcard_given_name,
-      too_many_matches: :no_fuzzy_with_wildcard_given_name,
+    "no_fuzzy_with_wildcard_postcode" => {
+      no_matches: "no_fuzzy_with_wildcard_given_name",
+      one_match: "no_fuzzy_with_wildcard_given_name",
+      too_many_matches: "no_fuzzy_with_wildcard_given_name",
       format_query:
         lambda do |query|
           query[:address_postcode] = query[:address_postcode].dup
@@ -82,11 +84,11 @@ class PDSCascadingSearchJob < ApplicationJobActiveJob
           query
         end
     },
-    no_fuzzy_with_wildcard_given_name: {
-      no_matches: :no_fuzzy_with_wildcard_family_name,
-      one_match: :no_fuzzy_with_wildcard_family_name,
-      too_many_matches: :no_fuzzy_with_wildcard_family_name,
-      skip_step: :no_fuzzy_with_wildcard_family_name,
+    "no_fuzzy_with_wildcard_given_name" => {
+      no_matches: "no_fuzzy_with_wildcard_family_name",
+      one_match: "no_fuzzy_with_wildcard_family_name",
+      too_many_matches: "no_fuzzy_with_wildcard_family_name",
+      skip_step: "no_fuzzy_with_wildcard_family_name",
       format_query:
         lambda do |query|
           query[:given_name] = query[:given_name].dup
@@ -94,11 +96,11 @@ class PDSCascadingSearchJob < ApplicationJobActiveJob
           query
         end
     },
-    no_fuzzy_with_wildcard_family_name: {
-      no_matches: :save_nhs_number_if_unique,
-      one_match: :save_nhs_number_if_unique,
-      too_many_matches: :save_nhs_number_if_unique,
-      skip_step: :save_nhs_number_if_unique,
+    "no_fuzzy_with_wildcard_family_name" => {
+      no_matches: "save_nhs_number_if_unique",
+      one_match: "save_nhs_number_if_unique",
+      too_many_matches: "save_nhs_number_if_unique",
+      skip_step: "save_nhs_number_if_unique",
       format_query:
         lambda do |query|
           query[:family_name] = query[:family_name].dup
@@ -118,9 +120,9 @@ class PDSCascadingSearchJob < ApplicationJobActiveJob
     return :no_postcode, nil if address_postcode.blank?
 
     case step_name
-    when :no_fuzzy_with_wildcard_given_name
+    when "no_fuzzy_with_wildcard_given_name"
       return :skip_step, nil if given_name.length <= 3
-    when :no_fuzzy_with_wildcard_family_name
+    when "no_fuzzy_with_wildcard_family_name"
       return :skip_step, nil if family_name.length <= 3
     end
 
