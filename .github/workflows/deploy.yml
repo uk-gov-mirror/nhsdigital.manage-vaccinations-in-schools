@@ -45,6 +45,7 @@ on:
           - web
           - sidekiq
           - ops
+          - metrics
         default: all
       run_pre_deploy_migrations:
         description: Run `pre-deploy` job (schema-migrations) before service deployment.
@@ -103,7 +104,7 @@ jobs:
       fail-fast: true
       matrix:
         service: >-
-          ${{ inputs.server_types == 'all' && fromJSON('["web", "sidekiq", "ops"]') ||
+          ${{ inputs.server_types == 'all' && fromJSON('["web", "sidekiq", "ops", "metrics"]') ||
           fromJSON(format('["{0}"]', inputs.server_types)) }}
     env:
       repository_name: ${{ matrix.service == 'ops' && 'mavis/ops' || 'mavis/webapp' }}
@@ -328,7 +329,7 @@ jobs:
       fail-fast: false
       matrix:
         service: >-
-          ${{ inputs.server_types == 'all' && fromJSON('["web", "sidekiq", "ops"]') ||
+          ${{ inputs.server_types == 'all' && fromJSON('["web", "sidekiq", "ops", "metrics"]') ||
           fromJSON(format('["{0}"]', inputs.server_types)) }}
     steps:
       - name: Configure AWS Credentials

@@ -10,6 +10,7 @@ require "net/http"
 require_relative "../lib/prometheus_exporter/custom_active_record_collector"
 
 def fetch_ecs_task_id
+  return "bar"
   metadata_uri = ENV.fetch("ECS_CONTAINER_METADATA_URI_V4")
   max_retries = 12
   retry_delay = 10
@@ -40,11 +41,11 @@ def resolve_label(env_key, &default)
 end
 
 labels = {
-  "TaskId" => resolve_label("PROMETHEUS_TASK_ID_LABEL") do
-    ARGV.include?("skip-server-labels") ? nil : fetch_ecs_task_id
+  "TaskId" => ARGV.include?("skip-server-labels") ? nil : resolve_label("PROMETHEUS_TASK_ID_LABEL") do
+    fetch_ecs_task_id
   end,
-  "ServiceName" => resolve_label("PROMETHEUS_SERVICE_NAME_LABEL") do
-    ARGV.include?("skip-server-labels") ? nil : ENV["SERVICE_NAME"]
+  "ServiceName" => ARGV.include?("skip-server-labels") ? nil : resolve_label("PROMETHEUS_SERVICE_NAME_LABEL") do
+    ENV["SERVICE_NAME"]
   end
 }.compact
 
