@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-describe API::Testing::TeamsController do
-  include ActiveJob::TestHelper
+describe "/api/testing/teams" do
   include ImportsHelper
 
   before do
@@ -75,7 +74,7 @@ describe API::Testing::TeamsController do
     end
 
     context "when not keeping itself" do
-      subject(:call) { delete :destroy, params: { workgroup: "r1l" } }
+      subject(:call) { delete "/api/testing/teams/r1l" }
 
       it "deletes associated data" do
         expect { call }.to(
@@ -98,7 +97,7 @@ describe API::Testing::TeamsController do
 
     context "when keeping itself" do
       subject(:call) do
-        delete :destroy, params: { workgroup: "r1l", keep_itself: "true" }
+        delete "/api/testing/teams/r1l", params: { keep_itself: "true" }
       end
 
       it "deletes associated data" do
@@ -133,9 +132,8 @@ describe API::Testing::TeamsController do
 
     context "when keep_base_locations is true" do
       subject(:call) do
-        delete :destroy_locations,
+        delete "/api/testing/teams/r1l/locations",
                params: {
-                 workgroup: "r1l",
                  keep_base_locations: "true"
                }
       end
@@ -151,13 +149,7 @@ describe API::Testing::TeamsController do
     end
 
     context "when keep_base_locations is false" do
-      subject(:call) do
-        delete :destroy_locations,
-               params: {
-                 workgroup: "r1l",
-                 keep_base_locations: "false"
-               }
-      end
+      subject(:call) { delete "/api/testing/teams/r1l/locations" }
 
       it "deletes all locations" do
         expect { call }.to change(Location.gias_school, :count).by(-2)

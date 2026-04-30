@@ -111,10 +111,13 @@ Rails.application.routes.draw do
   namespace :api do
     unless Rails.env.production?
       namespace :testing do
+        post "onboard", to: "onboard#create"
+
         resources :locations, only: :index
-        delete "teams/:workgroup/locations", to: "teams#destroy_locations"
-        resources :teams, only: :destroy, param: :workgroup
-        post "/onboard", to: "onboard#create"
+        resources :teams, only: :destroy, param: :workgroup do
+          delete "locations", action: :destroy_locations, on: :member
+        end
+
         get "refresh-reporting", to: "refresh_reporting#create"
         post "vaccinations-search-in-nhs",
              to: "vaccinations_search_in_nhs#create"
