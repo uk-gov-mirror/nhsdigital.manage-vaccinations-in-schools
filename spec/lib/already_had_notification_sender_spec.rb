@@ -22,8 +22,8 @@ describe AlreadyHadNotificationSender do
   before { ActiveJob::Base.queue_adapter.enqueued_jobs.clear }
 
   shared_examples "sends no notifications" do
-    it { expect { call }.not_to have_delivered_email }
-    it { expect { call }.not_to have_delivered_sms }
+    it { expect { call }.not_to deliver_email }
+    it { expect { call }.not_to deliver_sms }
   end
 
   shared_examples "sends one email to all parents with valid consents" do
