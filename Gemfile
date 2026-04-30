@@ -119,6 +119,7 @@ group :test do
   gem "capybara"
   gem "capybara_accessible_selectors",
       github: "citizensadvice/capybara_accessible_selectors"
+  gem "capybara-screenshot"
   gem "climate_control"
   gem "database_cleaner-active_record"
   gem "its"
