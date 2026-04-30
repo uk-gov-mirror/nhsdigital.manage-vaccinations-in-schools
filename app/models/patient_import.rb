@@ -42,7 +42,16 @@ class PatientImport < ApplicationRecord
     end
 
     if Flipper.enabled?(:pds) && Flipper.enabled?(:pds_search_during_import)
-      process_no_postcode_changesets(changesets.without_postcode)
+      changesets.without_postcode.find_each do |cs|
+        cs.search_results << {
+          step: :no_fuzzy_with_history,
+          result: :no_postcode,
+          nhs_number: nil,
+          created_at: Time.current
+        }
+        cs.calculating_review!
+        ReviewPatientChangesetJob.perform_later(cs.id)
+      end
       if changesets.with_postcode.any?
         enqueue_pds_cascading_searches(changesets.with_postcode)
         return
@@ -145,19 +154,6 @@ class PatientImport < ApplicationRecord
   end
 
   private
-
-  def process_no_postcode_changesets(changesets)
-    changesets.find_each do |cs|
-      cs.search_results << {
-        step: :no_fuzzy_with_history,
-        result: :no_postcode,
-        nhs_number: nil,
-        created_at: Time.current
-      }
-      cs.calculating_review!
-      ReviewPatientChangesetJob.perform_later(cs.id)
-    end
-  end
 
   def enqueue_review_jobs(changesets)
     review_changesets =
