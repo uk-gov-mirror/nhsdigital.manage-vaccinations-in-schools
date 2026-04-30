@@ -35,6 +35,16 @@ class PatientImport < ApplicationRecord
   end
 
   def process!
+    # if pds enabled
+      # changesets with no postcode are given a fake search result
+        # ReviewPatientChangesetJob
+      # changesets with postcode
+        # PDSCascadingSearchJob
+          # ProcessPatientChangesetJob
+            # ReviewPatientChangesetJob
+    # if pds disabled or pds enabled but no changesets with postcodes
+      # ReviewPatientChangesetJob
+
     raise "'rows' are empty. Call parse_rows! before processing." if rows.nil?
 
     rows.each_with_index.map do |row, row_number|
