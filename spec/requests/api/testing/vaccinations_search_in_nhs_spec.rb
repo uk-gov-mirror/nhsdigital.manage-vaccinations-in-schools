@@ -2,7 +2,6 @@
 
 describe "/api/testing/vaccinations-search-in-nhs" do
   before { Flipper.enable(:testing_api) }
-  after { Flipper.disable(:testing_api) }
 
   describe "POST" do
     context "without wait param" do
