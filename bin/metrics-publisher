@@ -1,8 +1,21 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require_relative "../config/environment"
+require "bundler/setup"
+require "openssl"
+require "sidekiq"
+require "sidekiq/api"
+require "prometheus_exporter"
 require "prometheus_exporter/instrumentation"
+
+redis_config = { url: ENV["SIDEKIQ_REDIS_URL"] || ENV["REDIS_URL"] }
+
+if %w[production staging].include?(ENV["RAILS_ENV"])
+  redis_config[:ssl_params] = { verify_mode: OpenSSL::SSL::VERIFY_NONE }
+  redis_config[:timeout] = 10
+end
+
+Sidekiq.configure_client { |config| config.redis = redis_config }
 
 PrometheusExporter::Instrumentation::SidekiqStats.start
 PrometheusExporter::Instrumentation::SidekiqQueue.start(all_queues: true)
