@@ -70,7 +70,17 @@ class PatientImport < ApplicationRecord
     validate_changeset_uniqueness!
     return if changesets_are_invalid?
 
-    enqueue_review_jobs(changesets)
+    review_changesets =
+      if Flipper.enabled?(:pds) && Flipper.enabled?(:pds_search_during_import)
+        changesets.with_postcode
+      else
+        changesets
+      end
+
+    review_changesets.each do |cs|
+      cs.calculating_review!
+      ReviewPatientChangesetSidekiqJob.perform_async(cs.id)
+    end
 
     TeamCachedCounts.new(team).reset_import_issues!
   end
@@ -161,20 +171,6 @@ class PatientImport < ApplicationRecord
   end
 
   private
-
-  def enqueue_review_jobs(changesets)
-    review_changesets =
-      if Flipper.enabled?(:pds) && Flipper.enabled?(:pds_search_during_import)
-        changesets.with_postcode
-      else
-        changesets
-      end
-
-    review_changesets.each do |cs|
-      cs.calculating_review!
-      ReviewPatientChangesetSidekiqJob.perform_async(cs.id)
-    end
-  end
 
   def valid_pds_match_rate?
     pds_match_rate / 100 >= PDS_MATCH_THRESHOLD
