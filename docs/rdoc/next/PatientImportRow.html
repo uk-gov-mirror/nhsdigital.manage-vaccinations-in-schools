@@ -1037,7 +1037,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -1447,7 +1447,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -1854,7 +1854,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -2263,7 +2263,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -2730,7 +2730,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -3211,7 +3211,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -3621,7 +3621,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -4155,7 +4155,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -4582,7 +4582,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -5019,7 +5019,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -5555,7 +5555,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -5996,7 +5996,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -6441,7 +6441,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -6834,7 +6834,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -7364,7 +7364,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -7798,7 +7798,7 @@
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
       <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
         <span class="ruby-value">:base</span>,
         <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -8238,7 +8238,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -8718,7 +8718,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -9138,7 +9138,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -9552,7 +9552,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -9888,7 +9888,7 @@
           <div class="method-source-code" id="validate_existing_patients-source">
             <pre class="ruby"><span class="ruby-comment"># File app/models/patient_import_row.rb, line 219</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
@@ -10879,7 +10879,7 @@
 <span class="ruby-keyword">end</span>
 
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">validate_existing_patients</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">existing_patients</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_patients</span>&amp;.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
     <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(
       <span class="ruby-value">:base</span>,
       <span class="ruby-string">&quot;Two or more possible patients match the patient first name, last name, date of birth or postcode.&quot;</span>
