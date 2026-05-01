@@ -5,17 +5,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>class AppSessionSearchFormComponent - Mavis Documentation</title>
+<title>class AppPatientSessionRegistrationComponent - Mavis Documentation</title>
 
 
   <meta
     name="keywords"
-    content="ruby,class,AppSessionSearchFormComponent"
+    content="ruby,class,AppPatientSessionRegistrationComponent"
   >
 
     <meta
       name="description"
-      content="Documentation for the AppSessionSearchFormComponent class"
+      content="Documentation for the AppPatientSessionRegistrationComponent class"
     >
 
 
@@ -24,13 +24,13 @@
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="class AppSessionSearchFormComponent - Mavis Documentation">
+<meta property="og:title" content="class AppPatientSessionRegistrationComponent - Mavis Documentation">
 
 
 
     <meta
       property="og:description"
-      content="Documentation for AppSessionSearchFormComponent class - API reference and code examples"
+      content="Documentation for AppPatientSessionRegistrationComponent class - API reference and code examples"
     >
 
 
@@ -39,13 +39,13 @@
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="class AppSessionSearchFormComponent - Mavis Documentation">
+<meta name="twitter:title" content="class AppPatientSessionRegistrationComponent - Mavis Documentation">
 
 
 
     <meta
       name="twitter:description"
-      content="Documentation for AppSessionSearchFormComponent class - API reference and code examples"
+      content="Documentation for AppPatientSessionRegistrationComponent class - API reference and code examples"
     >
 
 
@@ -570,6 +570,25 @@
 
 
 
+  <div class="nav-section">
+    <details class="nav-section-collapsible" open>
+      <summary class="nav-section-header">
+        <span class="nav-section-icon">
+          <svg><use href="#icon-instance-methods"></use></svg>
+        </span>
+        <span class="nav-section-title">Instance Methods</span>
+        <span class="nav-section-chevron">
+          <svg><use href="#icon-chevron"></use></svg>
+        </span>
+      </summary>
+      <ul class="nav-list" role="directory">
+
+        <li ><a href="#method-i-render-3F">render?</a></li>
+
+      </ul>
+    </details>
+  </div>
+
 
   <div id="classindex-section" class="nav-section">
   <details class="nav-section-collapsible" open>
@@ -589,13 +608,13 @@
 
 </nav>
 
-<main role="main" aria-labelledby="class-appsessionsearchformcomponent">
+<main role="main" aria-labelledby="class-apppatientsessionregistrationcomponent">
   
   
 
-  <span id="class-AppSessionSearchFormComponent" class="legacy-anchor"></span>
-  <h1 id="class-appsessionsearchformcomponent" class="anchor-link class">
-    class AppSessionSearchFormComponent
+  <span id="class-AppPatientSessionRegistrationComponent" class="legacy-anchor"></span>
+  <h1 id="class-apppatientsessionregistrationcomponent" class="anchor-link class">
+    class AppPatientSessionRegistrationComponent
   </h1>
 
   <section class="description">
@@ -609,31 +628,6 @@
 
 
 
-
-    <section class="constants-list">
-      <header>
-        <h3 id="untitled-constants"><a href="#untitled-constants">Constants</a></h3>
-      </header>
-      <dl>
-
-        <dt id="STATUSES">STATUSES</dt>
-
-        <dd>
-
-          
-        </dd>
-
-
-        <dt id="TYPES">TYPES</dt>
-
-        <dd>
-
-          
-        </dd>
-
-
-      </dl>
-    </section>
 
 
 
@@ -654,7 +648,7 @@
             <div class="method-heading">
               <a href="#method-c-new" title="Link to this method">
                 <span class="method-name">new</span>
-                <span class="method-args">(form, url:, programmes:, academic_years:)</span>
+                <span class="method-args">(patient:, session:)</span>
               </a>
             </div>
 
@@ -667,12 +661,10 @@
             </details>
           </div>
           <div class="method-source-code" id="new-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/components/app_session_search_form_component.rb, line 4</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">form</span>, <span class="ruby-value">url:</span>, <span class="ruby-value">programmes:</span>, <span class="ruby-value">academic_years:</span>)
-  <span class="ruby-ivar">@form</span> = <span class="ruby-identifier">form</span>
-  <span class="ruby-ivar">@url</span> = <span class="ruby-identifier">url</span>
-  <span class="ruby-ivar">@programmes</span> = <span class="ruby-identifier">programmes</span>
-  <span class="ruby-ivar">@academic_years</span> = <span class="ruby-identifier">academic_years</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/components/app_patient_session_registration_component.rb, line 4</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-value">patient:</span>, <span class="ruby-value">session:</span>)
+  <span class="ruby-ivar">@patient</span> = <span class="ruby-identifier">patient</span>
+  <span class="ruby-ivar">@session</span> = <span class="ruby-identifier">session</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
 
@@ -700,6 +692,56 @@
 
 
 
+
+     <section id="public-instance-untitled-method-details" class="method-section anchor-link">
+       <header>
+         <h3 id="public-instance-untitled-methods"><a href="#public-instance-untitled-methods">Public Instance Methods</a></h3>
+       </header>
+
+
+      <div id="method-i-render-3F" class="method-detail anchor-link ">
+        <div class="method-header">
+
+            <div class="method-heading">
+              <a href="#method-i-render-3F" title="Link to this method">
+                <span class="method-name">render?</span>
+                <span class="method-args">()</span>
+              </a>
+            </div>
+
+        </div>
+
+
+          <div class="method-controls">
+            <details class="method-source-toggle">
+              <summary>Source</summary>
+            </details>
+          </div>
+          <div class="method-source-code" id="render-3F-source">
+            <pre class="ruby"><span class="ruby-comment"># File app/components/app_patient_session_registration_component.rb, line 9</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">render?</span>
+  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">requires_registration?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">session</span>.<span class="ruby-identifier">today?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+
+
+
+        <div class="method-description">
+
+
+          
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+    </section>
 
 
 
