@@ -629,7 +629,7 @@
             <div class="method-heading">
               <a href="#method-c-new" title="Link to this method">
                 <span class="method-name">new</span>
-                <span class="method-args">(text:, colour: &quot;blue&quot;, small: false, classes: &quot;&quot;)</span>
+                <span class="method-args">( text:, colour: &quot;blue&quot;, icon: :warning, small: false, classes: &quot;&quot; )</span>
               </a>
             </div>
 
@@ -642,10 +642,17 @@
             </details>
           </div>
           <div class="method-source-code" id="new-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/components/app_status_component.rb, line 13</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-value">text:</span>, <span class="ruby-value">colour:</span> <span class="ruby-string">&quot;blue&quot;</span>, <span class="ruby-value">small:</span> <span class="ruby-keyword">false</span>, <span class="ruby-value">classes:</span> <span class="ruby-string">&quot;&quot;</span>)
+            <pre class="ruby"><span class="ruby-comment"># File app/components/app_status_component.rb, line 11</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(
+  <span class="ruby-value">text:</span>,
+  <span class="ruby-value">colour:</span> <span class="ruby-string">&quot;blue&quot;</span>,
+  <span class="ruby-value">icon:</span> <span class="ruby-value">:warning</span>,
+  <span class="ruby-value">small:</span> <span class="ruby-keyword">false</span>,
+  <span class="ruby-value">classes:</span> <span class="ruby-string">&quot;&quot;</span>
+)
   <span class="ruby-ivar">@text</span> = <span class="ruby-identifier">text</span>
   <span class="ruby-ivar">@colour</span> = <span class="ruby-identifier">colour</span>
+  <span class="ruby-ivar">@icon</span> = <span class="ruby-identifier">icon</span>
   <span class="ruby-ivar">@small</span> = <span class="ruby-identifier">small</span>
   <span class="ruby-ivar">@classes</span> = <span class="ruby-identifier">classes</span>
 <span class="ruby-keyword">end</span></pre>
