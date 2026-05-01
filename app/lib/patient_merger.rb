@@ -112,6 +112,47 @@ class PatientMerger
              academic_year: patient_location.academic_year,
              location_id: patient_location.location_id
            )
+          patient_location_to_keep =
+            patient_to_keep
+              .patient_locations
+              .where(
+                academic_year: patient_location.academic_year,
+                location_id: patient_location.location_id
+              )
+              .sole
+
+          begin_date_to_keep =
+            if patient_location.date_range.begin &&
+                 patient_location_to_keep.date_range.begin
+              [
+                patient_location.date_range.begin,
+                patient_location_to_keep.date_range.begin
+              ].min
+            else
+              patient_location_to_keep.date_range.begin
+            end
+
+          end_date_to_keep =
+            if patient_location.date_range.end == ::Float::INFINITY &&
+                 patient_location_to_keep.date_range.end != ::Float::INFINITY
+              Date.current
+            elsif patient_location.date_range.end &&
+                  patient_location_to_keep.date_range.end
+              [
+                patient_location.date_range.end,
+                patient_location_to_keep.date_range.end
+              ].max
+            else
+              patient_location_to_keep.date_range.end
+            end
+
+          date_range_to_keep = Range.new(begin_date_to_keep, end_date_to_keep)
+
+          patient_location_to_keep.update_column(
+            :date_range,
+            date_range_to_keep
+          )
+
           next
         end
         patient_location.update_column(:patient_id, patient_to_keep.id)
