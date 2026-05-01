@@ -72,6 +72,33 @@ describe DraftVaccinationRecord do
       end
     end
 
+    context "when recording recording already vaccinated" do
+      context "when performed_at is in the future on the date step" do
+        let(:attributes) do
+          valid_administered_attributes.merge(
+            patient_id: patient.id,
+            performed_at: 1.day.from_now,
+            programme_type: programme.type,
+            session_id: nil,
+            source: "manual_report"
+          )
+        end
+
+        around { |example| freeze_time { example.run } }
+
+        before { draft_vaccination_record.wizard_step = :date_and_time }
+
+        it "has an error" do
+          expect(draft_vaccination_record.save(context: :update)).to be(false)
+          expect(
+            draft_vaccination_record.errors[:performed_at_date]
+          ).to include(
+            "The vaccination cannot take place after #{Date.current.to_fs(:long)}"
+          )
+        end
+      end
+    end
+
     context "when the programme is flu" do
       let(:attributes) do
         valid_administered_attributes.merge(

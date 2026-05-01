@@ -92,7 +92,6 @@ class DraftVaccinationRecord
 
   on_wizard_step :date_and_time, exact: true do
     validates :performed_at_date, presence: true
-    validate :performed_at_date_within_range
   end
 
   on_wizard_step :outcome, exact: true do
@@ -187,6 +186,8 @@ class DraftVaccinationRecord
     validates :full_dose, inclusion: { in: [true, false] }
     validates :source, inclusion: { in: VaccinationRecord.sources.keys }
   end
+
+  validate :performed_at_date_within_range, on: :update
 
   def created_at = Time.current
 
@@ -478,7 +479,7 @@ class DraftVaccinationRecord
     end
   end
 
-  def academic_year = session&.academic_year
+  def academic_year = session&.academic_year || AcademicYear.pending
 
   def batch
     return nil if batch_id.nil?
@@ -498,7 +499,7 @@ class DraftVaccinationRecord
   end
 
   def performed_at_date_within_range
-    return if performed_at_date.nil? || session.nil?
+    return if performed_at_date.nil?
 
     if performed_at_date < earliest_possible_date
       errors.add(
