@@ -56,6 +56,16 @@ describe "Child record imports duplicates" do
     then_i_should_see_the_address_is_updated
   end
 
+  scenario "Patient matches multiple existing records in Mavis" do
+    given_i_am_signed_in
+    and_an_hpv_programme_is_underway
+    and_multiple_existing_patient_records_exist
+
+    when_i_visit_the_import_page
+    and_i_upload_a_valid_file
+    then_i_see_an_error_that_multiple_existing_matches_exist
+  end
+
   context "when PDS lookup during import is enabled" do
     scenario "User reviews and selects between duplicate records" do
       given_i_am_signed_in
@@ -104,6 +114,19 @@ describe "Child record imports duplicates" do
 
       when_i_go_to_the_fourth_uploaded_record
       then_i_should_see_the_address_is_updated
+    end
+
+    context "A patient being imported matches ..."
+
+    xscenario "Patient matches multiple existing records in Mavis" do
+      given_i_am_signed_in
+      and_pds_lookup_during_import_is_enabled
+      and_an_hpv_programme_is_underway
+      and_multiple_existing_patient_records_exist
+
+      when_i_visit_the_import_page
+      and_i_upload_a_valid_file
+      then_i_should_see_import_completed
     end
   end
 
@@ -264,6 +287,38 @@ describe "Child record imports duplicates" do
       )
   end
 
+  def and_multiple_existing_patient_records_exist
+    create(
+      :patient,
+      given_name: "Mark", # 3/4 match to third row of valid.csv on first name, last name and postcode
+      family_name: "Doe",
+      nhs_number: nil,
+      date_of_birth: Date.new(2010, 1, 4), # different date of birth
+      gender_code: :male,
+      address_line_1: "10 Downing Street",
+      address_line_2: "",
+      address_town: "London",
+      address_postcode: "SW1A 1AA",
+      school: @school,
+      session: @session
+    )
+
+    create(
+      :patient,
+      given_name: "Mark", # 3/4 match to third row of valid.csv on first name, last name and postcode
+      family_name: "Doe",
+      nhs_number: nil,
+      date_of_birth: Date.new(2013, 1, 5), # different date of birth
+      gender_code: :male,
+      address_line_1: "10 Downing Street",
+      address_line_2: "",
+      address_town: "London",
+      address_postcode: "SW1A 1AA",
+      school: @school,
+      session: @session
+    )
+  end
+
   def when_i_visit_the_import_page
     visit "/"
     click_link "Import", match: :first
@@ -283,6 +338,18 @@ describe "Child record imports duplicates" do
     attach_file_fixture "cohort_import[csv]",
                         "cohort_import/valid_with_duplicates.csv"
     click_on "Continue"
+    wait_for_import_to_complete(CohortImport)
+  end
+
+  def and_i_upload_a_valid_file
+    click_button "Upload records"
+
+    choose "Child records"
+    click_button "Continue"
+
+    attach_file_fixture "cohort_import[csv]", "cohort_import/valid.csv"
+    click_on "Continue"
+
     wait_for_import_to_complete(CohortImport)
   end
 
@@ -519,5 +586,15 @@ describe "Child record imports duplicates" do
     expect(
       SearchVaccinationRecordsInNHSJob
     ).not_to have_enqueued_sidekiq_job.with(@second_patient.id)
+  end
+
+  def then_i_see_an_error_that_multiple_existing_matches_exist
+    expect(page).to have_content(
+      "Three or more possible patients match the patient"
+    )
+  end
+
+  def then_i_should_see_import_completed
+    expect(page).to have_content(/Status\w*Completed/)
   end
 end
