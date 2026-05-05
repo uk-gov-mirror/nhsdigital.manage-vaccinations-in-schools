@@ -4,11 +4,10 @@ describe "/api/testing/vaccinations-search-in-nhs" do
   before { Flipper.enable(:testing_api) }
 
   describe "POST" do
-    before { allow(EnqueueVaccinationsSearchInNHSJob).to receive(:perform_now) }
-
     it "runs the enqueue job synchronously and responds with accepted" do
-      post "/api/testing/vaccinations-search-in-nhs"
-      expect(EnqueueVaccinationsSearchInNHSJob).to have_received(:perform_now)
+      expect {
+        post "/api/testing/vaccinations-search-in-nhs"
+      }.to enqueue_sidekiq_job(EnqueueVaccinationsSearchInNHSJob)
       expect(response).to have_http_status(:accepted)
     end
   end
