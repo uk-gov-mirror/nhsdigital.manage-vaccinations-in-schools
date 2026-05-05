@@ -16,11 +16,18 @@ class PDSCascadingSearchJob < ApplicationJobActiveJob
     queue = queue.to_s
 
     # FIXME: Remove these once we're not queueing jobs with
-    #  `ActiveSupport::HashWithIndifferentAcces`.
+    #  `ActiveSupport::HashWithIndifferentAccess` and
+    #  `ActiveSupport::TimeWithZone` values.
     search_results =
       search_results.map do |search_result|
         search_result.to_hash.stringify_keys.transform_values do |value|
-          value.is_a?(Symbol) ? value.to_s : value
+          if value.is_a?(Symbol)
+            value.to_s
+          elsif value.is_a?(ActiveSupport::TimeWithZone)
+            value.iso8601
+          else
+            value
+          end
         end
       end
 
