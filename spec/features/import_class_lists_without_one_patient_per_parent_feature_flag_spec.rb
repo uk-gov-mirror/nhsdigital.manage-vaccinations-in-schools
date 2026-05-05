@@ -3,8 +3,6 @@
 describe "Import class lists" do
   around { |example| travel_to(Date.new(2023, 5, 20)) { example.run } }
 
-  before { Flipper.enable(:one_patient_per_parent) }
-
   scenario "User uploads a file" do
     given_an_hpv_programme_is_underway
 
@@ -34,7 +32,6 @@ describe "Import class lists" do
     and_i_upload_a_valid_file
     then_i_should_see_the_upload
     and_i_should_see_the_patients
-    and_a_new_patient_record_should_be_created
 
     when_i_go_to_the_session
     then_i_should_see_the_children_added_to_the_session
@@ -76,7 +73,6 @@ describe "Import class lists" do
       and_i_upload_a_valid_file
       then_i_should_see_the_upload
       and_i_should_see_the_patients
-      and_a_new_patient_record_should_be_created
 
       when_i_go_to_the_session
       then_i_should_see_the_children_added_to_the_session
@@ -171,26 +167,6 @@ describe "Import class lists" do
     expect(page).to have_content(/NHS number.*999.*000.*0018/)
     expect(page).to have_content("Date of birth 1 January 2010")
     expect(page).to have_content("Postcode SW1A 1AA")
-  end
-
-  def and_a_new_patient_record_should_be_created
-    expect(Patient.count).to eq(4)
-
-    patient = Patient.where(nhs_number: "9990000026").first
-    expect(patient.given_name).to eq("Jimmy")
-    expect(patient.family_name).to eq("Smith")
-    expect(patient.pending_changes).to eq({})
-    expect(patient.date_of_birth).to eq(Date.new(2010, 1, 2))
-    expect(patient.address_postcode).to eq("SW1A 1AA")
-    expect(patient.sessions.count).to eq(1)
-
-    dad = patient.parent_relationships.find_by(type: "father")
-    expect(dad.full_name).to eq("John Smith")
-    expect(dad.phone).to eq("07412 345678")
-    expect(dad.email).to eq("john@example.com")
-
-    session = patient.sessions.first
-    expect(session).to eq(@session)
   end
 
   alias_method :and_i_should_see_the_patients, :then_i_should_see_the_patients

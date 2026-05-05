@@ -49,6 +49,7 @@ describe "Import child records", :pds do
     when_i_upload_a_valid_file_with_changes
     and_i_go_to_the_import_page
     then_i_should_see_import_issues_with_the_count
+    and_a_new_patient_record_should_be_created
   end
 
   context "when PDS lookup during import is enabled" do
@@ -360,5 +361,21 @@ describe "Import child records", :pds do
       .where(given_name: "Taylor", family_name: "Reed")
       .where.not(id: @existing_patient.id)
       .sole
+  end
+
+  def and_a_new_patient_record_should_be_created
+    expect(Patient.count).to eq(3)
+
+    patient = Patient.find_by(nhs_number: "9990000026")
+    expect(patient.given_name).to eq("Jimmy")
+    expect(patient.family_name).to eq("Smith")
+    expect(patient.pending_changes).to eq({})
+    expect(patient.date_of_birth).to eq(Date.new(2010, 1, 2))
+    expect(patient.address_postcode).to eq("SW1A 1AA")
+
+    dad = patient.parent_relationships.find_by(type: "father")
+    expect(dad.full_name).to eq("John Smith")
+    expect(dad.phone).to eq("07412 345678")
+    expect(dad.email).to eq("john@example.com")
   end
 end
