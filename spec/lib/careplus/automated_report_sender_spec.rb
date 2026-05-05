@@ -14,7 +14,7 @@ describe Careplus::AutomatedReportSender do
   let(:programme) { Programme.hpv }
   let(:session) { create(:session, team:, programmes: [programme]) }
   let(:endpoint) do
-    "#{Settings.careplus.base_url}/#{team.careplus_namespace}/soap.SchImms.cls"
+    "#{Settings.careplus.base_url}/#{team.careplus_namespace}/soap.SCHImms.cls"
   end
   let(:response_status) { 200 }
   let(:response_body) { "<result>OK</result>" }
