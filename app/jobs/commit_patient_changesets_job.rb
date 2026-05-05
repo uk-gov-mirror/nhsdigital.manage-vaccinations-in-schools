@@ -89,7 +89,7 @@ class CommitPatientChangesetsJob < ApplicationJobSidekiq
     if import.changesets.needs_re_review.any?
       trigger_re_review(import)
     else
-      import.update_columns(processed_at: Time.zone.now, status: :processed)
+      import.processed!
     end
     import.postprocess_rows!
     reset_counts(import)

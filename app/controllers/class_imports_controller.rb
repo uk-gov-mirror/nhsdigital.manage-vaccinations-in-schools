@@ -117,10 +117,7 @@ class ClassImportsController < ApplicationController
       )
       @class_import.postprocess_rows!
     else
-      @class_import.update_columns(
-        status: :processed,
-        processed_at: Time.zone.now
-      )
+      @class_import.processed!
       @class_import.postprocess_rows!
     end
 

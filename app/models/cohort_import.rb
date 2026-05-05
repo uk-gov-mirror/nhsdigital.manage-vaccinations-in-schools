@@ -56,6 +56,10 @@ class CohortImport < PatientImport
   def post_commit!
   end
 
+  def processed!
+    update_columns(processed_at: Time.zone.now, status: :processed)
+  end
+
   private
 
   def parse_row(data)

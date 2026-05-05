@@ -133,6 +133,10 @@ class ClassImport < PatientImport
     patients_not_in_import - patients_with_school_moves
   end
 
+  def processed!
+    update_columns(processed_at: Time.zone.now, status: :processed)
+  end
+
   private
 
   def parse_row(data)
