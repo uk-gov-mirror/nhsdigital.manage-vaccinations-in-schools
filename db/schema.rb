@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_29_175616) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_05_154553) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -162,6 +162,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_175616) do
     t.bigint "class_import_id", null: false
     t.bigint "parent_relationship_id", null: false
     t.index ["class_import_id", "parent_relationship_id"], name: "idx_on_class_import_id_parent_relationship_id_8225058195", unique: true
+    t.index ["parent_relationship_id", "class_import_id"], name: "idx_on_parent_relationship_id_class_import_id_d7c05d6c2c", unique: true
   end
 
   create_table "class_imports_parents", id: false, force: :cascade do |t|
@@ -220,6 +221,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_175616) do
     t.bigint "cohort_import_id", null: false
     t.bigint "parent_relationship_id", null: false
     t.index ["cohort_import_id", "parent_relationship_id"], name: "idx_on_cohort_import_id_parent_relationship_id_c65e20d1f8", unique: true
+    t.index ["parent_relationship_id", "cohort_import_id"], name: "idx_on_parent_relationship_id_cohort_import_id_40fb9846d6", unique: true
   end
 
   create_table "cohort_imports_parents", id: false, force: :cascade do |t|
@@ -458,6 +460,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_175616) do
     t.bigint "immunisation_import_id", null: false
     t.bigint "vaccination_record_id", null: false
     t.index ["immunisation_import_id", "vaccination_record_id"], name: "idx_on_immunisation_import_id_vaccination_record_id_588e859772", unique: true
+    t.index ["vaccination_record_id", "immunisation_import_id"], name: "idx_on_vaccination_record_id_immunisation_import_id_813c516ad7", unique: true
   end
 
   create_table "important_notices", force: :cascade do |t|
@@ -770,6 +773,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_175616) do
     t.bigint "school_id"
     t.datetime "updated_at", null: false
     t.datetime "updated_from_pds_at"
+    t.boolean "vaccs_history_alpha_parental_consent", default: false, null: false
     t.index "address_postcode, date_of_birth, lower((given_name)::text)", name: "index_patients_on_lower_given_name_dob_address"
     t.index "date_of_birth, address_postcode, lower((family_name)::text)", name: "index_patients_on_lower_family_name_dob_address"
     t.index "lower((family_name)::text), lower((given_name)::text), address_postcode", name: "index_patients_on_lower_names_family_first_address"

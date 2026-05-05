@@ -4,36 +4,37 @@
 #
 # Table name: patients
 #
-#  id                         :bigint           not null, primary key
-#  address_line_1             :string
-#  address_line_2             :string
-#  address_postcode           :string
-#  address_town               :string
-#  birth_academic_year        :integer          not null
-#  date_of_birth              :date             not null
-#  date_of_death              :date
-#  date_of_death_recorded_at  :datetime
-#  ethnic_background          :integer
-#  ethnic_background_other    :string
-#  ethnic_group               :integer
-#  family_name                :string           not null
-#  gender_code                :integer          default("not_known"), not null
-#  given_name                 :string           not null
-#  invalidated_at             :datetime
-#  local_authority_mhclg_code :string
-#  nhs_number                 :string
-#  nhs_number_first_added_at  :datetime
-#  pending_changes            :jsonb            not null
-#  preferred_family_name      :string
-#  preferred_given_name       :string
-#  registration               :string
-#  registration_academic_year :integer
-#  restricted_at              :datetime
-#  updated_from_pds_at        :datetime
-#  created_at                 :datetime         not null
-#  updated_at                 :datetime         not null
-#  gp_practice_id             :bigint
-#  school_id                  :bigint
+#  id                                   :bigint           not null, primary key
+#  address_line_1                       :string
+#  address_line_2                       :string
+#  address_postcode                     :string
+#  address_town                         :string
+#  birth_academic_year                  :integer          not null
+#  date_of_birth                        :date             not null
+#  date_of_death                        :date
+#  date_of_death_recorded_at            :datetime
+#  ethnic_background                    :integer
+#  ethnic_background_other              :string
+#  ethnic_group                         :integer
+#  family_name                          :string           not null
+#  gender_code                          :integer          default("not_known"), not null
+#  given_name                           :string           not null
+#  invalidated_at                       :datetime
+#  local_authority_mhclg_code           :string
+#  nhs_number                           :string
+#  nhs_number_first_added_at            :datetime
+#  pending_changes                      :jsonb            not null
+#  preferred_family_name                :string
+#  preferred_given_name                 :string
+#  registration                         :string
+#  registration_academic_year           :integer
+#  restricted_at                        :datetime
+#  updated_from_pds_at                  :datetime
+#  vaccs_history_alpha_parental_consent :boolean          default(FALSE), not null
+#  created_at                           :datetime         not null
+#  updated_at                           :datetime         not null
+#  gp_practice_id                       :bigint
+#  school_id                            :bigint
 #
 # Indexes
 #
