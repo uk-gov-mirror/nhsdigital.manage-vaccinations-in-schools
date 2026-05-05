@@ -52,17 +52,17 @@ class PatientImport < ApplicationRecord
     end
 
     if Flipper.enabled?(:pds) && Flipper.enabled?(:pds_search_during_import)
-      changesets.without_postcode.find_each do |cs|
-        cs.search_results << {
-          step: :no_fuzzy_with_history,
-          result: :no_postcode,
-          nhs_number: nil,
-          created_at: Time.current
-        }
-        cs.calculating_review!
-        ReviewPatientChangesetSidekiqJob.perform_async(cs.id)
-      end
       if changesets.with_postcode.any?
+        changesets.without_postcode.find_each do |cs|
+          cs.search_results << {
+            step: :no_fuzzy_with_history,
+            result: :no_postcode,
+            nhs_number: nil,
+            created_at: Time.current
+          }
+          cs.calculating_review!
+          ReviewPatientChangesetSidekiqJob.perform_async(cs.id)
+        end
         changesets.with_postcode.find_each do |changeset|
           PDSCascadingSearchSidekiqJob.set(queue: :imports).perform_async(
             changeset.to_global_id.to_s,
@@ -72,6 +72,17 @@ class PatientImport < ApplicationRecord
           )
         end
         return
+      else
+        changesets.without_postcode.find_each do |cs|
+          cs.search_results << {
+            step: :no_fuzzy_with_history,
+            result: :no_postcode,
+            nhs_number: nil,
+            created_at: Time.current
+          }
+          cs.calculating_review!
+          ReviewPatientChangesetSidekiqJob.perform_async(cs.id)
+        end
       end
     end
 
