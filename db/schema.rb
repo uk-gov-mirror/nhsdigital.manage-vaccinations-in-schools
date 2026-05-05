@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_29_175616) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_05_112333) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -629,7 +629,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_175616) do
   create_table "patient_change_log_entries", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "patient_id", null: false
-    t.jsonb "recorded_changes", default: {}, null: false
+    t.text "recorded_changes", default: "{}", null: false
     t.integer "source", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"

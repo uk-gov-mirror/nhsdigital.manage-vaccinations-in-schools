@@ -5,7 +5,7 @@
 # Table name: patient_change_log_entries
 #
 #  id               :bigint           not null, primary key
-#  recorded_changes :jsonb            not null
+#  recorded_changes :text             default({}), not null
 #  source           :integer          not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null

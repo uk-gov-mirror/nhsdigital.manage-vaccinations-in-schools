@@ -5,7 +5,7 @@
 # Table name: patient_change_log_entries
 #
 #  id               :bigint           not null, primary key
-#  recorded_changes :jsonb            not null
+#  recorded_changes :text             default({}), not null
 #  source           :integer          not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
@@ -36,6 +36,9 @@ class PatientChangeLogEntry < ApplicationRecord
     address_town
     address_postcode
   ].freeze
+
+  serialize :recorded_changes, coder: JSON
+  encrypts :recorded_changes
 
   belongs_to :patient
   belongs_to :user, optional: true
