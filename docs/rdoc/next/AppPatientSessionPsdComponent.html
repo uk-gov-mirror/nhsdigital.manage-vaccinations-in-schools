@@ -721,7 +721,7 @@
           <div class="method-source-code" id="render-3F-source">
             <pre class="ruby"><span class="ruby-comment"># File app/components/app_patient_session_psd_component.rb, line 10</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">render?</span>
-  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">psd_enabled?</span>
+  <span class="ruby-identifier">programme</span>.<span class="ruby-identifier">supports_delegation?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">session</span>.<span class="ruby-identifier">psd_enabled?</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
 
