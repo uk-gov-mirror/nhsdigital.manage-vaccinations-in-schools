@@ -59,31 +59,33 @@ class CohortImport < PatientImport
   end
 
   def log_started
-    with_logger_tags { logger.info("started") }
+    log_with_tags(:info, "started")
   end
 
   def in_review!
     super
-    with_logger_tags { logger.info("in_review") }
+    log_with_tags(:info, "in_review")
   end
 
   def in_re_review!
     super
-    with_logger_tags { logger.info("in_re_review") }
+    log_with_tags(:info, "in_re_review")
   end
 
   def committing!
     super
-    with_logger_tags { logger.info("committing") }
+    log_with_tags(:info, "committing")
   end
 
   def processed!
     update_columns(processed_at: Time.zone.now, status: :processed)
-    with_logger_tags { logger.info("finished") }
+    log_with_tags(:info, "finished")
   end
 
-  def with_logger_tags(&)
-    SemanticLogger.tagged(id:, team_workgroup: team.workgroup, &)
+  def log_with_tags(log_level, *)
+    SemanticLogger.tagged(id:, team_workgroup: team.workgroup) do
+      log.public_send(log_level, *)
+    end
   end
 
   private

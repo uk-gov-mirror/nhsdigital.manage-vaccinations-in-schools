@@ -195,20 +195,21 @@ class ImmunisationImport < ApplicationRecord
   end
 
   def log_started
-    with_logger_tags { logger.info("started") }
+    log_with_tags(:info, "started")
   end
 
   def log_finished
-    with_logger_tags do
-      logger.info(
-        "finished",
-        duration_ms: ((processed_at - created_at) * 1000).to_i,
-        count: rows_count
-      )
-    end
+    log_with_tags(
+      :info,
+      "finished",
+      duration_ms: ((processed_at - created_at) * 1000).to_i,
+      count: rows_count
+    )
   end
 
-  def with_logger_tags(&)
-    SemanticLogger.tagged(id:, team_workgroup: team.workgroup, &)
+  def log_with_tags(log_level, *)
+    SemanticLogger.tagged(id:, team_workgroup: team.workgroup) do
+      log.public_send(log_level, *)
+    end
   end
 end
