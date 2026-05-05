@@ -691,7 +691,10 @@
     <span class="ruby-constant">CohortImportsParentRelationship</span>.<span class="ruby-identifier">where</span>(
       <span class="ruby-value">parent_relationship_id:</span> <span class="ruby-identifier">parent_relationship_ids</span>
     ).<span class="ruby-identifier">delete_all</span>
-    <span class="ruby-identifier">parent_relationships_to_remove</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:destroy!</span>)
+
+    <span class="ruby-constant">Audited</span>
+      .<span class="ruby-identifier">audit_class</span>
+      .<span class="ruby-identifier">as_user</span>(<span class="ruby-identifier">user</span>) { <span class="ruby-identifier">parent_relationships_to_remove</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:destroy!</span>) }
 
     <span class="ruby-constant">Parent</span>
       .<span class="ruby-identifier">where</span>(<span class="ruby-value">id:</span> <span class="ruby-identifier">parent_ids_to_check</span>)
