@@ -50,6 +50,8 @@ class ClassImport < PatientImport
            dependent: :destroy
   has_many :pds_search_results
 
+  after_create :log_started
+
   def type_label
     "Class list records"
   end
@@ -133,8 +135,32 @@ class ClassImport < PatientImport
     patients_not_in_import - patients_with_school_moves
   end
 
+  def log_started
+    with_logger_tags { logger.info("started") }
+  end
+
+  def in_review!
+    super
+    with_logger_tags { logger.info("in_review") }
+  end
+
+  def in_re_review!
+    super
+    with_logger_tags { logger.info("in_re_review") }
+  end
+
+  def committing!
+    super
+    with_logger_tags { logger.info("committing") }
+  end
+
   def processed!
     update_columns(processed_at: Time.zone.now, status: :processed)
+    with_logger_tags { logger.info("finished") }
+  end
+
+  def with_logger_tags(&)
+    SemanticLogger.tagged(id:, team_workgroup: team.workgroup, &)
   end
 
   private
