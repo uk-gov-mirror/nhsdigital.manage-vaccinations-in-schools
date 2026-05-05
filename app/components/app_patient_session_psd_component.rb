@@ -8,7 +8,7 @@ class AppPatientSessionPsdComponent < ViewComponent::Base
   end
 
   def render?
-    session.psd_enabled?
+    programme.supports_delegation? && session.psd_enabled?
   end
 
   private

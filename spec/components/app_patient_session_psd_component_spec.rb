@@ -9,6 +9,15 @@ describe AppPatientSessionPsdComponent do
   let(:session) { create(:session, :psd_enabled, programmes: [programme]) }
   let(:patient) { create(:patient, session:) }
 
+  context "when the programme does not support PSDs" do
+    let(:programme) { Programme.hpv }
+    let(:session) { create(:session, :psd_enabled, programmes: [programme]) }
+
+    it "does not render" do
+      expect(component.render?).to be false
+    end
+  end
+
   context "when the session does not use PSDs" do
     let(:session) { create(:session, programmes: [programme]) }
 
