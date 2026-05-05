@@ -665,7 +665,7 @@
             </details>
           </div>
           <div class="method-source-code" id="deduplicate_patients-21-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/concerns/patient_import_concern.rb, line 42</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/concerns/patient_import_concern.rb, line 43</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">deduplicate_patients!</span>(<span class="ruby-identifier">patients</span>, <span class="ruby-identifier">relationships</span>)
   <span class="ruby-ivar">@patients_by_nhs_number</span> <span class="ruby-operator">||=</span> {}
 
@@ -723,7 +723,7 @@
             </details>
           </div>
           <div class="method-source-code" id="has_auto_confirmable_school_move-3F-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/concerns/patient_import_concern.rb, line 118</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/concerns/patient_import_concern.rb, line 119</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">has_auto_confirmable_school_move?</span>(<span class="ruby-identifier">school_move</span>, <span class="ruby-identifier">import</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">from_another_team?</span>
 
@@ -782,6 +782,7 @@
       .<span class="ruby-identifier">uniq</span> { [<span class="ruby-identifier">_1</span>.<span class="ruby-identifier">parent</span>, <span class="ruby-identifier">_1</span>.<span class="ruby-identifier">patient</span>] }
 
   <span class="ruby-identifier">deduplicate_patients!</span>(<span class="ruby-identifier">patients</span>, <span class="ruby-identifier">relationships</span>)
+  <span class="ruby-identifier">patients</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:ensure_nhs_number_first_added_at</span>)
 
   <span class="ruby-identifier">patients_with_nhs_number_changes</span> =
     <span class="ruby-identifier">patients</span>.<span class="ruby-identifier">select</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:nhs_number_previously_changed?</span>)
@@ -846,7 +847,7 @@
             </details>
           </div>
           <div class="method-source-code" id="import_pds_search_results-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/concerns/patient_import_concern.rb, line 82</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/concerns/patient_import_concern.rb, line 83</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">import_pds_search_results</span>(<span class="ruby-identifier">changesets</span>, <span class="ruby-identifier">import</span>)
   <span class="ruby-identifier">pds_search_records</span> = []
 
@@ -908,7 +909,7 @@
             </details>
           </div>
           <div class="method-source-code" id="import_school_moves-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/concerns/patient_import_concern.rb, line 62</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/concerns/patient_import_concern.rb, line 63</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">import_school_moves</span>(<span class="ruby-identifier">changesets</span>, <span class="ruby-identifier">import</span>)
   <span class="ruby-identifier">school_moves</span> = <span class="ruby-identifier">changesets</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:school_move</span>).<span class="ruby-identifier">compact</span>.<span class="ruby-identifier">uniq</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:patient</span>)
 
@@ -966,7 +967,7 @@
             </details>
           </div>
           <div class="method-source-code" id="increment_column_counts-21-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/concerns/patient_import_concern.rb, line 106</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/concerns/patient_import_concern.rb, line 107</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">increment_column_counts!</span>(<span class="ruby-identifier">import</span>, <span class="ruby-identifier">counts</span>, <span class="ruby-identifier">changesets</span>)
   <span class="ruby-identifier">changesets</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">changeset</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">count_column_to_increment</span> =

@@ -1077,7 +1077,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">in_pending_changes</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">in_existing_patient</span>
-    <span class="ruby-identifier">existing_patient</span>[<span class="ruby-identifier">attribute</span>] = <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">public_send</span>(
+      <span class="ruby-node">&quot;#{attribute}=&quot;</span>,
+      <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    )
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -1457,7 +1460,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">in_pending_changes</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">in_existing_patient</span>
-    <span class="ruby-identifier">existing_patient</span>[<span class="ruby-identifier">attribute</span>] = <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">public_send</span>(
+      <span class="ruby-node">&quot;#{attribute}=&quot;</span>,
+      <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    )
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -1717,7 +1723,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="auto_accept_registration-3F-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 390</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 393</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">auto_accept_registration?</span>
   <span class="ruby-identifier">import_type</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;ClassImport&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1759,7 +1765,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="auto_overwrite_address-3F-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 436</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 439</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">auto_overwrite_address?</span>(<span class="ruby-identifier">existing_patient</span>)
   <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">address_postcode</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">child_attributes</span>[<span class="ruby-string">&quot;address_postcode&quot;</span>] <span class="ruby-operator">&amp;&amp;</span>
     [
@@ -2015,7 +2021,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">in_pending_changes</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">in_existing_patient</span>
-    <span class="ruby-identifier">existing_patient</span>[<span class="ruby-identifier">attribute</span>] = <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">public_send</span>(
+      <span class="ruby-node">&quot;#{attribute}=&quot;</span>,
+      <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    )
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -2177,7 +2186,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="calculate_review_data-21-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 477</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 480</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">calculate_review_data!</span>
   <span class="ruby-identifier">clear_review_data!</span>
   <span class="ruby-identifier">reset_patient_id!</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient_id</span>.<span class="ruby-identifier">present?</span>
@@ -2236,7 +2245,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="changeset_type-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 465</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 468</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">changeset_type</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">patient</span>.<span class="ruby-identifier">id</span>.<span class="ruby-identifier">nil?</span>
     <span class="ruby-value">:new_patient</span>
@@ -2513,7 +2522,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">in_pending_changes</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">in_existing_patient</span>
-    <span class="ruby-identifier">existing_patient</span>[<span class="ruby-identifier">attribute</span>] = <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">public_send</span>(
+      <span class="ruby-node">&quot;#{attribute}=&quot;</span>,
+      <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    )
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -2673,7 +2685,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="clear_review_data-21-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 498</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 501</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clear_review_data!</span>
   <span class="ruby-identifier">data</span>[<span class="ruby-string">&quot;review&quot;</span>] = { <span class="ruby-value">patient:</span> {}, <span class="ruby-value">school_move:</span> {} }
   <span class="ruby-identifier">save!</span>
@@ -2716,7 +2728,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="csv_row_number-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 507</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 510</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">csv_row_number</span>
   (<span class="ruby-identifier">row_number</span> <span class="ruby-operator">||</span> <span class="ruby-value">0</span>) <span class="ruby-operator">+</span> <span class="ruby-value">2</span>
 <span class="ruby-keyword">end</span></pre>
@@ -2979,7 +2991,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">in_pending_changes</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">in_existing_patient</span>
-    <span class="ruby-identifier">existing_patient</span>[<span class="ruby-identifier">attribute</span>] = <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">public_send</span>(
+      <span class="ruby-node">&quot;#{attribute}=&quot;</span>,
+      <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    )
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -3140,7 +3155,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="deserialize_attribute-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 394</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 397</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">deserialize_attribute</span>(<span class="ruby-identifier">attributes</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">type</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">attributes</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">key</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">attributes</span>[<span class="ruby-identifier">key</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">String</span>)
     <span class="ruby-identifier">attributes</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-keyword">case</span> <span class="ruby-identifier">type</span>
@@ -3485,7 +3500,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">in_pending_changes</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">in_existing_patient</span>
-    <span class="ruby-identifier">existing_patient</span>[<span class="ruby-identifier">attribute</span>] = <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">public_send</span>(
+      <span class="ruby-node">&quot;#{attribute}=&quot;</span>,
+      <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    )
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -3868,7 +3886,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">in_pending_changes</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">in_existing_patient</span>
-    <span class="ruby-identifier">existing_patient</span>[<span class="ruby-identifier">attribute</span>] = <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">public_send</span>(
+      <span class="ruby-node">&quot;#{attribute}=&quot;</span>,
+      <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    )
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -4028,7 +4049,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="handle_address_updates-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 411</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 414</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">handle_address_updates</span>(<span class="ruby-identifier">existing_patient</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">child_attributes</span>[<span class="ruby-string">&quot;address_postcode&quot;</span>].<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span>
        <span class="ruby-identifier">child_attributes</span>[<span class="ruby-string">&quot;address_postcode&quot;</span>] <span class="ruby-operator">!=</span>
@@ -4091,7 +4112,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="inter_team_move-3F-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 405</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 408</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">inter_team_move?</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">patient_id</span>.<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">school_move</span>.<span class="ruby-identifier">present?</span>
 
@@ -4382,7 +4403,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
     <span class="ruby-keyword">end</span>
 
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">in_pending_changes</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">in_existing_patient</span>
-      <span class="ruby-identifier">existing_patient</span>[<span class="ruby-identifier">attribute</span>] = <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+      <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">public_send</span>(
+        <span class="ruby-node">&quot;#{attribute}=&quot;</span>,
+        <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+      )
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
@@ -4762,7 +4786,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">in_pending_changes</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">in_existing_patient</span>
-    <span class="ruby-identifier">existing_patient</span>[<span class="ruby-identifier">attribute</span>] = <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">public_send</span>(
+      <span class="ruby-node">&quot;#{attribute}=&quot;</span>,
+      <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    )
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -5138,7 +5165,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">in_pending_changes</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">in_existing_patient</span>
-    <span class="ruby-identifier">existing_patient</span>[<span class="ruby-identifier">attribute</span>] = <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">public_send</span>(
+      <span class="ruby-node">&quot;#{attribute}=&quot;</span>,
+      <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    )
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -5654,7 +5684,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="reset_patient_id-21-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 503</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 506</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">reset_patient_id!</span>
   <span class="ruby-identifier">update_column</span>(<span class="ruby-value">:patient_id</span>, <span class="ruby-keyword">nil</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -5925,7 +5955,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">in_pending_changes</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">in_existing_patient</span>
-    <span class="ruby-identifier">existing_patient</span>[<span class="ruby-identifier">attribute</span>] = <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">public_send</span>(
+      <span class="ruby-node">&quot;#{attribute}=&quot;</span>,
+      <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    )
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -6358,7 +6391,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">in_pending_changes</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">in_existing_patient</span>
-    <span class="ruby-identifier">existing_patient</span>[<span class="ruby-identifier">attribute</span>] = <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">public_send</span>(
+      <span class="ruby-node">&quot;#{attribute}=&quot;</span>,
+      <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    )
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -6785,7 +6821,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">in_pending_changes</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">in_existing_patient</span>
-    <span class="ruby-identifier">existing_patient</span>[<span class="ruby-identifier">attribute</span>] = <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">public_send</span>(
+      <span class="ruby-node">&quot;#{attribute}=&quot;</span>,
+      <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    )
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span>
 
@@ -6961,7 +7000,10 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">in_pending_changes</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">in_existing_patient</span>
-    <span class="ruby-identifier">existing_patient</span>[<span class="ruby-identifier">attribute</span>] = <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">public_send</span>(
+      <span class="ruby-node">&quot;#{attribute}=&quot;</span>,
+      <span class="ruby-identifier">child_attributes</span>[<span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>]
+    )
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -7002,7 +7044,7 @@ fk_rails_...  (school_id =&gt; locations.id)</pre>
             </details>
           </div>
           <div class="method-source-code" id="stage_and_handle_pending_changes-source">
-            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 445</span>
+            <pre class="ruby"><span class="ruby-comment"># File app/models/patient_changeset.rb, line 448</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">stage_and_handle_pending_changes</span>(<span class="ruby-identifier">existing_patient</span>)
   <span class="ruby-identifier">auto_accepted_changes</span> = <span class="ruby-identifier">existing_patient</span>.<span class="ruby-identifier">changed_attributes</span>.<span class="ruby-identifier">keys</span>
 

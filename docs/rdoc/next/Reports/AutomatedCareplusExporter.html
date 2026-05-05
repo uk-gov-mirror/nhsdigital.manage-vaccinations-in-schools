@@ -783,14 +783,44 @@
   <span class="ruby-value">start_date:</span>,
   <span class="ruby-value">end_date:</span>
 )
-  <span class="ruby-constant">Reports</span><span class="ruby-operator">::</span><span class="ruby-constant">CareplusExporter</span>.<span class="ruby-identifier">vaccination_records_scope</span>(
-    <span class="ruby-value">team:</span>,
-    <span class="ruby-value">programmes:</span> <span class="ruby-identifier">team</span>.<span class="ruby-identifier">programmes</span>,
-    <span class="ruby-value">academic_year:</span>,
-    <span class="ruby-value">start_date:</span>,
-    <span class="ruby-value">end_date:</span>,
-    <span class="ruby-value">include_missing_nhs_number:</span> <span class="ruby-keyword">false</span>
-  )
+  <span class="ruby-identifier">base_scope</span> =
+    <span class="ruby-constant">Reports</span><span class="ruby-operator">::</span><span class="ruby-constant">CareplusExporter</span>.<span class="ruby-identifier">vaccination_records_scope</span>(
+      <span class="ruby-value">team:</span>,
+      <span class="ruby-value">programmes:</span> <span class="ruby-identifier">team</span>.<span class="ruby-identifier">programmes</span>,
+      <span class="ruby-value">academic_year:</span>,
+      <span class="ruby-value">start_date:</span> <span class="ruby-keyword">nil</span>,
+      <span class="ruby-value">end_date:</span> <span class="ruby-keyword">nil</span>,
+      <span class="ruby-value">include_missing_nhs_number:</span> <span class="ruby-keyword">false</span>
+    )
+  <span class="ruby-identifier">date_range_scope</span> =
+    <span class="ruby-identifier">base_scope</span>.<span class="ruby-identifier">created_or_updated_between</span>(<span class="ruby-identifier">start_date</span>, <span class="ruby-identifier">end_date</span>)
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">date_range_scope</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">team</span>.<span class="ruby-identifier">careplus_automated_reports_enabled_at</span>.<span class="ruby-identifier">blank?</span>
+
+  <span class="ruby-identifier">nhs_number_first_added_scope</span> =
+    <span class="ruby-identifier">base_scope</span>
+      .<span class="ruby-identifier">created_or_updated_on_or_after</span>(
+        <span class="ruby-identifier">team</span>.<span class="ruby-identifier">careplus_automated_reports_enabled_at</span>
+      )
+      .<span class="ruby-identifier">where</span>.<span class="ruby-identifier">not</span>(<span class="ruby-value">patients:</span> { <span class="ruby-value">nhs_number_first_added_at:</span> <span class="ruby-keyword">nil</span> })
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">start_date</span>.<span class="ruby-identifier">present?</span>
+    <span class="ruby-identifier">nhs_number_first_added_scope</span> =
+      <span class="ruby-identifier">nhs_number_first_added_scope</span>.<span class="ruby-identifier">where</span>(
+        <span class="ruby-string">&quot;patients.nhs_number_first_added_at &gt;= ?&quot;</span>,
+        <span class="ruby-identifier">start_date</span>.<span class="ruby-identifier">beginning_of_day</span>
+      )
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">end_date</span>.<span class="ruby-identifier">present?</span>
+    <span class="ruby-identifier">nhs_number_first_added_scope</span> =
+      <span class="ruby-identifier">nhs_number_first_added_scope</span>.<span class="ruby-identifier">where</span>(
+        <span class="ruby-string">&quot;patients.nhs_number_first_added_at &lt;= ?&quot;</span>,
+        <span class="ruby-identifier">end_date</span>.<span class="ruby-identifier">end_of_day</span>
+      )
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">date_range_scope</span>.<span class="ruby-identifier">or</span>(<span class="ruby-identifier">nhs_number_first_added_scope</span>).<span class="ruby-identifier">distinct</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
 
