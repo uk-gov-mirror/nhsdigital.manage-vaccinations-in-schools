@@ -672,6 +672,8 @@
           <div class="method-source-code" id="call-source">
             <pre class="ruby"><span class="ruby-comment"># File app/lib/mavis_cli/gias/download.rb, line 23</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">call</span>(<span class="ruby-value">output_file:</span>, <span class="ruby-operator">**</span>)
+  <span class="ruby-constant">MavisCLI</span>.<span class="ruby-identifier">load_rails</span>
+
   <span class="ruby-identifier">logger</span> = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">$stdout</span>)
   <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">formatter</span> =
     <span class="ruby-identifier">proc</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">_severity</span>, <span class="ruby-identifier">_datetime</span>, <span class="ruby-identifier">_progname</span>, <span class="ruby-identifier">msg</span><span class="ruby-operator">|</span> <span class="ruby-node">&quot;#{msg}\n&quot;</span> }
