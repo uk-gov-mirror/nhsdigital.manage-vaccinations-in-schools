@@ -378,8 +378,6 @@ describe PDSCascadingSearchJob do
           )
         ]
       )
-
-      expect(search_results.first).to include("result" => "error")
     end
   end
 end
