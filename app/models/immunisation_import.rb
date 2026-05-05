@@ -44,8 +44,6 @@ class ImmunisationImport < ApplicationRecord
   has_and_belongs_to_many :sessions
   has_and_belongs_to_many :vaccination_records
 
-  after_create :log_started
-
   def type_label
     "Vaccination records"
   end
@@ -192,24 +190,5 @@ class ImmunisationImport < ApplicationRecord
     UpdatePatientsFromPDS.call(patients, queue: :imports)
 
     TeamCachedCounts.new(team).reset_import_issues!
-  end
-
-  def log_started
-    log_with_tags(:info, "started")
-  end
-
-  def log_finished
-    log_with_tags(
-      :info,
-      "finished",
-      duration_ms: ((processed_at - created_at) * 1000).to_i,
-      count: rows_count
-    )
-  end
-
-  def log_with_tags(log_level, *)
-    SemanticLogger.tagged(id:, team_workgroup: team.workgroup) do
-      log.public_send(log_level, *)
-    end
   end
 end

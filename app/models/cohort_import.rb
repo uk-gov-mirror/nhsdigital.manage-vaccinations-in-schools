@@ -44,8 +44,6 @@ class CohortImport < PatientImport
            dependent: :destroy
   has_many :pds_search_results
 
-  after_create :log_started
-
   def type_label
     "Child records"
   end
@@ -56,36 +54,6 @@ class CohortImport < PatientImport
   end
 
   def post_commit!
-  end
-
-  def log_started
-    log_with_tags(:info, "started")
-  end
-
-  def in_review!
-    super
-    log_with_tags(:info, "in_review")
-  end
-
-  def in_re_review!
-    super
-    log_with_tags(:info, "in_re_review")
-  end
-
-  def committing!
-    super
-    log_with_tags(:info, "committing")
-  end
-
-  def processed!
-    update_columns(processed_at: Time.zone.now, status: :processed)
-    log_with_tags(:info, "finished")
-  end
-
-  def log_with_tags(log_level, *)
-    SemanticLogger.tagged(id:, team_workgroup: team.workgroup) do
-      log.public_send(log_level, *)
-    end
   end
 
   private

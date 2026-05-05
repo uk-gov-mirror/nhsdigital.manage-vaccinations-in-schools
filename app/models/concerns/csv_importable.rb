@@ -91,6 +91,37 @@ module CSVImportable
     end
 
     before_save :ensure_processed_with_count_statistics
+    after_create :log_started
+
+    def log_started
+      log_with_tags(:info, "started")
+    end
+
+    def in_review!
+      super
+      log_with_tags(:info, "in_review")
+    end
+
+    def in_re_review!
+      super
+      log_with_tags(:info, "in_re_review")
+    end
+
+    def committing!
+      super
+      log_with_tags(:info, "committing")
+    end
+
+    def processed!
+      update_columns(processed_at: Time.zone.now, status: :processed)
+      log_with_tags(:info, "finished")
+    end
+
+    def log_with_tags(log_level, *)
+      SemanticLogger.tagged(id:, team_workgroup: team.workgroup) do
+        logger.public_send(log_level, *)
+      end
+    end
   end
 
   # Assign an uploaded CSV file to this import.
