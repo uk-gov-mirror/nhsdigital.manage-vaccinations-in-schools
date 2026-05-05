@@ -756,21 +756,21 @@
 
     <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">build_soap_envelope</span>
       <span class="ruby-identifier">escaped_payload</span> = <span class="ruby-constant">CGI</span>.<span class="ruby-identifier">escapeHTML</span>(<span class="ruby-identifier">payload</span>)
-      <span class="ruby-identifier">target_namespace</span> = <span class="ruby-node">&quot;#{TARGET_NAMESPACE_BASE}/#{namespace}/webservices&quot;</span>
 
       <span class="ruby-identifier">&lt;&lt;~XML</span>
-<span class="ruby-value">        &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-        &lt;soap:Envelope
-            xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;
-            xmlns:car=&quot;#{target_namespace}&quot;&gt;
-          &lt;soap:Body&gt;
+<span class="ruby-value">        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+        &lt;soapenv:Envelope
+            xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;
+            xmlns:car=&quot;http://careplus.syhapp.thirdparty.nhs.uk&quot;&gt;
+          &lt;soapenv:Header/&gt;
+          &lt;soapenv:Body&gt;
             &lt;car:InsertImmsRecord&gt;
               &lt;car:strUserId&gt;#{username}&lt;/car:strUserId&gt;
               &lt;car:strPwd&gt;#{password}&lt;/car:strPwd&gt;
               &lt;car:strPayload&gt;#{escaped_payload}&lt;/car:strPayload&gt;
             &lt;/car:InsertImmsRecord&gt;
-          &lt;/soap:Body&gt;
-        &lt;/soap:Envelope&gt;</span>
+          &lt;/soapenv:Body&gt;
+        &lt;/soapenv:Envelope&gt;</span>
 <span class="ruby-identifier">      XML</span>
     <span class="ruby-keyword">end</span>
 
@@ -779,7 +779,10 @@
       <span class="ruby-identifier">http</span>.<span class="ruby-identifier">use_ssl</span> = <span class="ruby-identifier">uri</span>.<span class="ruby-identifier">scheme</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;https&quot;</span>
 
       <span class="ruby-identifier">request</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTP</span><span class="ruby-operator">::</span><span class="ruby-constant">Post</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">uri</span>.<span class="ruby-identifier">request_uri</span>)
-      <span class="ruby-identifier">request</span>[<span class="ruby-string">&quot;Content-Type&quot;</span>] = <span class="ruby-string">&quot;text/xml; charset=utf-8&quot;</span>
+      <span class="ruby-identifier">request</span>[<span class="ruby-string">&quot;Content-Type&quot;</span>] = <span class="ruby-string">&quot;application/xml&quot;</span>
+      <span class="ruby-identifier">request</span>[
+        <span class="ruby-string">&quot;SOAPAction&quot;</span>
+      ] = <span class="ruby-string">&quot;http://careplus.syhapp.thirdparty.nhs.uk/soap.SCHImms.InsertImmsRecord&quot;</span>
       <span class="ruby-identifier">request</span>.<span class="ruby-identifier">body</span> = <span class="ruby-identifier">body</span>
 
       <span class="ruby-identifier">http</span>.<span class="ruby-identifier">request</span>(<span class="ruby-identifier">request</span>)
@@ -840,21 +843,21 @@
             <pre class="ruby"><span class="ruby-comment"># File app/lib/careplus/client.rb, line 35</span>
     <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">build_soap_envelope</span>
       <span class="ruby-identifier">escaped_payload</span> = <span class="ruby-constant">CGI</span>.<span class="ruby-identifier">escapeHTML</span>(<span class="ruby-identifier">payload</span>)
-      <span class="ruby-identifier">target_namespace</span> = <span class="ruby-node">&quot;#{TARGET_NAMESPACE_BASE}/#{namespace}/webservices&quot;</span>
 
       <span class="ruby-identifier">&lt;&lt;~XML</span>
-<span class="ruby-value">        &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-        &lt;soap:Envelope
-            xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;
-            xmlns:car=&quot;#{target_namespace}&quot;&gt;
-          &lt;soap:Body&gt;
+<span class="ruby-value">        &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+        &lt;soapenv:Envelope
+            xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;
+            xmlns:car=&quot;http://careplus.syhapp.thirdparty.nhs.uk&quot;&gt;
+          &lt;soapenv:Header/&gt;
+          &lt;soapenv:Body&gt;
             &lt;car:InsertImmsRecord&gt;
               &lt;car:strUserId&gt;#{username}&lt;/car:strUserId&gt;
               &lt;car:strPwd&gt;#{password}&lt;/car:strPwd&gt;
               &lt;car:strPayload&gt;#{escaped_payload}&lt;/car:strPayload&gt;
             &lt;/car:InsertImmsRecord&gt;
-          &lt;/soap:Body&gt;
-        &lt;/soap:Envelope&gt;</span>
+          &lt;/soapenv:Body&gt;
+        &lt;/soapenv:Envelope&gt;</span>
 <span class="ruby-identifier">      XML</span>
     <span class="ruby-keyword">end</span></pre>
           </div>
@@ -901,7 +904,10 @@
   <span class="ruby-identifier">http</span>.<span class="ruby-identifier">use_ssl</span> = <span class="ruby-identifier">uri</span>.<span class="ruby-identifier">scheme</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;https&quot;</span>
 
   <span class="ruby-identifier">request</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTP</span><span class="ruby-operator">::</span><span class="ruby-constant">Post</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">uri</span>.<span class="ruby-identifier">request_uri</span>)
-  <span class="ruby-identifier">request</span>[<span class="ruby-string">&quot;Content-Type&quot;</span>] = <span class="ruby-string">&quot;text/xml; charset=utf-8&quot;</span>
+  <span class="ruby-identifier">request</span>[<span class="ruby-string">&quot;Content-Type&quot;</span>] = <span class="ruby-string">&quot;application/xml&quot;</span>
+  <span class="ruby-identifier">request</span>[
+    <span class="ruby-string">&quot;SOAPAction&quot;</span>
+  ] = <span class="ruby-string">&quot;http://careplus.syhapp.thirdparty.nhs.uk/soap.SCHImms.InsertImmsRecord&quot;</span>
   <span class="ruby-identifier">request</span>.<span class="ruby-identifier">body</span> = <span class="ruby-identifier">body</span>
 
   <span class="ruby-identifier">http</span>.<span class="ruby-identifier">request</span>(<span class="ruby-identifier">request</span>)
@@ -949,7 +955,7 @@
   <span class="ruby-identifier">base_url</span> = <span class="ruby-constant">Settings</span>.<span class="ruby-identifier">careplus</span>.<span class="ruby-identifier">base_url</span>.<span class="ruby-identifier">presence</span> <span class="ruby-keyword">or</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;Settings.careplus.base_url is empty or has not been configured &quot;</span> \
             <span class="ruby-string">&quot;(if this is a deployed service, the MOCK_CAREPLUS_URL environment variable may not be set)&quot;</span>
-  <span class="ruby-identifier">uri</span> = <span class="ruby-constant">URI</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-node">&quot;#{base_url}/#{namespace}/soap.SchImms.cls&quot;</span>)
+  <span class="ruby-identifier">uri</span> = <span class="ruby-constant">URI</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-node">&quot;#{base_url}/#{namespace}/soap.SCHImms.cls&quot;</span>)
   <span class="ruby-identifier">soap_body</span> = <span class="ruby-identifier">build_soap_envelope</span>
   <span class="ruby-identifier">post_soap_request</span>(<span class="ruby-identifier">uri</span>, <span class="ruby-identifier">soap_body</span>)
 <span class="ruby-keyword">end</span></pre>
