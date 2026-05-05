@@ -65,7 +65,6 @@ class PatientImport < ApplicationRecord
             "imports"
           )
         end
-        return
       else
         changesets.find_each do |cs|
           cs.calculating_review!
