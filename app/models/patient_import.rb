@@ -67,7 +67,7 @@ class PatientImport < ApplicationRecord
         end
         return
       else
-        changesets.without_postcode.find_each do |cs|
+        changesets.find_each do |cs|
           cs.calculating_review!
           ReviewPatientChangesetSidekiqJob.perform_async(cs.id)
         end
