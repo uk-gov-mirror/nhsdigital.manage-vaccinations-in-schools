@@ -97,14 +97,7 @@ class PatientImport < ApplicationRecord
       validate_changeset_uniqueness!
       return if changesets_are_invalid?
 
-      review_changesets =
-        if Flipper.enabled?(:pds) && Flipper.enabled?(:pds_search_during_import)
-          []
-        else
-          changesets
-        end
-
-      review_changesets.each do |cs|
+      changesets.each do |cs|
         cs.calculating_review!
         ReviewPatientChangesetSidekiqJob.perform_async(cs.id)
       end
