@@ -83,27 +83,46 @@ class PatientImport < ApplicationRecord
           cs.calculating_review!
           ReviewPatientChangesetSidekiqJob.perform_async(cs.id)
         end
+
+        changesets.each(&:assign_patient_id)
+
+        validate_changeset_uniqueness!
+        return if changesets_are_invalid?
+
+        review_changesets =
+          if Flipper.enabled?(:pds) && Flipper.enabled?(:pds_search_during_import)
+            []
+          else
+            changesets
+          end
+
+        review_changesets.each do |cs|
+          cs.calculating_review!
+          ReviewPatientChangesetSidekiqJob.perform_async(cs.id)
+        end
+
+        TeamCachedCounts.new(team).reset_import_issues!
       end
-    end
+    else
+      changesets.each(&:assign_patient_id)
 
-    changesets.each(&:assign_patient_id)
+      validate_changeset_uniqueness!
+      return if changesets_are_invalid?
 
-    validate_changeset_uniqueness!
-    return if changesets_are_invalid?
+      review_changesets =
+        if Flipper.enabled?(:pds) && Flipper.enabled?(:pds_search_during_import)
+          []
+        else
+          changesets
+        end
 
-    review_changesets =
-      if Flipper.enabled?(:pds) && Flipper.enabled?(:pds_search_during_import)
-        []
-      else
-        changesets
+      review_changesets.each do |cs|
+        cs.calculating_review!
+        ReviewPatientChangesetSidekiqJob.perform_async(cs.id)
       end
 
-    review_changesets.each do |cs|
-      cs.calculating_review!
-      ReviewPatientChangesetSidekiqJob.perform_async(cs.id)
+      TeamCachedCounts.new(team).reset_import_issues!
     end
-
-    TeamCachedCounts.new(team).reset_import_issues!
   end
 
   def validate_pds_match_rate!
